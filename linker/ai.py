@@ -21,7 +21,7 @@ import os
 
 # Change this to trade quality for cost. Haiku is cheapest/fastest;
 # Sonnet gives richer write-ups. Both are current API model strings.
-DEFAULT_MODEL = "claude-sonnet-5"          # or "claude-haiku-4-5-20251001"
+DEFAULT_MODEL = "claude-haiku-4-5-20251001"          # or "claude-sonnet-5" for higher quality
 
 _SYSTEM = (
     "You are a decision-support assistant for counter-IED incident analysts. "

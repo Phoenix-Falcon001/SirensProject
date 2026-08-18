@@ -1,0 +1,14 @@
+{
+  "INC-033": {
+    "caza": "Marjaayoun",
+    "street": "road shoulder near culvert, Blida",
+    "munition": "other",
+    "color": "yellow",
+    "condition": [
+      "surface-laid"
+    ],
+    "lat": 33.1064,
+    "lon": 35.3981,
+    "grid": "36N 723778E 3665641N"
+  }
+}

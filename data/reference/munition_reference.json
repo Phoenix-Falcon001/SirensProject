@@ -1,0 +1,1030 @@
+{
+  "_comment": "General, PUBLIC, category-level recognition reference keyed to taxonomy object_type values plus additional browsable categories. For analyst / first-responder recognition and cataloguing ONLY. NOT positive identification, and NOT fuzing, arming, render-safe, emplacement or defeat guidance. Figures are approximate and vary by model/manufacturer.",
+  "_disclaimer": "General public reference for recognition and cataloguing — not identification, and not device-handling or render-safe guidance. Do not approach suspected munitions; cordon and contact EOD / the relevant authority.",
+  "entries": {
+    "mortar_round": {
+      "label": "Mortar round (generic)",
+      "summary": "A finned, drop-fired projectile for indirect high-angle fire, spanning light (60 mm), medium (81/82 mm) and heavy (120 mm) families. As an unexploded item it is highly dangerous and may remain armed.",
+      "specs": [
+        [
+          "Calibre",
+          "60 / 81 / 82 / 120 mm families"
+        ],
+        [
+          "Body",
+          "Streamlined shell with tail fins; nose fuze common"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive (HE) — fragmentation against personnel and light targets",
+        "Smoke — screening or marking",
+        "Illumination — battlefield lighting via flare",
+        "Guided / precision variants (modern systems)"
+      ],
+      "deployment": [
+        "Fired from a tube with baseplate and bipod; towed, man-portable or vehicle-mounted",
+        "Encountered as UXO where a round failed to function"
+      ],
+      "responder_note": "Treat any suspected mortar round as live and potentially armed. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "mortar_60mm": {
+      "label": "60 mm mortar round",
+      "summary": "The light company/platoon mortar class — short-ranged, man-portable, used for close indirect support. Small but a serious hazard as UXO.",
+      "specs": [
+        [
+          "Calibre",
+          "60 mm"
+        ],
+        [
+          "Typical max range",
+          "~1.5–3.5 km"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive (HE) — fragmentation against personnel and light targets",
+        "Smoke — screening or marking",
+        "Illumination — battlefield lighting via flare"
+      ],
+      "deployment": [
+        "Man-portable light mortar",
+        "Encountered as UXO"
+      ],
+      "responder_note": "Small size does not mean safe. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "mortar_81mm": {
+      "label": "81 mm mortar round",
+      "summary": "A widely fielded medium mortar class giving battalion-level indirect fire, heavier and longer-ranged than the 60 mm.",
+      "specs": [
+        [
+          "Calibre",
+          "81 mm"
+        ],
+        [
+          "Typical max range",
+          "~5–6 km"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive (HE) — fragmentation against personnel and light targets",
+        "Smoke — screening or marking",
+        "Illumination — battlefield lighting via flare"
+      ],
+      "deployment": [
+        "Tube with baseplate and bipod",
+        "Encountered as UXO"
+      ],
+      "responder_note": "Assume live and potentially armed. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "mortar_82mm": {
+      "label": "82 mm mortar round",
+      "summary": "The Eastern-pattern counterpart to the 81 mm medium mortar, very common in many conflict zones. Frequently seen as UXO.",
+      "specs": [
+        [
+          "Calibre",
+          "82 mm"
+        ],
+        [
+          "Typical max range",
+          "~4–6 km"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive (HE) — fragmentation against personnel and light targets",
+        "Smoke — screening or marking",
+        "Illumination — battlefield lighting via flare"
+      ],
+      "deployment": [
+        "Tube with baseplate and bipod",
+        "Encountered as UXO"
+      ],
+      "responder_note": "Assume live and potentially armed. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "mortar_120mm": {
+      "label": "120 mm mortar round",
+      "summary": "The heavy mortar class, bridging light mortars and towed artillery, delivering heavy indirect fire over several kilometres. Large explosive content.",
+      "specs": [
+        [
+          "Calibre",
+          "120 mm"
+        ],
+        [
+          "Typical max range",
+          "~7–9 km (system-dependent)"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive (HE) — fragmentation against personnel and light targets",
+        "Smoke — screening or marking",
+        "Illumination — battlefield lighting via flare",
+        "Guided / precision variants (modern systems)"
+      ],
+      "deployment": [
+        "Towed or vehicle-mounted with a heavy baseplate",
+        "Encountered as UXO"
+      ],
+      "responder_note": "Large charge. Establish a wide cordon and contact EOD. Do not approach.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "rocket_generic": {
+      "label": "Rocket (unspecified calibre)",
+      "summary": "A rocket-propelled munition of unestablished calibre. Carries a motor plus a warhead; hazards include both the warhead and unburnt propellant.",
+      "specs": [
+        [
+          "Calibre",
+          "Not established"
+        ],
+        [
+          "Stabilisation",
+          "Spin or fin"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive fragmentation (most common)"
+      ],
+      "deployment": [
+        "Tube, rail or improvised launcher"
+      ],
+      "responder_note": "Assume live warhead and propellant hazard. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "rocket_107mm": {
+      "label": "107 mm rocket",
+      "summary": "A widely encountered light artillery rocket, spin- or fin-stabilised, fired from single tubes, light multi-tube launchers, or improvised single rails. Inaccurate individually and used for area effect.",
+      "specs": [
+        [
+          "Calibre",
+          "107 mm"
+        ],
+        [
+          "Typical max range",
+          "~8 km"
+        ],
+        [
+          "Stabilisation",
+          "Spin (canted nozzles) or fin"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive fragmentation"
+      ],
+      "deployment": [
+        "Multi-tube launchers, single tubes, or improvised rails/ramps",
+        "Encountered as UXO or as a recovered intact round"
+      ],
+      "responder_note": "May contain an armed or damaged fuze and unburnt propellant. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "rocket_122mm": {
+      "label": "122 mm rocket",
+      "summary": "A heavier artillery rocket associated with multiple-launch rocket systems, fin-stabilised, with greater range and warhead than the 107 mm class.",
+      "specs": [
+        [
+          "Calibre",
+          "122 mm"
+        ],
+        [
+          "Typical max range",
+          "~20–40 km (variant-dependent)"
+        ],
+        [
+          "Stabilisation",
+          "Fin (wrap-around fins common)"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive fragmentation",
+        "Cargo / submunition-carrying variants (some types)"
+      ],
+      "deployment": [
+        "Multi-barrel launch systems, or improvised single launchers"
+      ],
+      "responder_note": "Large warhead and rocket motor. Cordon widely and contact EOD. Do not approach.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "rocket_240mm": {
+      "label": "240 mm rocket",
+      "summary": "A large-calibre heavy artillery rocket with a substantial warhead, used for area bombardment. Very hazardous as UXO.",
+      "specs": [
+        [
+          "Calibre",
+          "240 mm"
+        ],
+        [
+          "Typical max range",
+          "~10–40 km (variant-dependent)"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive",
+        "Submunition-carrying variants (some types)"
+      ],
+      "deployment": [
+        "Heavy multiple-rocket launchers or single launchers"
+      ],
+      "responder_note": "Very large warhead. Wide cordon; contact EOD. Do not approach.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "rocket_300mm": {
+      "label": "300 mm rocket",
+      "summary": "A very large heavy artillery rocket associated with long-range multiple-launch systems; may be guided in modern variants.",
+      "specs": [
+        [
+          "Calibre",
+          "~300 mm"
+        ],
+        [
+          "Typical max range",
+          "~70–120 km (variant-dependent)"
+        ],
+        [
+          "Guidance",
+          "Unguided or guided (variant-dependent)"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive",
+        "Cargo / submunition variants (some types)"
+      ],
+      "deployment": [
+        "Long-range multiple-rocket launch systems"
+      ],
+      "responder_note": "Very large warhead. Wide cordon; contact EOD. Do not approach.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "artillery_shell": {
+      "label": "Artillery shell / projectile (generic)",
+      "summary": "A gun-fired projectile across common calibres (roughly 105–155 mm and larger). Dense, robust body that often survives impact unexploded, making it a common and dangerous UXO and a frequent main charge in improvised devices.",
+      "specs": [
+        [
+          "Common calibres",
+          "105 / 122 / 130 / 152 / 155 mm and others"
+        ],
+        [
+          "Body",
+          "Thick steel, driving band near the base"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive (HE)",
+        "Smoke",
+        "Illumination",
+        "Base-bleed / extended-range and precision variants (some types)"
+      ],
+      "deployment": [
+        "Fired from towed or self-propelled guns",
+        "Encountered as UXO or recovered rounds"
+      ],
+      "responder_note": "High-hazard UXO; a fired-but-unexploded shell may be armed. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "artillery_105mm": {
+      "label": "105 mm artillery projectile",
+      "summary": "A 105 mm gun-launched indirect-fire projectile — a steel cylinder with a tapered nose, robust and dangerous as UXO. A common main charge in improvised devices.",
+      "specs": [
+        [
+          "Calibre",
+          "105 mm"
+        ],
+        [
+          "Typical max range",
+          "~11–17 km"
+        ],
+        [
+          "Body",
+          "Steel, driving band near the base; nose or base fuze"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive (HE)",
+        "Smoke",
+        "Illumination",
+        "Extended-range / precision (some types)"
+      ],
+      "deployment": [
+        "Fired from towed or self-propelled guns",
+        "Encountered as UXO or recovered rounds"
+      ],
+      "responder_note": "High-hazard UXO. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "artillery_122mm": {
+      "label": "122 mm artillery projectile",
+      "summary": "A 122 mm gun-launched indirect-fire projectile — a steel cylinder with a tapered nose, robust and dangerous as UXO. A common main charge in improvised devices.",
+      "specs": [
+        [
+          "Calibre",
+          "122 mm"
+        ],
+        [
+          "Typical max range",
+          "~15–22 km"
+        ],
+        [
+          "Body",
+          "Steel, driving band near the base; nose or base fuze"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive (HE)",
+        "Smoke",
+        "Illumination",
+        "Extended-range / precision (some types)"
+      ],
+      "deployment": [
+        "Fired from towed or self-propelled guns",
+        "Encountered as UXO or recovered rounds"
+      ],
+      "responder_note": "High-hazard UXO. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "artillery_130mm": {
+      "label": "130 mm artillery projectile",
+      "summary": "A 130 mm gun-launched indirect-fire projectile — a steel cylinder with a tapered nose, robust and dangerous as UXO. A common main charge in improvised devices.",
+      "specs": [
+        [
+          "Calibre",
+          "130 mm"
+        ],
+        [
+          "Typical max range",
+          "~27 km"
+        ],
+        [
+          "Body",
+          "Steel, driving band near the base; nose or base fuze"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive (HE)",
+        "Smoke",
+        "Illumination",
+        "Extended-range / precision (some types)"
+      ],
+      "deployment": [
+        "Fired from towed or self-propelled guns",
+        "Encountered as UXO or recovered rounds"
+      ],
+      "responder_note": "High-hazard UXO. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "artillery_152mm": {
+      "label": "152 mm artillery projectile",
+      "summary": "A 152 mm gun-launched indirect-fire projectile — a steel cylinder with a tapered nose, robust and dangerous as UXO. A common main charge in improvised devices.",
+      "specs": [
+        [
+          "Calibre",
+          "152 mm"
+        ],
+        [
+          "Typical max range",
+          "~17–29 km"
+        ],
+        [
+          "Body",
+          "Steel, driving band near the base; nose or base fuze"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive (HE)",
+        "Smoke",
+        "Illumination",
+        "Extended-range / precision (some types)"
+      ],
+      "deployment": [
+        "Fired from towed or self-propelled guns",
+        "Encountered as UXO or recovered rounds"
+      ],
+      "responder_note": "High-hazard UXO. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "artillery_155mm": {
+      "label": "155 mm artillery projectile",
+      "summary": "A 155 mm gun-launched indirect-fire projectile — a steel cylinder with a tapered nose, robust and dangerous as UXO. A common main charge in improvised devices.",
+      "specs": [
+        [
+          "Calibre",
+          "155 mm"
+        ],
+        [
+          "Typical max range",
+          "~22–40 km"
+        ],
+        [
+          "Body",
+          "Steel, driving band near the base; nose or base fuze"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive (HE)",
+        "Smoke",
+        "Illumination",
+        "Extended-range / precision (some types)"
+      ],
+      "deployment": [
+        "Fired from towed or self-propelled guns",
+        "Encountered as UXO or recovered rounds"
+      ],
+      "responder_note": "High-hazard UXO. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "tank_gun_projectile": {
+      "label": "Tank-gun projectile",
+      "summary": "A high-velocity projectile fired from a tank main gun. Encountered as UXO or a recovered round; robust and dangerous.",
+      "specs": [
+        [
+          "Common calibres",
+          "~100 / 105 / 115 / 120 / 125 mm"
+        ],
+        [
+          "Velocity",
+          "High"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive types",
+        "Kinetic-energy types (recognition only)"
+      ],
+      "deployment": [
+        "Fired from armoured-vehicle main guns"
+      ],
+      "responder_note": "Treat as live UXO. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "recoilless_munition": {
+      "label": "Recoilless / shoulder-launched munition",
+      "summary": "A projectile fired from a recoilless rifle or shoulder-launched tube, common in man-portable anti-armour and support roles.",
+      "specs": [
+        [
+          "Class",
+          "Recoilless rifle / shoulder-launched"
+        ]
+      ],
+      "ammunition": [
+        "HE or shaped-charge types (recognition only)"
+      ],
+      "deployment": [
+        "Fired from a tube or recoilless rifle"
+      ],
+      "responder_note": "Assume live warhead. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "rpg_round": {
+      "label": "Rocket-propelled grenade (RPG) round",
+      "summary": "A shoulder-launched rocket-boosted projectile widely used against vehicles and structures. Very common; a downed or dud round is a serious hazard.",
+      "specs": [
+        [
+          "Class",
+          "Shoulder-launched anti-armour"
+        ],
+        [
+          "Warhead",
+          "Shaped-charge or HE (recognition only)"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Launched from a shoulder tube",
+        "Encountered as UXO or recovered rounds"
+      ],
+      "responder_note": "A dud RPG round may have an armed warhead. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "grenade": {
+      "label": "Grenade (generic)",
+      "summary": "A small hand- or launcher-fired munition producing blast and fragmentation over a short radius. Small size but a serious close-range hazard and a common UXO.",
+      "specs": [
+        [
+          "Types",
+          "Hand grenade; 40 mm and rifle grenades"
+        ],
+        [
+          "Effect",
+          "Blast and fragmentation, short lethal radius"
+        ]
+      ],
+      "ammunition": [
+        "Fragmentation",
+        "Smoke",
+        "Illumination / signal",
+        "Practice (inert)"
+      ],
+      "deployment": [
+        "Hand-thrown or launcher-fired"
+      ],
+      "responder_note": "A grenade with the safety lever released, or any UXO grenade, is extremely dangerous. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "hand_grenade": {
+      "label": "Hand grenade",
+      "summary": "A hand-thrown grenade using a lever-and-pin fuze. If the lever has separated, treat it as an immediate, extreme hazard.",
+      "specs": [
+        [
+          "Effect",
+          "Blast and fragmentation"
+        ],
+        [
+          "Fuzing",
+          "Time-delay (type-dependent)"
+        ]
+      ],
+      "ammunition": [
+        "Fragmentation",
+        "Smoke",
+        "Practice (inert)"
+      ],
+      "deployment": [
+        "Hand-thrown"
+      ],
+      "responder_note": "If the safety lever is released, do not go near it. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "rifle_grenade": {
+      "label": "Rifle grenade",
+      "summary": "A grenade launched from the muzzle of a rifle for greater range than a thrown grenade. Encountered as UXO.",
+      "specs": [
+        [
+          "Launch",
+          "Rifle muzzle"
+        ],
+        [
+          "Effect",
+          "Blast/fragmentation or anti-armour (type-dependent)"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Launched from a rifle muzzle"
+      ],
+      "responder_note": "Assume live. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "grenade_40mm": {
+      "label": "40 mm grenade",
+      "summary": "A launcher-fired low-velocity or high-velocity grenade, from single-shot launchers or automatic grenade launchers. Small, easily overlooked, and dangerous as UXO.",
+      "specs": [
+        [
+          "Calibre",
+          "40 mm"
+        ],
+        [
+          "Launch",
+          "Under-barrel or stand-alone launcher; automatic launchers"
+        ]
+      ],
+      "ammunition": [
+        "High-explosive dual-purpose",
+        "Smoke",
+        "Practice (inert)"
+      ],
+      "deployment": [
+        "Launcher-fired"
+      ],
+      "responder_note": "Small and easily missed; still a live hazard. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "landmine": {
+      "label": "Landmine (generic)",
+      "summary": "A victim- or command-initiated munition emplaced on or under the ground, in anti-personnel and anti-vehicle types. Designed to remain functional for long periods, making legacy and abandoned mines a persistent civilian hazard.",
+      "specs": [
+        [
+          "Types",
+          "Anti-personnel (AP) and anti-vehicle / anti-tank (AV/AT)"
+        ],
+        [
+          "Casing",
+          "Metal, plastic or minimal-metal"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Surface-laid or buried; may be part of a marked or unmarked minefield"
+      ],
+      "responder_note": "Never approach, probe or move a suspected mine. Stop, retrace your steps, mark from a distance if safe, and contact mine action / EOD.",
+      "sources": [
+        "Public references: Open Source Munitions Portal, humanitarian mine-action guidance"
+      ]
+    },
+    "anti_personnel_mine": {
+      "label": "Anti-personnel mine",
+      "summary": "A mine designed to injure or kill people, typically small and triggered by pressure or a tripwire. A leading cause of civilian casualties long after conflicts end.",
+      "specs": [
+        [
+          "Target",
+          "Personnel"
+        ],
+        [
+          "Initiation",
+          "Pressure or tripwire (type-dependent)"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Surface-laid or buried, singly or in patterns"
+      ],
+      "responder_note": "Extremely sensitive. Do not move. Retrace your steps and contact mine action.",
+      "sources": [
+        "Public references: Open Source Munitions Portal, humanitarian mine-action guidance"
+      ]
+    },
+    "anti_vehicle_mine": {
+      "label": "Anti-vehicle / anti-tank mine",
+      "summary": "A larger mine designed to disable or destroy vehicles, usually needing greater pressure to initiate. Contains a large charge.",
+      "specs": [
+        [
+          "Target",
+          "Vehicles"
+        ],
+        [
+          "Charge",
+          "Large"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Buried or surface-laid on routes and tracks"
+      ],
+      "responder_note": "Large charge. Do not approach. Cordon and contact mine action / EOD.",
+      "sources": [
+        "Public references: Open Source Munitions Portal, humanitarian mine-action guidance"
+      ]
+    },
+    "submunition": {
+      "label": "Submunition / bomblet",
+      "summary": "A small munition dispensed in quantity from a cargo shell, rocket or air dispenser. High failure rates leave many unexploded and highly sensitive — a leading cause of post-conflict casualties.",
+      "specs": [
+        [
+          "Origin",
+          "Dispensed from cargo rounds, rockets or dispensers"
+        ],
+        [
+          "Size",
+          "Small"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Scattered over an area from a carrier munition"
+      ],
+      "responder_note": "Extremely sensitive. Do not touch or go near. Mark from a safe distance and contact EOD / mine action urgently.",
+      "sources": [
+        "Public references: Open Source Munitions Portal, humanitarian mine-action guidance"
+      ]
+    },
+    "cluster_munition": {
+      "label": "Cluster munition (carrier)",
+      "summary": "A carrier shell, bomb or rocket that opens in flight to scatter many submunitions over an area. The hazard is both the carrier and the many bomblets it leaves behind.",
+      "specs": [
+        [
+          "Carrier",
+          "Shell, bomb or rocket"
+        ],
+        [
+          "Payload",
+          "Many submunitions"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Dispenses submunitions over an area"
+      ],
+      "responder_note": "Assume unexploded submunitions are present across a wide area. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Open Source Munitions Portal, humanitarian mine-action guidance"
+      ]
+    },
+    "air_delivered_bomb": {
+      "label": "Air-delivered bomb (generic)",
+      "summary": "A bomb released from an aircraft, from small to very large calibres, guided or unguided. Failed aircraft bombs are among the most hazardous UXO due to their large explosive content.",
+      "specs": [
+        [
+          "Size class",
+          "Small practice to large general-purpose bombs (up to ~2,000 kg)"
+        ],
+        [
+          "Guidance",
+          "Unguided or precision-guided (type-dependent)"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Released from aircraft"
+      ],
+      "responder_note": "Potentially very large charge. Establish a wide cordon and contact EOD immediately.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "general_purpose_bomb": {
+      "label": "General-purpose bomb",
+      "summary": "The standard unguided aircraft bomb (e.g. the 250 lb / 500 lb / 1,000 lb / 2,000 lb families), a thick steel case around a high-explosive fill.",
+      "specs": [
+        [
+          "Weight classes",
+          "~250 / 500 / 1,000 / 2,000 lb families"
+        ],
+        [
+          "Guidance",
+          "Unguided"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Released from aircraft"
+      ],
+      "responder_note": "Large charge. Wide cordon; contact EOD. Do not approach.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "guided_bomb": {
+      "label": "Guided bomb",
+      "summary": "A general-purpose bomb fitted with a guidance kit (e.g. satellite- or laser-guided) for precision. Same large charge; may carry additional battery/electronics hazards when downed.",
+      "specs": [
+        [
+          "Base",
+          "General-purpose bomb body"
+        ],
+        [
+          "Guidance",
+          "Satellite / laser (kit-dependent)"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Released from aircraft"
+      ],
+      "responder_note": "Large charge. Wide cordon; contact EOD. Do not approach.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "missile_generic": {
+      "label": "Missile (unspecified)",
+      "summary": "A guided munition of unestablished type. Carries a warhead and propulsion; treat as extremely hazardous pending specialist assessment.",
+      "specs": [
+        [
+          "Guidance",
+          "Guided"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Ground-, air- or vehicle-launched"
+      ],
+      "responder_note": "Assume live warhead and propellant. Cordon widely and contact EOD.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "atgm": {
+      "label": "Anti-tank guided missile (ATGM)",
+      "summary": "A guided anti-armour missile, often man-portable or vehicle-mounted, with a shaped- or tandem-charge warhead. A fired-but-unexploded round is very dangerous.",
+      "specs": [
+        [
+          "Role",
+          "Anti-armour"
+        ],
+        [
+          "Warhead",
+          "Shaped / tandem charge (recognition only)"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Man-portable, vehicle- or aircraft-launched"
+      ],
+      "responder_note": "Assume live warhead. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "manpads_missile": {
+      "label": "MANPADS missile (man-portable air-defence)",
+      "summary": "A shoulder-launched surface-to-air guided missile. A downed or dud unit carries a warhead and propulsion hazards.",
+      "specs": [
+        [
+          "Role",
+          "Surface-to-air"
+        ],
+        [
+          "Class",
+          "Shoulder-launched"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Shoulder-launched at aircraft"
+      ],
+      "responder_note": "Assume live warhead and propellant. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "loitering_munition": {
+      "label": "Loitering munition",
+      "summary": "A one-way attack munition that loiters over an area before striking, blurring the line between drone and missile. A failed or downed unit carries an intact warhead and battery/propulsion hazards.",
+      "specs": [
+        [
+          "Class",
+          "One-way attack / 'kamikaze' UAV"
+        ],
+        [
+          "Warhead",
+          "Explosive payload"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Launched to loiter then strike a target"
+      ],
+      "responder_note": "A downed or failed unit may carry a live warhead. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "one_way_attack_uav": {
+      "label": "One-way attack UAV / FPV munition",
+      "summary": "An uncrewed aircraft — from small first-person-view quadcopters to larger fixed-wing types — carrying an explosive payload to a target. A crashed or dud unit is a live hazard.",
+      "specs": [
+        [
+          "Class",
+          "One-way attack UAV"
+        ],
+        [
+          "Payload",
+          "Explosive charge"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Flown to a target and detonated on impact"
+      ],
+      "responder_note": "A crashed or failed unit may carry a live charge and battery hazard. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Wikipedia, Open Source Munitions Portal"
+      ]
+    },
+    "improvised_explosive_device": {
+      "label": "Improvised explosive device (IED) — awareness",
+      "summary": "A device made or placed in an improvised manner incorporating explosive material, in many forms and disguises. Recognition and avoidance only — no attempt at assessment or handling by non-specialists.",
+      "specs": [
+        [
+          "Nature",
+          "Improvised; highly variable in form and initiation"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Emplaced along routes, in vehicles, or in objects; may be disguised"
+      ],
+      "responder_note": "If an IED is suspected, do not approach or use radios/phones nearby unless locally advised. Cordon at distance and contact EOD.",
+      "sources": [
+        "Public references: Open Source Munitions Portal, humanitarian mine-action guidance"
+      ]
+    },
+    "victim_operated_ied": {
+      "label": "Victim-operated IED (VOIED) — awareness",
+      "summary": "An IED initiated by the target's own action — for example stepping on a pressure device or disturbing a tripwire or an object. Functions like a landmine and is a severe civilian hazard. Awareness and avoidance only.",
+      "specs": [
+        [
+          "Initiation",
+          "Triggered by the victim's action"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Emplaced where people or vehicles pass; may be hidden or disguised"
+      ],
+      "responder_note": "Stop, do not move, retrace your steps if safe, and contact EOD / mine action.",
+      "sources": [
+        "Public references: Open Source Munitions Portal, humanitarian mine-action guidance"
+      ]
+    },
+    "command_initiated_ied": {
+      "label": "Command-initiated IED — awareness",
+      "summary": "An IED set off deliberately by a person at a distance (by wire or remote signal) rather than by the victim. Awareness and avoidance only.",
+      "specs": [
+        [
+          "Initiation",
+          "Set off remotely by a person"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Emplaced along routes; initiated when a target is in the kill zone"
+      ],
+      "responder_note": "Treat any suspected device as live. Cordon at distance and contact EOD.",
+      "sources": [
+        "Public references: Open Source Munitions Portal, humanitarian mine-action guidance"
+      ]
+    },
+    "projectile_generic": {
+      "label": "Projectile (unspecified)",
+      "summary": "A gun- or launcher-fired projectile whose precise type is not established. Treated as potential UXO pending specialist assessment.",
+      "specs": [
+        [
+          "Type",
+          "Not established"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Gun- or launcher-fired"
+      ],
+      "responder_note": "Treat as live UXO. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Open Source Munitions Portal"
+      ]
+    },
+    "uxo_generic": {
+      "label": "Unexploded ordnance (unspecified)",
+      "summary": "Any munition that was fired, dropped, launched or emplaced and failed to function, now posing a hazard. Type not established; treated as live pending assessment.",
+      "specs": [
+        [
+          "Type",
+          "Not established"
+        ],
+        [
+          "Status",
+          "Failed to function; assume armed"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Varies"
+      ],
+      "responder_note": "Assume it is armed and unstable. Do not touch, move or approach. Cordon and contact EOD / mine action.",
+      "sources": [
+        "Public references: Open Source Munitions Portal"
+      ]
+    },
+    "small_arms_ammunition": {
+      "label": "Small-arms ammunition",
+      "summary": "Cartridges for rifles, pistols and machine guns. Individually far less hazardous than explosive ordnance, but dangerous in fire or if mishandled, and often found alongside more serious items.",
+      "specs": [
+        [
+          "Type",
+          "Cartridge (bullet, case, propellant, primer)"
+        ]
+      ],
+      "ammunition": [],
+      "deployment": [
+        "Found loose, in belts, or in containers"
+      ],
+      "responder_note": "Do not handle or place in fire. Report alongside any explosive items found nearby.",
+      "sources": [
+        "Public references: Open Source Munitions Portal"
+      ]
+    }
+  }
+}
