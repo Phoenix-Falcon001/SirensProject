@@ -15,6 +15,7 @@ from __future__ import annotations
 import pathlib
 import re
 import webbrowser
+import random
 from threading import Timer
 
 from flask import (Flask, redirect, render_template_string, request,
@@ -23,7 +24,8 @@ from flask import (Flask, redirect, render_template_string, request,
 from linker.ingest import load_incidents
 from linker.extract import FeatureExtractor
 from linker.match import Matcher
-from linker import store, semantic, ai, reference
+from linker.cluster import Clusterer
+from linker import store, semantic, ai, reference, report
 from linker.models import Incident
 
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -39,6 +41,9 @@ ALLOWED_PHOTO_EXT = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024  # 8 MB cap per upload
+
+from brief_bp import brief_bp
+app.register_blueprint(brief_bp)
 
 # Load the extractor once (spaCy start-up cost paid a single time).
 _EXTRACTOR = FeatureExtractor(TAXONOMY, use_ner=True)
@@ -237,8 +242,9 @@ def analyse():
         "color": item_color, "condition": conditions, "grid": grid,
     }
     return render_template_string(
-        TEMPLATE, result=result, form=f, status=_status(),
-        suggested_id=store.next_incident_id(), error=grid_err, **opts)
+        TEMPLATE, result=result, form={}, status=_status(),
+        suggested_id=store.next_incident_id(), error=grid_err,
+        **_form_options({}))
 
 
 @app.route("/seed", methods=["POST"])
@@ -314,10 +320,14 @@ TEMPLATE = r"""{% macro ref_card(e) %}
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--surface);color:var(--ink);font-family:var(--sans);
-       line-height:1.5;-webkit-font-smoothing:antialiased}
+       line-height:1.5;-webkit-font-smoothing:antialiased;position:relative}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+       background:url('/static/siren-mark.jpeg') no-repeat center center;
+       background-size:min(70vw,1100px);opacity:.06;filter:grayscale(1)}
+  .bar,.wrap{position:relative;z-index:1}
   a{color:var(--link)}
-  .bar{display:flex;align-items:center;gap:18px;flex-wrap:wrap;
-       padding:14px 26px;background:var(--ink);color:#eef2f5;
+  .bar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+       padding:18px 32px;background:var(--ink);color:#eef2f5;
        border-bottom:3px solid var(--sig)}
   .brand{font-family:var(--mono);font-weight:600;letter-spacing:.16em;
          text-transform:uppercase;font-size:15px}
@@ -330,14 +340,16 @@ TEMPLATE = r"""{% macro ref_card(e) %}
   .badge .dot{display:inline-block;width:7px;height:7px;border-radius:50%;
               margin-right:6px;vertical-align:middle;background:var(--weak)}
   .badge.on .dot{background:#54d08a}.badge.off .dot{background:#d0574f}
-  .wrap{max-width:1180px;margin:0 auto;padding:26px 22px 60px}
-  .grid{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:22px;align-items:start}
+  .wrap{max-width:1720px;margin:0 auto;padding:40px 48px 90px}
+  .grid{display:grid;grid-template-columns:minmax(0,560px) minmax(0,1fr);gap:40px;align-items:start}
+  @media(max-width:1100px){.wrap{padding:28px 20px 60px}.grid{grid-template-columns:1fr}}
   @media(max-width:840px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:6px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:9px;
+        box-shadow:0 1px 2px rgba(22,32,43,.04),0 4px 16px rgba(22,32,43,.05)}
   .card h2{margin:0;padding:14px 18px;border-bottom:1px solid var(--line-2);
            font-size:12px;letter-spacing:.14em;text-transform:uppercase;
            color:var(--ink-soft);font-family:var(--mono);font-weight:600}
-  .card .body{padding:18px}
+  .card .body{padding:24px 26px}
   label{display:block;font-size:12px;letter-spacing:.03em;color:var(--ink-soft);
         margin:0 0 5px;font-weight:600}
   input[type=text],textarea{width:100%;padding:9px 11px;border:1px solid var(--line);
@@ -345,15 +357,15 @@ TEMPLATE = r"""{% macro ref_card(e) %}
         background:#fcfdfc}
   input[type=text]:focus,textarea:focus{outline:2px solid var(--link);
         outline-offset:1px;border-color:var(--link)}
-  textarea{min-height:190px;resize:vertical;line-height:1.55}
+  textarea{min-height:230px;resize:vertical;line-height:1.6}
   .row{display:flex;gap:12px}.row>div{flex:1;min-width:0}
-  .field{margin-bottom:14px}
+  .field{margin-bottom:20px}
   .mono{font-family:var(--mono)}
   .hint{font-size:12px;color:var(--weak);margin-top:5px}
-  .checks{display:flex;flex-wrap:wrap;gap:7px 14px}
-  .chk{display:inline-flex;align-items:center;gap:6px;margin:0;font-weight:500;
-       font-size:13px;color:var(--ink-soft);cursor:pointer}
-  .chk input{width:15px;height:15px;margin:0}
+  .checks{display:flex;flex-wrap:wrap;gap:12px 22px;margin-top:4px}
+  .chk{display:inline-flex;align-items:center;gap:8px;margin:0;font-weight:500;
+       font-size:14px;color:var(--ink-soft);cursor:pointer;padding:4px 0}
+  .chk input{width:17px;height:17px;margin:0}
   .gridmode{display:flex;gap:18px;margin-bottom:4px}
   .gridrow{margin-top:8px}
   .mini{font-size:11px;letter-spacing:.02em;color:var(--weak);margin:0 0 4px;font-weight:600}
@@ -453,6 +465,8 @@ TEMPLATE = r"""{% macro ref_card(e) %}
 <div class="bar">
   <div class="brand">Sirens<small>C-IED Incident Link Console</small></div>
   <a href="/map" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">map &#8599;</a>
+  <a href="/tree" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">link tree &#8599;</a>
+  <a href="/brief" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">brief &#8599;</a>
   <div class="badges">
     <span class="badge {{ 'on' if status.db_count else 'off' }}"><span class="dot"></span>{{ status.db_count }} in database</span>
     <span class="badge {{ 'on' if status.sem_ok else 'off' }}"><span class="dot"></span>meaning: {{ 'vectors' if status.sem_ok else 'lexical' }}</span>
@@ -644,6 +658,10 @@ TEMPLATE = r"""{% macro ref_card(e) %}
           {% if result.assessment.ok %}<span class="tag">{{ result.assessment.model }}</span>{% endif %}</h3>
         {% if result.assessment.ok %}
           <div class="txt">{{ result.assessment.text }}</div>
+          <div class="off" style="border-top:1px solid #dce6f0;padding-top:9px;margin-top:2px">
+            Generated by a small local model ({{ result.assessment.model }}) — verify every
+            claim against the <strong>Links found</strong> panel below before acting on it.
+          </div>
         {% else %}
           <div class="off">Assessment unavailable — {{ result.assessment.reason }}</div>
         {% endif %}
@@ -749,25 +767,24 @@ import math
 
 REGIONS_FILE = ROOT / "data" / "regions.json"
 
-_HEAT = ["#e9edea", "#f6efdc", "#f0dcae", "#e3a95f", "#c9762a"]      # cold -> hot
-_HEAT_INK = ["#8a929a", "#7a5a12", "#7a4e12", "#5f3a08", "#ffffff"]  # text per level
-
+_HEAT = ["#eceeec", "#ede4d2", "#dfc9a0", "#c99b5f", "#a86b38"]      # cold -> hot, muted
+_HEAT_INK = ["#9aa1a8", "#8a7048", "#7a5c38", "#5f4326", "#e8e2d6"]  # text per level, softer
 # --- Report attributes -----------------------------------------------------
 # Caza fill shows *concentration* (the heat ramp above). Individual reports
 # drop a coloured pin inside their caza, coloured by *munition type* — so the
 # two never fight over one fill. (key, human label, pin colour).
 _MUNITIONS = [
-    ("ied",       "IED / roadside device", "#e4572e"),
-    ("vbied",     "VBIED (vehicle-borne)",  "#8a1c1c"),
-    ("uxo",       "UXO (unexploded ord.)",  "#f4a300"),
-    ("mine",      "Landmine / mine",        "#7b4fb0"),
-    ("mortar",    "Mortar",                 "#2d6fb0"),
-    ("rocket",    "Rocket",                 "#0f9d8c"),
-    ("missile",   "Missile / ATGM",         "#c2359d"),
-    ("artillery", "Artillery shell",        "#8a6d3b"),
-    ("grenade",   "Grenade / RPG",          "#3f9142"),
-    ("cache",     "Weapons cache",          "#586b78"),
-    ("other",     "Other / unknown",        "#8a929a"),
+    ("ied",       "IED / roadside device", "#c0663f"),
+    ("vbied",     "VBIED (vehicle-borne)",  "#7a3a3a"),
+    ("uxo",       "UXO (unexploded ord.)",  "#c99a4a"),
+    ("mine",      "Landmine / mine",        "#8770a0"),
+    ("mortar",    "Mortar",                 "#5a80a3"),
+    ("rocket",    "Rocket",                 "#4a9a8f"),
+    ("missile",   "Missile / ATGM",         "#a3568f"),
+    ("artillery", "Artillery shell",        "#8a7451"),
+    ("grenade",   "Grenade / RPG",          "#6a9a6e"),
+    ("cache",     "Weapons cache",          "#6b7c86"),
+    ("other",     "Other / unknown",        "#9aa1a8"),
 ]
 _MUNITION_COLOR = {k: c for k, _l, c in _MUNITIONS}
 _MUNITION_LABEL = {k: l for k, l, _c in _MUNITIONS}
@@ -956,15 +973,16 @@ def _form_options(f):
 
 
 def _pin_xy(lat, lon, centroid, idx):
-    """Pixel for a report's pin: its exact lon/lat if known, else a golden-angle
-    spiral around the caza centre so stacked pins fan out instead of overlapping."""
+    """Pixel for a report's pin: its exact lon/lat if known, else a capped
+    golden-angle spiral around the caza centre so many pins fan out but
+    stay contained near the city instead of drifting off the map."""
     if lat is not None and lon is not None and _PROJ:
         return _PROJ(lon, lat)
     cx, cy = centroid
     if idx <= 0:
         return cx, cy
     ang = idx * 2.399963229728653          # golden angle (radians)
-    rad = 3.0 + 2.4 * math.sqrt(idx)
+    rad = min(3.0 + 2.2 * math.sqrt(idx), 14.0)   # capped radius
     return cx + rad * math.cos(ang), cy + rad * math.sin(ang)
 
 # Map the sample data's invented locations onto real Lebanese cazas so the
@@ -1073,7 +1091,7 @@ def _make_projector(fc, width=560, pad=12):
 
 
 if _REGIONS:
-    _PROJ, _MAP_W, _MAP_H, _PROJ_PARAMS = _make_projector(_REGIONS)
+    _PROJ, _MAP_W, _MAP_H, _PROJ_PARAMS = _make_projector(_REGIONS, width=900)
     _CAZA_NAMES = sorted({f["properties"]["name"] for f in _REGIONS["features"]})
 else:
     _PROJ = _MAP_W = _MAP_H = _PROJ_PARAMS = None
@@ -1115,6 +1133,30 @@ def _heat_level(count, hi):
     if count <= 0 or hi <= 0:
         return 0
     return 1 + min(3, int((count - 1) * 4 / max(hi, 1)))
+
+
+@app.route("/tree")
+def link_tree():
+    """Interactive force-directed link graph: which incidents connect to
+    which, coloured by cluster. Runs the same matcher used by /analyse over
+    every incident currently in the database, entirely offline."""
+    incidents = store.all_incidents()
+    if not incidents:
+        return render_template_string(
+            "<p style='font-family:monospace;padding:40px'>No incidents in the "
+            "database yet. <a href='/'>Go back</a> and load or save some first.</p>")
+
+    matcher = Matcher().fit(incidents)
+    links = matcher.all_pairs(incidents, threshold=0.25)
+    clusterer = Clusterer(incidents, links)
+    clusters = clusterer.clusters(singletons=False)
+    payload = clusterer.graph_payload()
+
+    html_page = report.html_report(
+        incidents, links, clusters, payload,
+        title="Sirens — Incident Link Tree",
+    )
+    return html_page
 
 
 @app.route("/map")
@@ -1213,7 +1255,7 @@ MAP_TEMPLATE = r"""<!doctype html>
 <title>Sirens — Incident Map</title>
 <style>
   :root{--ink:#16202b;--soft:#3a4652;--line:#e2e6e3;--surface:#f4f6f3;
-    --sig:#b5761f;--weak:#7a8791;--link:#2d5b8e;
+    --sig:#a8703a; --sig-soft:#f0e6d4;
     --mono:ui-monospace,Menlo,Consolas,monospace;
     --sans:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;}
   *{box-sizing:border-box}
@@ -1231,8 +1273,7 @@ MAP_TEMPLATE = r"""<!doctype html>
   .sub{color:var(--weak);font-size:13px;margin:0 0 18px}
   .layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:24px;align-items:start}
   @media(max-width:820px){.layout{grid-template-columns:1fr}}
-  .mapcard{position:relative;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px}
-  svg{width:100%;height:auto;display:block;touch-action:none;cursor:grab}
+  .mapcard{position:relative;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px;user-select:none;-webkit-user-select:none}  svg{width:100%;height:auto;display:block;touch-action:none;cursor:grab}
   svg.grabbing{cursor:grabbing}
   .region{stroke:#c7cdc9;stroke-width:.6;cursor:pointer}
   .region.hot{stroke:#16202b;stroke-width:1.1}
@@ -1241,6 +1282,7 @@ MAP_TEMPLATE = r"""<!doctype html>
   .rlabel{font-family:var(--mono);pointer-events:none;paint-order:stroke;
     stroke:#fff;stroke-width:2.4px;stroke-linejoin:round}
   .rlabel.dim{opacity:.18}
+  .rlabel.zero{opacity:.5}
   .pin{stroke:#fff;stroke-width:1;cursor:pointer}
   .pin.hollow{fill-opacity:.45;stroke-dasharray:2 1.4}
   .pin.off{display:none}
@@ -1334,7 +1376,7 @@ MAP_TEMPLATE = r"""<!doctype html>
       <svg id="lbmap" viewBox="0 0 {{ w|round|int }} {{ h|round|int }}" role="img" aria-label="Choropleth of Lebanon shaded by incident count per caza, with a coloured pin per report by munition type">
         <g id="vp">
           {% for s in shapes %}<path class="region" data-name="{{ s.name }}" data-count="{{ s.count }}" d="{{ s.d }}" fill="{{ s.fill }}"></path>{% endfor %}
-          {% for l in labels %}<text class="rlabel" data-name="{{ l.name }}" x="{{ l.x|round(1) }}" y="{{ l.y|round(1) }}" font-size="{{ '8.5' if l.count else '7' }}" font-weight="{{ '600' if l.count else '400' }}" text-anchor="middle" fill="{{ l.ink }}">{{ l.name }}{% if l.count %} &#183; {{ l.count }}{% endif %}</text>{% endfor %}
+          {% for l in labels %}<text class="rlabel{{ ' zero' if not l.count }}" data-name="{{ l.name }}" x="{{ l.x|round(1) }}" y="{{ l.y|round(1) }}" font-size="{{ '9' if l.count else '5.5' }}" font-weight="{{ '700' if l.count else '400' }}" text-anchor="middle" fill="{{ l.ink }}">{{ l.name }}{% if l.count %} &#183; {{ l.count }}{% endif %}</text>{% endfor %}
           {% for p in pins %}<circle class="pin{{ ' hollow' if not p.exact else '' }}" data-type="{{ p.type }}" data-caza="{{ p.caza }}" data-id="{{ p.id }}" cx="{{ p.x }}" cy="{{ p.y }}" r="3.1" fill="{{ p.fill }}"></circle>{% endfor %}
         </g>
       </svg>

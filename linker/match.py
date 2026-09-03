@@ -5,6 +5,12 @@ Linkage logic mirrors how analysts reason about it:
     TTP) is strong evidence of a common builder. Common features (everything is
     an IED) carry little weight. We capture this with an IDF-style weight per
     feature: weight = log(N / doc_freq).
+  * Only *method/behavioural* facets count as signature evidence — initiation,
+    trigger, emplacement, container, charge_label, ttp, object_type. Purely
+    decorative descriptors of a found item (colour, shape, size, condition,
+    fuze) are excluded from scoring: with only a handful of possible values,
+    unrelated incidents coincidentally share them by chance, which produces
+    false links that look like a shared "signature" but aren't.
   * A shared *identity* — the same phone number or named individual across two
     incidents — is a strong network link on its own, even with few shared
     features.
@@ -21,6 +27,24 @@ from itertools import combinations
 from rapidfuzz import fuzz
 
 from .models import Incident, Link
+
+# Facets that reflect a builder's method/habits and are trustworthy as
+# link evidence. Facets NOT in this set (colour, shape, size, condition,
+# fuze) describe the physical item found, not a repeatable behaviour, and
+# are excluded from scoring — they remain visible on the incident's full
+# feature list for display/report purposes, just not for linkage.
+SIGNATURE_FACETS = {
+    "initiation", "trigger", "emplacement", "container",
+    "charge_label", "ttp", "object_type",
+}
+
+# A single coincidentally-shared facet is not real evidence of a shared
+# network — with a small controlled vocabulary per facet, two unrelated
+# incidents will share one value by chance often. Jaccard similarity is
+# also statistically unreliable on very small sets (one shared item out of
+# a union of one gives a perfect 1.0). Require at least this many shared
+# signature facets before feature similarity contributes to the score.
+MIN_SHARED_SIGNATURE_FACETS = 2
 
 
 class Matcher:
@@ -45,7 +69,8 @@ class Matcher:
         df: Counter = Counter()
         for inc in incidents:
             for k in inc.feature_keys():
-                df[k] += 1
+                if k[0] in SIGNATURE_FACETS:
+                    df[k] += 1
         # Smoothed IDF so a feature shared by all still has a small positive wt.
         self.weights = {k: math.log((n + 1) / (c + 0.5)) + 0.1 for k, c in df.items()}
         return self
@@ -66,17 +91,29 @@ class Matcher:
 
     # -- pairwise score ------------------------------------------------------
     def score(self, a: Incident, b: Incident) -> Link:
-        ka, kb = a.feature_keys(), b.feature_keys()
+        # Only method/behavioural facets count as link evidence — see
+        # SIGNATURE_FACETS. Decorative descriptors (colour, shape, size,
+        # condition, fuze) are dropped here so coincidental appearance
+        # matches don't masquerade as a shared builder signature.
+        ka = {k for k in a.feature_keys() if k[0] in SIGNATURE_FACETS}
+        kb = {k for k in b.feature_keys() if k[0] in SIGNATURE_FACETS}
         shared_keys = ka & kb
         union_keys = ka | kb
 
-        num = sum(self._weight(k) for k in shared_keys)
-        den = sum(self._weight(k) for k in union_keys) or 1.0
-        weighted_jaccard = num / den
-        plain_jaccard = len(shared_keys) / (len(union_keys) or 1)
-        # Blend: rarity term rewards distinctive shared signatures in large
-        # corpora; the coverage term keeps small-corpus matches meaningful.
-        feature_sim = 0.5 * weighted_jaccard + 0.5 * plain_jaccard
+        if len(shared_keys) < MIN_SHARED_SIGNATURE_FACETS:
+            # Not enough independent overlap to treat as a real signature
+            # match — one shared facet alone is too easily coincidental,
+            # especially on incidents with few extracted facets total.
+            feature_sim = 0.0
+        else:
+            num = sum(self._weight(k) for k in shared_keys)
+            den = sum(self._weight(k) for k in union_keys) or 1.0
+            weighted_jaccard = num / den
+            plain_jaccard = len(shared_keys) / (len(union_keys) or 1)
+            # Blend: rarity term rewards distinctive shared signatures in
+            # large corpora; the coverage term keeps small-corpus matches
+            # meaningful.
+            feature_sim = 0.5 * weighted_jaccard + 0.5 * plain_jaccard
 
         reasons: list[str] = []
         shared_features = [f"{f}={v}" for (f, v) in sorted(shared_keys)]

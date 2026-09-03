@@ -1,0 +1,442 @@
+[
+  {
+    "id": "incident001",
+    "date": "2023-06-01",
+    "description": "Suspicious package found near the entrance of the mall. EOD team dispatched to investigate.",
+    "location": {
+      "latitude": 37.7749,
+      "longitude": -122.4194
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident002",
+    "date": "2023-06-02",
+    "description": "Improvised explosive device (IED) discovered along the highway. Bomb squad successfully defused the device.",
+    "location": {
+      "latitude": 37.3382,
+      "longitude": -121.8863
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident003",
+    "date": "2023-06-03",
+    "description": "Report of an active shooter at a local high school. Law enforcement responded and neutralized the threat.",
+    "location": {
+      "latitude": 36.1699,
+      "longitude": -115.1398
+    },
+    "casualties": 3,
+    "status": "resolved"
+  },
+  {
+    "id": "incident004",
+    "date": "2023-06-04",
+    "description": "Suspicious vehicle parked outside the government building. K-9 unit deployed to investigate.",
+    "location": {
+      "latitude": 38.9072,
+      "longitude": -77.0369
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident005",
+    "date": "2023-06-05",
+    "description": "Bomb threat received at the international airport. Terminal evacuated and searched, no devices found.",
+    "location": {
+      "latitude": 33.9416,
+      "longitude": -118.4085
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident006",
+    "date": "2023-06-06",
+    "description": "Suspicious bag left unattended on a subway train. Passengers evacuated, and bomb squad called in to investigate.",
+    "location": {
+      "latitude": 40.7128,
+      "longitude": -74.0060
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident007",
+    "date": "2023-06-07",
+    "description": "Report of a potential hostage situation at a bank. SWAT team deployed to assess and resolve the situation.",
+    "location": {
+      "latitude": 41.8781,
+      "longitude": -87.6298
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident008",
+    "date": "2023-06-08",
+    "description": "Unexploded ordnance discovered during construction work. EOD team safely removed and disposed of the device.",
+    "location": {
+      "latitude": 39.9526,
+      "longitude": -75.1652
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident009",
+    "date": "2023-06-09",
+    "description": "Suspicious package delivered to a government office. Building evacuated, and package safely detonated by the bomb squad.",
+    "location": {
+      "latitude": 38.9072,
+      "longitude": -77.0369
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident010",
+    "date": "2023-06-10",
+    "description": "Report of a suspicious individual carrying a backpack near a crowded public event. Law enforcement intervened and determined no threat.",
+    "location": {
+      "latitude": 34.0522,
+      "longitude": -118.2437
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident011",
+    "date": "2023-06-11",
+    "description": "Suspected explosive device found in a residential area. Bomb squad deployed and safely disposed of the device.",
+    "location": {
+      "latitude": 32.7157,
+      "longitude": -117.1611
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident012",
+    "date": "2023-06-12",
+    "description": "Suspicious envelope received at a government office. Hazmat team investigated and determined no biological threat.",
+    "location": {
+      "latitude": 38.9072,
+      "longitude": -77.0369
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident013",
+    "date": "2023-06-13",
+    "description": "Report of a potential chemical leak at an industrial facility. Hazmat team dispatched to assess and contain the situation.",
+    "location": {
+      "latitude": 29.7604,
+      "longitude": -95.3698
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident014",
+    "date": "2023-06-14",
+    "description": "Suspicious vehicle abandoned near a power plant. Bomb squad investigated and determined no explosive threat.",
+    "location": {
+      "latitude": 35.2271,
+      "longitude": -80.8431
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident015",
+    "date": "2023-06-15",
+    "description": "Report of an active shooter at a shopping mall. Law enforcement responded and apprehended the suspect.",
+    "location": {
+      "latitude": 33.4484,
+      "longitude": -112.0740
+    },
+    "casualties": 2,
+    "status": "resolved"
+  },
+  {
+    "id": "incident016",
+    "date": "2023-06-16",
+    "description": "Bomb threat received at a government building. Evacuation and search conducted, no devices found.",
+    "location": {
+      "latitude": 39.7392,
+      "longitude": -104.9903
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident017",
+    "date": "2023-06-17",
+    "description": "Suspicious package discovered at a train station. Bomb squad safely removed and disposed of the device.",
+    "location": {
+      "latitude": 47.6062,
+      "longitude": -122.3321
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident018",
+    "date": "2023-06-18",
+    "description": "Report of a potential hostage situation at a bank. SWAT team deployed and resolved the situation peacefully.",
+    "location": {
+      "latitude": 37.7749,
+      "longitude": -122.4194
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident019",
+    "date": "2023-06-19",
+    "description": "Suspicious vehicle parked near a government facility. K-9 unit investigated and determined no threat.",
+    "location": {
+      "latitude": 38.9072,
+      "longitude": -77.0369
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident020",
+    "date": "2023-06-20",
+    "description": "Improvised explosive device (IED) found near a busy intersection. Bomb squad successfully defused the device.",
+    "location": {
+      "latitude": 39.9526,
+      "longitude": -75.1652
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident021",
+    "date": "2023-06-21",
+    "description": "Suspicious package left unattended at a bus station. Bomb squad investigated and determined no explosive threat.",
+    "location": {
+      "latitude": 42.3601,
+      "longitude": -71.0589
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident022",
+    "date": "2023-06-22",
+    "description": "Report of a potential chemical spill at a manufacturing plant. Hazmat team contained and cleaned up the spill.",
+    "location": {
+      "latitude": 41.8781,
+      "longitude": -87.6298
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident023",
+    "date": "2023-06-23",
+    "description": "Suspicious envelope received at a government office. Hazmat team investigated and determined no biological threat.",
+    "location": {
+      "latitude": 38.9072,
+      "longitude": -77.0369
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident024",
+    "date": "2023-06-24",
+    "description": "Unexploded ordnance discovered during construction work. EOD team safely removed and disposed of the device.",
+    "location": {
+      "latitude": 32.7157,
+      "longitude": -117.1611
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident025",
+    "date": "2023-06-25",
+    "description": "Suspicious vehicle abandoned near a power plant. Bomb squad investigated and determined no explosive threat.",
+    "location": {
+      "latitude": 35.2271,
+      "longitude": -80.8431
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident026",
+    "date": "2023-06-26",
+    "description": "Report of an active shooter at a shopping mall. Law enforcement responded and apprehended the suspect.",
+    "location": {
+      "latitude": 33.4484,
+      "longitude": -112.0740
+    },
+    "casualties": 1,
+    "status": "resolved"
+  },
+  {
+    "id": "incident027",
+    "date": "2023-06-27",
+    "description": "Bomb threat received at a government building. Evacuation and search conducted, no devices found.",
+    "location": {
+      "latitude": 39.7392,
+      "longitude": -104.9903
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident028",
+    "date": "2023-06-28",
+    "description": "Suspicious package discovered at a train station. Bomb squad safely removed and disposed of the device.",
+    "location": {
+      "latitude": 47.6062,
+      "longitude": -122.3321
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident029",
+    "date": "2023-06-29",
+    "description": "Report of a potential hostage situation at a bank. SWAT team deployed and resolved the situation peacefully.",
+    "location": {
+      "latitude": 37.7749,
+      "longitude": -122.4194
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident030",
+    "date": "2023-06-30",
+    "description": "Suspicious vehicle parked near a government facility. K-9 unit investigated and determined no threat.",
+    "location": {
+      "latitude": 38.9072,
+      "longitude": -77.0369
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident031",
+    "date": "2023-07-01",
+    "description": "Improvised explosive device (IED) found near a busy intersection. Bomb squad successfully defused the device.",
+    "location": {
+      "latitude": 39.9526,
+      "longitude": -75.1652
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident032",
+    "date": "2023-07-02",
+    "description": "Suspicious package left unattended at a bus station. Bomb squad investigated and determined no explosive threat.",
+    "location": {
+      "latitude": 42.3601,
+      "longitude": -71.0589
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident033",
+    "date": "2023-07-03",
+    "description": "Report of a potential chemical spill at a manufacturing plant. Hazmat team contained and cleaned up the spill.",
+    "location": {
+      "latitude": 41.8781,
+      "longitude": -87.6298
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident034",
+    "date": "2023-07-04",
+    "description": "Suspicious envelope received at a government office. Hazmat team investigated and determined no biological threat.",
+    "location": {
+      "latitude": 38.9072,
+      "longitude": -77.0369
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident035",
+    "date": "2023-07-05",
+    "description": "Unexploded ordnance discovered during construction work. EOD team safely removed and disposed of the device.",
+    "location": {
+      "latitude": 32.7157,
+      "longitude": -117.1611
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident036",
+    "date": "2023-07-06",
+    "description": "Suspicious vehicle abandoned near a power plant. Bomb squad investigated and determined no explosive threat.",
+    "location": {
+      "latitude": 35.2271,
+      "longitude": -80.8431
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident037",
+    "date": "2023-07-07",
+    "description": "Report of an active shooter at a shopping mall. Law enforcement responded and apprehended the suspect.",
+    "location": {
+      "latitude": 33.4484,
+      "longitude": -112.0740
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident038",
+    "date": "2023-07-08",
+    "description": "Bomb threat received at a government building. Evacuation and search conducted, no devices found.",
+    "location": {
+      "latitude": 39.7392,
+      "longitude": -104.9903
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident039",
+    "date": "2023-07-09",
+    "description": "Suspicious package discovered at a train station. Bomb squad safely removed and disposed of the device.",
+    "location": {
+      "latitude": 47.6062,
+      "longitude": -122.3321
+    },
+    "casualties": 0,
+    "status": "resolved"
+  },
+  {
+    "id": "incident040",
+    "date": "2023-07-10",
+    "description": "Report of a potential hostage situation at a bank. SWAT team deployed and resolved the situation peacefully.",
+    "location": {
+      "latitude": 37.7749,
+      "longitude": -122.4194
+    },
+    "casualties": 0,
+    "status": "resolved"
+  }
+]

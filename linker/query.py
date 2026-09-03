@@ -46,6 +46,7 @@ class Brief:
     object_profile: list[tuple[str, int, str | None]]   # (object_type, count, most_recent_date)
     area_signature: list[str]                            # common co-occurring device features
     matches: list[Match] = field(default_factory=list)
+    area_incidents: list[Incident] = field(default_factory=list)  # every raw incident in this area
     responder_photo: str | None = None
     note: str = ("RECORD-BASED PRE-ARRIVAL BRIEF. This is retrieval from past reporting, "
                  "not identification of the present object and not handling guidance. "
@@ -126,5 +127,6 @@ def area_brief(
         object_profile=object_profile,
         area_signature=area_signature,
         matches=matches,
+        area_incidents=sorted(sel, key=lambda i: i.date or "", reverse=True),
         responder_photo=responder_photo,
     )

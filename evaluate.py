@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Evaluate the linker against a ground-truth key.
 
 Metric: pairwise linkage precision / recall / F1. For every pair of incidents we

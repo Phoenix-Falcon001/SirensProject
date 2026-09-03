@@ -1,87 +1,242 @@
 [
   {
     "id": "INC-001",
-    "date": "2026-03-04",
-    "location": "Route Copper, Al-Fakir District",
-    "grid": "38S MC 12345 67890",
-    "narrative": "On 04 MAR a victim-operated IED functioned against a logistics convoy along Route Copper near Al-Fakir District. Post-blast exploitation assessed a pressure plate trigger and a pressure cooker container. The main charge was reported as homemade explosive (HME). No secondary device observed. A local source associated the emplacement with a facilitator contactable on 0791-555-0182 and referenced an individual named Rashid Karim. A recovered component was photographed; photo: img_001.jpg.",
-    "photo": "img_001.jpg"
+    "date": "2026-01-01",
+    "location": "Ghandouriyeh",
+    "narrative": "On 01 an IED targeted a resupply patrol near Ghandouriyeh. Assessed as victim-operated. Post-blast indicators: a tripwire. Main charge homemade explosive."
   },
   {
     "id": "INC-002",
-    "date": "2026-03-11",
-    "location": "Route Copper, Al-Fakir District",
-    "grid": "38S MC 12360 67810",
-    "narrative": "A patrol struck a buried, pressure-initiated device on the shoulder of Route Copper. EOD render-safe was not possible; post-blast indicators included a pressure plate and a pressure cooker device. Charge assessed as HME. Reporting again referenced Rashid Karim as a suspected emplacer and the same contact number 0791-555-0182."
+    "date": "2026-05-20",
+    "location": "Yaroun",
+    "narrative": "On 20 an IED functioned against civilians nearby near Yaroun. Assessed as time-delay. Post-blast indicators: a tripwire. Main charge repurposed artillery shell. A recovered item: a unexploded ordnance, khaki, corroded."
   },
   {
     "id": "INC-003",
-    "date": "2026-03-19",
-    "location": "Green Village, Al-Fakir District",
-    "narrative": "Victim-operated IED against a resupply convoy near Green Village. Exploitation identified a pressure plate switch and a pressure cooker container; main charge homemade explosive. Emplacement style (dug-in roadside) is consistent with prior Route Copper events. Source line noted the Copper Road Cell."
+    "date": "2026-03-04",
+    "location": "Tibnin",
+    "narrative": "On 04 an IED functioned against a logistics route near Tibnin. Post-blast indicators: a tripwire."
   },
   {
     "id": "INC-004",
-    "date": "2026-04-02",
-    "location": "Al-Fakir District",
-    "narrative": "Find/clearance: a buried pressure-plate IED with a pressure cooker container was located and rendered safe before functioning. Homemade explosive main charge. Attributed by source reporting to the Copper Road Cell; phone 0791-555-0182 recovered from pattern-of-life."
+    "date": "2026-04-03",
+    "location": "Marjayoun",
+    "narrative": "On 03 an IED struck a convoy near Marjayoun. Assessed as remote-controlled. Post-blast indicators: a pressure plate."
+  },
+  {
+    "id": "INC-005",
+    "date": "2026-02-28",
+    "location": "Rmeish",
+    "narrative": "On 28 an IED functioned against a logistics route near Rmeish. Assessed as remote-controlled. Emplacement vehicle-borne. Main charge homemade explosive. A recovered item: a 155mm projectile, rust-coloured, partially buried."
+  },
+  {
+    "id": "INC-006",
+    "date": "2026-02-15",
+    "location": "Yaroun",
+    "narrative": "On 15 an IED was located near a convoy near Yaroun. Assessed as command-initiated. Post-blast indicators: a pressure plate."
+  },
+  {
+    "id": "INC-007",
+    "date": "2026-01-07",
+    "location": "Kfar Kila",
+    "narrative": "On 07 an IED struck a crowded market near Kfar Kila. Assessed as time-delay. Post-blast indicators: a radio control. A recovered item: a anti-personnel mine, metallic grey, leaking."
+  },
+  {
+    "id": "INC-008",
+    "date": "2026-05-13",
+    "location": "Meiss ej-Jabal",
+    "narrative": "On 13 an IED targeted a resupply patrol near Meiss ej-Jabal. Assessed as command-initiated. Post-blast indicators: a pressure plate. Emplacement buried at the road verge."
+  },
+  {
+    "id": "INC-009",
+    "date": "2026-04-20",
+    "location": "Srifa",
+    "narrative": "On 20 an IED functioned against a logistics route near Srifa. Assessed as time-delay. Post-blast indicators: a tripwire. Emplacement buried at the road verge. Main charge homemade explosive. A recovered item: a anti-personnel mine, metallic grey, weathered."
   },
   {
     "id": "INC-010",
-    "date": "2026-03-07",
-    "location": "Hazar Junction, Sector 7",
-    "grid": "38S NC 55512 33321",
-    "narrative": "Complex ambush at Hazar Junction: a command-wire IED initiated against a convoy, immediately followed by small-arms fire. A secondary device targeted the likely casualty-collection point. Repurposed military ordnance (artillery shell) assessed as the main charge. Reporting linked the attack to the Northern Cell and an individual, Kamal Dost."
+    "date": "2026-03-14",
+    "location": "Marjayoun",
+    "narrative": "On 14 an IED was emplaced against a logistics route near Marjayoun. Post-blast indicators: a passive infrared. Emplacement in a culvert. Main charge homemade explosive. A recovered item: a anti-personnel mine, metallic grey, leaking."
   },
   {
     "id": "INC-011",
-    "date": "2026-03-15",
-    "location": "Sector 7 bypass",
-    "narrative": "Command-initiated IED (command wire) against a patrol on the Sector 7 bypass, part of a complex attack with a follow-up device emplaced for first responders. Main charge assessed as repurposed ordnance. Source reporting again named the Northern Cell and Kamal Dost."
+    "date": "2026-02-05",
+    "location": "Deir Mimas",
+    "narrative": "On 05 an IED targeted a resupply patrol near Deir Mimas. Assessed as victim-operated. Post-blast indicators: a radio control. Main charge commercial explosive."
   },
   {
     "id": "INC-012",
-    "date": "2026-03-28",
-    "location": "Hazar Junction, Sector 7",
-    "narrative": "Command-wire initiated device with a secondary device (come-on) targeting the response element. Complex ambush with small-arms and IED. Artillery round assessed as the charge. Attributed to the Northern Cell."
+    "date": "2026-05-03",
+    "location": "Yaroun",
+    "narrative": "On 03 an IED functioned against a crowded market near Yaroun. Assessed as victim-operated. Post-blast indicators: a tripwire. Emplacement in a culvert. Main charge repurposed artillery shell."
+  },
+  {
+    "id": "INC-013",
+    "date": "2026-04-07",
+    "location": "Deir Mimas",
+    "narrative": "On 07 an IED struck a crowded market near Deir Mimas. Assessed as remote-controlled. Post-blast indicators: a passive infrared. Emplacement concealed in roadside debris. Main charge repurposed artillery shell."
+  },
+  {
+    "id": "INC-014",
+    "date": "2026-01-19",
+    "location": "Aitaroun",
+    "narrative": "On 19 an IED struck a resupply patrol near Aitaroun. Assessed as victim-operated. Emplacement in a culvert."
+  },
+  {
+    "id": "INC-015",
+    "date": "2026-01-17",
+    "location": "Aitaroun",
+    "narrative": "On 17 an IED was emplaced against a convoy near Aitaroun. Assessed as command-initiated. Post-blast indicators: a tripwire. Emplacement in a culvert. Main charge mining explosive."
+  },
+  {
+    "id": "INC-016",
+    "date": "2026-06-14",
+    "location": "Marjayoun",
+    "narrative": "On 14 an IED targeted a logistics route near Marjayoun. Assessed as victim-operated. Post-blast indicators: a pressure plate. Main charge homemade explosive."
+  },
+  {
+    "id": "INC-017",
+    "date": "2026-05-15",
+    "location": "Tibnin",
+    "narrative": "On 15 an IED was emplaced against a logistics route near Tibnin. Assessed as time-delay. Post-blast indicators: a pressure plate. Emplacement concealed in roadside debris. A recovered item: a 82mm mortar bomb, olive green, corroded."
+  },
+  {
+    "id": "INC-018",
+    "date": "2026-04-16",
+    "location": "Nabatieh",
+    "narrative": "On 16 an IED was located near a resupply patrol near Nabatieh. Assessed as victim-operated. A recovered item: a anti-tank mine, khaki, damaged."
+  },
+  {
+    "id": "INC-019",
+    "date": "2026-06-26",
+    "location": "Zawtar",
+    "narrative": "On 26 an IED struck a crowded market near Zawtar. Assessed as command-initiated. A recovered item: a 82mm mortar bomb, metallic grey, weathered."
   },
   {
     "id": "INC-020",
-    "date": "2026-03-22",
-    "location": "Central Market, Old Town",
-    "narrative": "Remote-controlled IED (radio-controlled) concealed in a cardboard box functioned in a crowded market, indicating a civilian target. Main charge assessed as commercial explosive. No linkage to convoy-attack signatures."
+    "date": "2026-01-19",
+    "location": "Aïn Ebel",
+    "narrative": "On 19 an IED was located near civilians nearby near Aïn Ebel. Assessed as command-initiated. Emplacement in a culvert."
   },
   {
     "id": "INC-021",
-    "date": "2026-04-05",
-    "location": "Ministry Road",
-    "narrative": "A vehicle-borne IED (car bomb) detonated on Ministry Road. Timer-initiated. Main charge assessed as homemade explosive. Emplacement and employment differ from other reporting in this dataset."
+    "date": "2026-04-04",
+    "location": "Yaroun",
+    "narrative": "On 04 an IED struck a resupply patrol near Yaroun. Assessed as victim-operated. Post-blast indicators: a radio control. Emplacement concealed in roadside debris. Main charge commercial explosive."
   },
   {
     "id": "INC-022",
-    "date": "2026-04-09",
-    "location": "North Gate",
-    "narrative": "A single victim-operated IED using a tripwire pull switch was located at North Gate and rendered safe. Container was a plastic jug. Homemade explosive charge. No corroborating network reporting."
+    "date": "2026-03-08",
+    "location": "Zawtar",
+    "narrative": "On 08 an IED targeted a logistics route near Zawtar. Post-blast indicators: a radio control. Main charge homemade explosive."
+  },
+  {
+    "id": "INC-023",
+    "date": "2026-05-04",
+    "location": "Deir Mimas",
+    "narrative": "On 04 an IED functioned against civilians nearby near Deir Mimas. Assessed as remote-controlled."
+  },
+  {
+    "id": "INC-024",
+    "date": "2026-02-15",
+    "location": "Maroun al-Ras",
+    "narrative": "On 15 an IED struck a crowded market near Maroun al-Ras. Assessed as victim-operated. Post-blast indicators: a tripwire. Main charge repurposed artillery shell."
+  },
+  {
+    "id": "INC-025",
+    "date": "2026-06-18",
+    "location": "Marjayoun",
+    "narrative": "On 18 an IED was emplaced against a convoy near Marjayoun. Assessed as command-initiated. Post-blast indicators: a command wire. Emplacement vehicle-borne. Main charge commercial explosive. A recovered item: a 82mm mortar bomb, olive green, partially buried."
+  },
+  {
+    "id": "INC-026",
+    "date": "2026-03-02",
+    "location": "Meiss ej-Jabal",
+    "narrative": "On 02 an IED functioned against a convoy near Meiss ej-Jabal. Assessed as remote-controlled. Emplacement hand-emplaced. Main charge homemade explosive."
+  },
+  {
+    "id": "INC-027",
+    "date": "2026-02-18",
+    "location": "Zawtar",
+    "narrative": "On 18 an IED functioned against a convoy near Zawtar. Assessed as command-initiated. Post-blast indicators: a pressure plate. Main charge homemade explosive. A recovered item: a hand grenade, metallic grey, corroded."
+  },
+  {
+    "id": "INC-028",
+    "date": "2026-01-12",
+    "location": "Srifa",
+    "narrative": "On 12 an IED struck a logistics route near Srifa. Assessed as command-initiated. Post-blast indicators: a command wire. Emplacement in a culvert. Main charge homemade explosive."
+  },
+  {
+    "id": "INC-029",
+    "date": "2026-04-26",
+    "location": "Aitaroun",
+    "narrative": "On 26 an IED was emplaced against a convoy near Aitaroun. Assessed as victim-operated. Post-blast indicators: a pressure plate. Emplacement in a culvert. A recovered item: a unexploded ordnance, khaki, corroded."
   },
   {
     "id": "INC-030",
-    "date": "2026-03-09",
-    "location": "Route Copper, Al-Fakir District",
-    "grid": "38S MC 12380 67840",
-    "photo": "img_030.jpg",
-    "narrative": "A find along Route Copper near Al-Fakir District: an intact 107mm rocket, olive green, fin-stabilised, approximately 1 m long, with a nose fuze fitted. Item was partially buried at the road verge. Photo: img_030.jpg. Assessed as abandoned/failed-launch ordnance rather than an emplaced IED."
+    "date": "2026-01-22",
+    "location": "Yaroun",
+    "narrative": "On 22 an IED was emplaced against a logistics route near Yaroun. Assessed as victim-operated. Post-blast indicators: a passive infrared. Emplacement concealed in roadside debris. A recovered item: a unexploded ordnance, olive green, intact."
   },
   {
     "id": "INC-031",
-    "date": "2026-03-24",
-    "location": "Al-Fakir District",
-    "photo": "img_031.jpg",
-    "narrative": "Green Village road spur, Al-Fakir District: a corroded 107mm rocket, olive drab, finned, roughly 1 m, no visible fuze, lying exposed. Weathered condition suggests it has been in place some time. Photo image: img_031.jpg."
+    "date": "2026-02-19",
+    "location": "Kfar Kila",
+    "narrative": "On 19 an IED targeted a patrol near Kfar Kila. Post-blast indicators: a passive infrared. Emplacement concealed in roadside debris. A recovered item: a hand grenade, khaki, intact."
   },
   {
     "id": "INC-032",
     "date": "2026-04-01",
-    "location": "Green Village, Al-Fakir District",
-    "narrative": "Reported UXO near Green Village: a tan mortar round, conical nose, intact, small (60mm), no fuze visible. Handed to specialist team. No network reporting."
+    "location": "Zawtar",
+    "narrative": "On 01 an IED struck civilians nearby near Zawtar. Assessed as command-initiated. Post-blast indicators: a pressure plate. Emplacement vehicle-borne. Main charge homemade explosive. A recovered item: a anti-personnel mine, rust-coloured, weathered."
+  },
+  {
+    "id": "INC-033",
+    "date": "2026-04-11",
+    "location": "Srifa",
+    "narrative": "On 11 an IED was located near a crowded market near Srifa. Assessed as command-initiated. Emplacement hand-emplaced. Main charge repurposed artillery shell. A recovered item: a anti-personnel mine, off-white, leaking."
+  },
+  {
+    "id": "INC-034",
+    "date": "2026-03-10",
+    "location": "Bint Jbeil",
+    "narrative": "On 10 an IED was emplaced against a logistics route near Bint Jbeil. Assessed as remote-controlled. Post-blast indicators: a radio control. Emplacement concealed in roadside debris. Main charge repurposed artillery shell. A recovered item: a anti-personnel mine, rust-coloured, partially buried."
+  },
+  {
+    "id": "INC-035",
+    "date": "2026-05-11",
+    "location": "Ghandouriyeh",
+    "narrative": "On 11 an IED functioned against a resupply patrol near Ghandouriyeh. Assessed as command-initiated. Post-blast indicators: a command wire."
+  },
+  {
+    "id": "INC-036",
+    "date": "2026-04-14",
+    "location": "Rmeish",
+    "narrative": "On 14 an IED struck a resupply patrol near Rmeish. Assessed as time-delay. Post-blast indicators: a command wire. Main charge homemade explosive. A recovered item: a hand grenade, sand-coloured, partially buried."
+  },
+  {
+    "id": "INC-037",
+    "date": "2026-04-02",
+    "location": "Naqoura",
+    "narrative": "On 02 an IED struck a resupply patrol near Naqoura. Assessed as victim-operated. Post-blast indicators: a radio control. Emplacement concealed in roadside debris. Main charge mining explosive. A recovered item: a howitzer round, rust-coloured, damaged."
+  },
+  {
+    "id": "INC-038",
+    "date": "2026-06-28",
+    "location": "Nabatieh",
+    "narrative": "On 28 an IED was located near a logistics route near Nabatieh. Assessed as command-initiated. Post-blast indicators: a passive infrared. Emplacement concealed in roadside debris. Main charge repurposed artillery shell."
+  },
+  {
+    "id": "INC-039",
+    "date": "2026-06-10",
+    "location": "Rmeish",
+    "narrative": "On 10 an IED was emplaced against a convoy near Rmeish. Assessed as victim-operated. Main charge repurposed artillery shell."
+  },
+  {
+    "id": "INC-040",
+    "date": "2026-03-18",
+    "location": "Meiss ej-Jabal",
+    "narrative": "On 18 an IED was located near a logistics route near Meiss ej-Jabal. Post-blast indicators: a radio control. Emplacement concealed in roadside debris. Main charge homemade explosive. A recovered item: a howitzer round, off-white, intact."
   }
 ]

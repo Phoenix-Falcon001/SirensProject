@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Synthetic incident generator for Sirens.
 
 Produces a folder of fabricated C-IED incident reports plus a ground-truth key,
