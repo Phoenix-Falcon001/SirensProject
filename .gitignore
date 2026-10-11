@@ -7,3 +7,5 @@ link_chart.html
 link_chart.png
 result.json
 sample_brief.json
+# local SQLite database (each person keeps their own)
+data/sirens.db*
