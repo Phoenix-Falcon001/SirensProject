@@ -17,8 +17,8 @@ Status: [x] done (verified) · [~] in progress · [ ] not started
 - [x] `.gitignore` excludes `data/sirens.db*`, `.venv`, `__pycache__`; tracked DB removed
 - [ ] Fresh clone runs from README in <= 10 min (timed, on a second machine)
 - [ ] Demo-mode button loads sample data
-- [ ] htmx + Chart.js load from `static/vendor/` with network off
-- [ ] DB tables for link decisions and notes exist (new module, not `store.py`)
+- [~] htmx + Chart.js load from `static/vendor/` with network off
+- [~] DB tables for link decisions and notes exist (new module, not `store.py`)
 
 ## W2 — Analyst workbench
 - [ ] Confirm / Reject / Unsure on every link, no page reload
@@ -55,3 +55,5 @@ Target: P 0.90 / R 0.80 / F1 0.85.
 ## Session log
 - 2026-10-12 (Bassam, browser): forked repo, created branch, fixed
   `.gitignore`, untracked `sirens.db`, added this scoreboard.
+    Also: vendored htmx 2.0.11 + Chart.js 4.5.1; added linker/decisions.py
+  (written in browser, NOT yet run: verify with `python -m linker.decisions`).
