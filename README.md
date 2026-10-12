@@ -38,6 +38,12 @@ database `data/sirens.db` is created empty on first start. To try the tool,
 click **demo data** in the top bar, then **Load demo data (fabricated)**:
 it loads 40 invented sample incidents.
 
+**Reviewing links.** Click **review links** in the top bar (`/review`). Every
+link the link tree shows is listed with its score, band and reasons, and
+you can mark each one Confirm / Reject / Unsure, undo, or add a note. Your
+decisions are stored separately from the machine's scores (which never
+change) and survive restarts.
+
 Other useful pages: `/vendor-check` confirms the front-end libraries load
 from `static/vendor/` (open it with Wi-Fi off to prove offline use).
 
