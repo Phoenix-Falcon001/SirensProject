@@ -48,8 +48,22 @@ Status: [x] done (verified) · [~] in progress · [ ] not started
   review the page design.
 
 ## W3 — Dashboard + auto-flagging
-- [ ] Timeline chart + 2 more charts + working filters
-- [ ] Saving a report shows its likely network with band + reasons (first to defer)
+- [x] Timeline chart + 2 more charts + working filters. Evidence 2026-10-12:
+  `/dashboard` (dashboard_bp.py): incidents per month, by area, by
+  initiation method, 4 tiles; one filter row (date range, area, method) plus
+  click-a-bar filtering; table twin per chart; `tests/test_dashboard.py`
+  passes (totals add up, every method bar equals its filter result);
+  headless Chromium: 3 charts drawn, filters work, 0 errors, 0 external requests.
+- [x] Saving a report shows its likely network with band + reasons.
+  Evidence: network_bp.py panel loads on the console result after Save;
+  `tests/test_network.py` passes (network, size, band and reasons match the
+  link-tree clustering); headless Chromium: panel shown after saving a
+  fabricated report, 0 errors.
+- Still to do on a laptop: try both pages with Wi-Fi off; Elie to review design.
+- Caution found while testing (matcher not changed): a fabricated report
+  near Meiss ej-Jabal got a 1.00 "strong" link partly from "same individual
+  (Meiss)", i.e. the village name read as a person. This inflates scores, so
+  the place-name issue below is worth fixing before the demo.
 
 ## W4 — Freeze / polish / deliver
 - [ ] Tooltips on all form fields
@@ -66,6 +80,7 @@ Status: [x] done (verified) · [~] in progress · [ ] not started
 | (before W1) | 100 synthetic, seed 7 | 0.25 | 0.628 | 0.888 | 0.736 |
 | 2026-10-12 | 100 synthetic, seed 7 | 0.25 | 0.628 | 0.888 | 0.736 |
 | 2026-10-12 (after W2, matcher untouched) | 100 synthetic, seed 7 | 0.25 | 0.628 | 0.888 | 0.736 |
+| 2026-10-12 (after W3, matcher untouched) | 100 synthetic, seed 7 | 0.25 | 0.628 | 0.888 | 0.736 |
 
 Target: P 0.90 / R 0.80 / F1 0.85.
 
@@ -109,3 +124,9 @@ Target: P 0.90 / R 0.80 / F1 0.85.
   decisions.py. Tests: review page, restart persistence (two processes),
   10-click workflow; 32 pass. app.py: +2 lines (registration, nav link).
   Accuracy re-measured: unchanged. Unverified: Wi-Fi-off use of /review.
+- 2026-10-12 (Bassam + Claude Code, W3, same session): added `/dashboard`
+  (timeline + area + initiation charts, filters, tables; vendored Chart.js)
+  and the likely-network panel shown after saving a report (network_bp.py,
+  htmx). app.py: +4 lines (2 registrations, 1 nav link, panel placeholder)
+  and the htmx script tag in the console template. 45 tests pass. Accuracy
+  re-measured: unchanged. Unverified: Wi-Fi-off use of the new pages.
