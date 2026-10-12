@@ -174,6 +174,22 @@ def notes_for(a: str, b: str, db_path=None) -> list[dict]:
     return [dict(r) for r in rows]
 
 
+def all_notes(db_path=None) -> dict[tuple[str, str], list[dict]]:
+    """Every note, grouped by link: {(a, b): [note, ...]}, oldest first."""
+    conn = connect(db_path)
+    try:
+        rows = conn.execute(
+            "SELECT incident_a, incident_b, note, analyst, created_at FROM link_notes ORDER BY id"
+        ).fetchall()
+    finally:
+        conn.close()
+    out: dict[tuple[str, str], list[dict]] = {}
+    for r in rows:
+        out.setdefault((r["incident_a"], r["incident_b"]), []).append(
+            {"note": r["note"], "analyst": r["analyst"], "created_at": r["created_at"]})
+    return out
+
+
 # -- self-check --------------------------------------------------------------
 def _self_check() -> None:
     import pathlib
@@ -219,6 +235,7 @@ def _self_check() -> None:
         notes = notes_for("INC-002", "INC-001", db_path=db)
         assert len(notes) == 1 and notes[0]["note"].startswith("Same group"), notes
         print("OK  notes saved and read back")
+        assert list(all_notes(db_path=db)) == [("INC-001", "INC-002")]
 
         assert store.count(db_path=db) == 0
         print("OK  incidents table untouched")
