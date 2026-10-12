@@ -44,6 +44,15 @@ you can mark each one Confirm / Reject / Unsure, undo, or add a note. Your
 decisions are stored separately from the machine's scores (which never
 change) and survive restarts.
 
+**Dashboard.** Click **dashboard** (`/dashboard`): incidents per month,
+incidents by area and by initiation method, with one row of filters (dates,
+area, method) that applies to everything. Click a bar to filter by it; every
+chart has a "Show table" with the exact numbers.
+
+**Likely network on save.** When you press **Save to database**, the result
+page shows which candidate network the report falls into, the strongest link
+with its band, and the reasons for each link.
+
 Other useful pages: `/vendor-check` confirms the front-end libraries load
 from `static/vendor/` (open it with Wi-Fi off to prove offline use).
 
