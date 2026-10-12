@@ -47,6 +47,7 @@ app.register_blueprint(brief_bp)
 from vendor_bp import vendor_bp; app.register_blueprint(vendor_bp)
 from demo_bp import demo_bp; app.register_blueprint(demo_bp)
 from review_bp import review_bp; app.register_blueprint(review_bp)
+from dashboard_bp import dashboard_bp; app.register_blueprint(dashboard_bp)
 
 # Load the extractor once (spaCy start-up cost paid a single time).
 _EXTRACTOR = FeatureExtractor(TAXONOMY, use_ner=True)
@@ -470,6 +471,7 @@ TEMPLATE = r"""{% macro ref_card(e) %}
   <a href="/map" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">map &#8599;</a>
   <a href="/tree" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">link tree &#8599;</a>
   <a href="/review" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">review links</a>
+  <a href="/dashboard" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">dashboard</a>
   <a href="/brief" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">brief &#8599;</a>
   <a href="/demo" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">demo data</a>
   <div class="badges">
