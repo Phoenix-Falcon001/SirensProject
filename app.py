@@ -44,6 +44,7 @@ app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024  # 8 MB cap per upload
 
 from brief_bp import brief_bp
 app.register_blueprint(brief_bp)
+from vendor_bp import vendor_bp; app.register_blueprint(vendor_bp)
 
 # Load the extractor once (spaCy start-up cost paid a single time).
 _EXTRACTOR = FeatureExtractor(TAXONOMY, use_ner=True)
