@@ -48,6 +48,7 @@ from vendor_bp import vendor_bp; app.register_blueprint(vendor_bp)
 from demo_bp import demo_bp; app.register_blueprint(demo_bp)
 from review_bp import review_bp; app.register_blueprint(review_bp)
 from dashboard_bp import dashboard_bp; app.register_blueprint(dashboard_bp)
+from network_bp import network_bp; app.register_blueprint(network_bp)
 
 # Load the extractor once (spaCy start-up cost paid a single time).
 _EXTRACTOR = FeatureExtractor(TAXONOMY, use_ner=True)
@@ -648,6 +649,7 @@ TEMPLATE = r"""{% macro ref_card(e) %}
         {% endif %}
       </div>
     </div>
+    {% if result.saved %}<div class="card result-card" style="margin-top:16px" hx-get="{{ url_for('network.panel', incident_id=result.incident.incident_id) }}" hx-trigger="load"><h2>Likely network</h2><div class="body"><div class="empty">Finding the network this report falls into&hellip; (if this stays, see <a href="/review">review links</a>)</div></div></div>{% endif %}
 
     {% if result.reference %}
       <div class="card result-card" style="margin-top:16px">
@@ -753,6 +755,7 @@ function showRef(v){
 })();
 </script>
 <footer>Decision-support for incident link analysis — every value traces to source text; a human analyst confirms any link. Photos are filed and shown beside linked incidents for the analyst to compare — never machine-analysed.</footer>
+<script src="{{ url_for('static', filename='vendor/htmx.min.js') }}"></script>
 </body>
 </html>"""
 
