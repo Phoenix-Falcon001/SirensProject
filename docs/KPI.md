@@ -33,9 +33,19 @@ Status: [x] done (verified) · [~] in progress · [ ] not started
   `tests/test_decisions.py` passes.
 
 ## W2 — Analyst workbench
-- [ ] Confirm / Reject / Unsure on every link, no page reload
-- [ ] Decisions + notes persist across restart
-- [ ] Scripted 10-click test: zero server errors
+- [x] Confirm / Reject / Unsure on every link, no page reload. Evidence
+  2026-10-12: `/review` (review_bp.py) lists all 74 tree links on the demo
+  data, each with Confirm / Reject / Unsure / Undo and a note box (htmx);
+  `tests/test_review.py` passes; headless Chromium: decision + note swap in
+  place, 0 navigations, 0 server/JS errors, 0 external requests.
+- [x] Decisions + notes persist across restart. Evidence:
+  `tests/test_persistence.py` (two separate processes, same temp DB) passes;
+  live server stopped and restarted: decision and note still shown.
+- [x] Scripted 10-click test: zero server errors. Evidence:
+  `tests/test_ten_clicks.py` passes (10 clicks, all < 500); same flow by
+  hand in headless Chromium: 10 clicks, 0 server errors, 0 JS errors.
+- Still to do on a laptop: try `/review` by hand with Wi-Fi off; Elie to
+  review the page design.
 
 ## W3 — Dashboard + auto-flagging
 - [ ] Timeline chart + 2 more charts + working filters
@@ -55,6 +65,7 @@ Status: [x] done (verified) · [~] in progress · [ ] not started
 |---|---|---|---|---|---|
 | (before W1) | 100 synthetic, seed 7 | 0.25 | 0.628 | 0.888 | 0.736 |
 | 2026-10-12 | 100 synthetic, seed 7 | 0.25 | 0.628 | 0.888 | 0.736 |
+| 2026-10-12 (after W2, matcher untouched) | 100 synthetic, seed 7 | 0.25 | 0.628 | 0.888 | 0.736 |
 
 Target: P 0.90 / R 0.80 / F1 0.85.
 
@@ -71,6 +82,11 @@ Target: P 0.90 / R 0.80 / F1 0.85.
 - Not fixed (outside W1, decide later): root `cli.py` has a SyntaxError on
   line 1 (README "Use" section relies on it); `anthropic` is in
   requirements.txt but never imported; `data/generated/` is tracked.
+- Extraction quality (seen on /review, not changed: the matcher was
+  off-limits this session): the top demo link INC-008 <-> INC-040 cites "same
+  individual (Meiss)", but Meiss is the place name Meiss ej-Jabal picked up
+  as a person. An analyst can now Reject such links; fixing the extractor is
+  a separate decision.
 
 ## Session log
 - 2026-10-12 (Bassam, browser): forked repo, created branch, fixed
@@ -87,3 +103,9 @@ Target: P 0.90 / R 0.80 / F1 0.85.
   added tests (21 pass, temp DB only); fixed README/setup.sh install steps.
   Still unverified: Wi-Fi-off test, timed second-machine install, AI with
   Ollama. Elie: see "Open items" above.
+- 2026-10-12 (Bassam + Claude Code, W2, same session): added `/review`
+  link-review page (review_bp.py): Confirm / Reject / Unsure / Undo + notes
+  on every link via htmx, filters, analyst initials; `all_notes()` helper in
+  decisions.py. Tests: review page, restart persistence (two processes),
+  10-click workflow; 32 pass. app.py: +2 lines (registration, nav link).
+  Accuracy re-measured: unchanged. Unverified: Wi-Fi-off use of /review.
