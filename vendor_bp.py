@@ -57,9 +57,6 @@ _TEMPLATE = r"""<!doctype html>
          text-transform:uppercase;font-size:15px}
   .brand small{display:block;letter-spacing:.06em;font-size:10px;color:#9fb0bd;
                font-weight:400;margin-top:2px}
-  .nav{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
-  .nav a{color:#cdd8e0;font-family:var(--mono);font-size:11px;
-    text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px}
   .wrap{max-width:1100px;margin:0 auto;padding:40px 48px 90px}
   @media(max-width:1000px){.wrap{padding:28px 20px 60px}}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:9px;margin-bottom:24px;
@@ -87,12 +84,7 @@ _TEMPLATE = r"""<!doctype html>
 <body>
 <div class="bar">
   <div class="brand">Sirens<small>vendor check · offline front-end libraries</small></div>
-  <nav class="nav">
-    <a href="{{ url_for('incident_map') }}">map</a>
-    <a href="{{ url_for('link_tree') }}">link tree</a>
-    <a href="{{ url_for('brief.brief_page') }}">brief</a>
-    <a href="{{ url_for('index') }}">&#8592; console</a>
-  </nav>
+  {{ sirens_menu('vendor') }}
 </div>
 <div class="wrap">
   <div class="card"><h2>Libraries served from static/vendor/</h2><div class="body">

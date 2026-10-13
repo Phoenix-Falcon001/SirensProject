@@ -129,7 +129,7 @@ _TEMPLATE = r"""<!doctype html>
 <body>
 <div class="bar">
   <div class="brand">Sirens<small>Pre-arrival Brief</small></div>
-  <a href="/">&#8592; console</a>
+  {{ sirens_menu('brief') }}
 </div>
 <div class="wrap">
   {% if error %}<div class="err">{{ error }}</div>{% endif %}

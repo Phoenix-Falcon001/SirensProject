@@ -130,3 +130,13 @@ Target: P 0.90 / R 0.80 / F1 0.85.
   htmx). app.py: +4 lines (2 registrations, 1 nav link, panel placeholder)
   and the htmx script tag in the console template. 45 tests pass. Accuracy
   re-measured: unchanged. Unverified: Wi-Fi-off use of the new pages.
+- 2026-10-13 (Bassam + Claude Code, UI pass): one shared drop-down menu on
+  all 8 pages (Reports / Analysis / Data, current page highlighted; ui_menu.py);
+  dashboard expanded with signatures (feature selector + filter), candidate
+  networks, link strength + review progress, and data quality
+  (linker/stats.py); link tree restyled to the light theme with a
+  colour-vision-checked muted cluster palette; console empty panel points to
+  dashboard / review / tree and no longer says "13 samples". Found and fixed
+  the open menu being covered by page content on console and brief. 57 tests
+  pass; 64/64 menu clicks and the 10-click workflow pass in headless
+  Chromium; accuracy re-measured: unchanged (0.628 / 0.888 / 0.736).

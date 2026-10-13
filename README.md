@@ -35,26 +35,38 @@ python app.py
 
 Then open <http://127.0.0.1:5000> (it usually opens by itself). The local
 database `data/sirens.db` is created empty on first start. To try the tool,
-click **demo data** in the top bar, then **Load demo data (fabricated)**:
-it loads 40 invented sample incidents.
+press **Load demo data (fabricated)** on the console (or open **Data ▾ → Load
+demo data**): it loads 40 invented sample incidents.
 
-**Reviewing links.** Click **review links** in the top bar (`/review`). Every
-link the link tree shows is listed with its score, band and reasons, and
-you can mark each one Confirm / Reject / Unsure, undo, or add a note. Your
-decisions are stored separately from the machine's scores (which never
-change) and survive restarts.
+**Getting around.** Every page has the same menu at the top:
 
-**Dashboard.** Click **dashboard** (`/dashboard`): incidents per month,
-incidents by area and by initiation method, with one row of filters (dates,
-area, method) that applies to everything. Click a bar to filter by it; every
+| Menu | Page | What it is for |
+|---|---|---|
+| Reports ▾ | New report (`/`) | Paste, analyse and save an incident report |
+| | Pre-arrival brief (`/brief`) | What past reporting says about a place |
+| Analysis ▾ | Dashboard (`/dashboard`) | Statistics and charts over the record |
+| | Review links (`/review`) | Confirm, reject or flag each link |
+| | Link tree (`/tree`) | Graph of linked incidents and networks |
+| | Map (`/map`) | Incidents by caza |
+| Data ▾ | Load demo data (`/demo`) | 40 fabricated sample incidents |
+| | Offline check (`/vendor-check`) | Proves the page libraries load without internet (open it with Wi-Fi off) |
+
+**Reviewing links.** On **Review links**, every link the link tree shows is
+listed with its score, band and reasons, and you can mark each one Confirm /
+Reject / Unsure, undo, or add a note. Your decisions are stored separately
+from the machine's scores (which never change) and survive restarts.
+
+**Dashboard.** One row of filters (dates, area, initiation method, signature
+feature) applies to the whole page. Sections: overview tiles; incidents per
+month, by area and by initiation method; a signature breakdown with a feature
+selector; candidate networks (sizes, active dates, common signature); link
+strength and analyst review progress; and data quality (which fields reports
+carry, and the least complete reports). Click a bar to filter by it; every
 chart has a "Show table" with the exact numbers.
 
 **Likely network on save.** When you press **Save to database**, the result
 page shows which candidate network the report falls into, the strongest link
 with its band, and the reasons for each link.
-
-Other useful pages: `/vendor-check` confirms the front-end libraries load
-from `static/vendor/` (open it with Wi-Fi off to prove offline use).
 
 **Optional local AI.** The AI summary panels use [Ollama](https://ollama.com)
 running on the same machine. Install it, then pull the model named by
