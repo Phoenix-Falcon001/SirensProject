@@ -44,6 +44,11 @@ app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024  # 8 MB cap per upload
 
 from brief_bp import brief_bp
 app.register_blueprint(brief_bp)
+from vendor_bp import vendor_bp; app.register_blueprint(vendor_bp)
+from demo_bp import demo_bp; app.register_blueprint(demo_bp)
+from review_bp import review_bp; app.register_blueprint(review_bp)
+from dashboard_bp import dashboard_bp; app.register_blueprint(dashboard_bp)
+from network_bp import network_bp; app.register_blueprint(network_bp)
 
 # Load the extractor once (spaCy start-up cost paid a single time).
 _EXTRACTOR = FeatureExtractor(TAXONOMY, use_ner=True)
@@ -466,7 +471,10 @@ TEMPLATE = r"""{% macro ref_card(e) %}
   <div class="brand">Sirens<small>C-IED Incident Link Console</small></div>
   <a href="/map" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">map &#8599;</a>
   <a href="/tree" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">link tree &#8599;</a>
+  <a href="/review" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">review links</a>
+  <a href="/dashboard" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">dashboard</a>
   <a href="/brief" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">brief &#8599;</a>
+  <a href="/demo" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">demo data</a>
   <div class="badges">
     <span class="badge {{ 'on' if status.db_count else 'off' }}"><span class="dot"></span>{{ status.db_count }} in database</span>
     <span class="badge {{ 'on' if status.sem_ok else 'off' }}"><span class="dot"></span>meaning: {{ 'vectors' if status.sem_ok else 'lexical' }}</span>
@@ -641,6 +649,7 @@ TEMPLATE = r"""{% macro ref_card(e) %}
         {% endif %}
       </div>
     </div>
+    {% if result.saved %}<div class="card result-card" style="margin-top:16px" hx-get="{{ url_for('network.panel', incident_id=result.incident.incident_id) }}" hx-trigger="load"><h2>Likely network</h2><div class="body"><div class="empty">Finding the network this report falls into&hellip; (if this stays, see <a href="/review">review links</a>)</div></div></div>{% endif %}
 
     {% if result.reference %}
       <div class="card result-card" style="margin-top:16px">
@@ -746,6 +755,7 @@ function showRef(v){
 })();
 </script>
 <footer>Decision-support for incident link analysis — every value traces to source text; a human analyst confirms any link. Photos are filed and shown beside linked incidents for the analyst to compare — never machine-analysed.</footer>
+<script src="{{ url_for('static', filename='vendor/htmx.min.js') }}"></script>
 </body>
 </html>"""
 

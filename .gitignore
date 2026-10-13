@@ -7,3 +7,10 @@ link_chart.html
 link_chart.png
 result.json
 sample_brief.json
+# local SQLite database (each person keeps their own)
+data/sirens.db*
+# virtual environments (either name)
+venv/
+# local operational data: filed incident photos (sensitive) and the app's metadata sidecar
+data/photos/
+data/report_meta.json

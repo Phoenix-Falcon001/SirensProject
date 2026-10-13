@@ -11,14 +11,56 @@ features and identities produced it.
 
 ## Quickstart
 
+Needs Python 3.10+ and an internet connection **for the install only**
+(about 50 MB of spaCy language models). After that, Sirens runs offline.
+
+Linux / macOS:
+
 ```bash
-bash setup.sh
+bash setup.sh                 # creates .venv and installs everything
 source .venv/bin/activate
-python sirens.py
+python app.py                 # web console
 ```
 
-Windows: `python -m venv .venv`, `.venv\Scripts\activate`, install with the
-two `pip install` lines below, then `python sirens.py`.
+Windows (PowerShell):
+
+```powershell
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
+pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0-py3-none-any.whl
+python app.py
+```
+
+Then open <http://127.0.0.1:5000> (it usually opens by itself). The local
+database `data/sirens.db` is created empty on first start. To try the tool,
+click **demo data** in the top bar, then **Load demo data (fabricated)**:
+it loads 40 invented sample incidents.
+
+**Reviewing links.** Click **review links** in the top bar (`/review`). Every
+link the link tree shows is listed with its score, band and reasons, and
+you can mark each one Confirm / Reject / Unsure, undo, or add a note. Your
+decisions are stored separately from the machine's scores (which never
+change) and survive restarts.
+
+**Dashboard.** Click **dashboard** (`/dashboard`): incidents per month,
+incidents by area and by initiation method, with one row of filters (dates,
+area, method) that applies to everything. Click a bar to filter by it; every
+chart has a "Show table" with the exact numbers.
+
+**Likely network on save.** When you press **Save to database**, the result
+page shows which candidate network the report falls into, the strongest link
+with its band, and the reasons for each link.
+
+Other useful pages: `/vendor-check` confirms the front-end libraries load
+from `static/vendor/` (open it with Wi-Fi off to prove offline use).
+
+**Optional local AI.** The AI summary panels use [Ollama](https://ollama.com)
+running on the same machine. Install it, then pull the model named by
+`DEFAULT_MODEL` in `linker/ai.py` (`ollama pull <that name>`). Without
+Ollama everything else works and the AI panels say Ollama isn't running.
+No API keys or cloud services are used.
 
 ## Scope
 
@@ -44,10 +86,17 @@ in the tool. All bundled data is fabricated.
 
 ## Install
 
+`setup.sh` (or the Windows steps above) does all of this. By hand:
+
 ```bash
 pip install -r requirements.txt
 pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
+pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0-py3-none-any.whl
 ```
+
+The first model (`en_core_web_sm`, names) is required. The second
+(`en_core_web_md`, word vectors) is recommended; without it meaning-based
+matching falls back to text overlap.
 
 ## Use
 
@@ -72,8 +121,12 @@ clusters = Clusterer(incs, links).clusters()
 ## Test
 
 ```bash
-python -m pytest tests/ -q
+source .venv/bin/activate     # Windows: .venv\Scripts\activate
+python -m pytest tests/ -q    # all tests should pass
+python -m linker.decisions    # must end with SELF-CHECK PASSED
 ```
+
+Tests use a temporary database; they never touch `data/sirens.db`.
 
 ## Pre-arrival brief
 
