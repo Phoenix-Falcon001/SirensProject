@@ -109,22 +109,22 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
 <title>{title}</title>
 <style>
   :root {{
-    --bg:#0e1216; --panel:#161b21; --panel-2:#1d242c; --line:#2a323b;
-    --ink:#e6e9ec; --muted:#8b96a2; --accent:#e0b64a; --accent-2:#4ac5e0;
-    --block:#c8402f;
+    --bg:#f4f6f3; --panel:#ffffff; --panel-2:#fbfcfb; --line:#e2e6e3;
+    --ink:#16202b; --muted:#7a8791; --accent:#a8703a; --accent-2:#2d5b8e;
+    --block:#b0605a; --bar:#16202b;
   }}
   * {{ box-sizing:border-box; }}
   html,body {{ margin:0; height:100%; background:var(--bg); color:var(--ink);
     font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif; }}
   .wrap {{ display:grid; grid-template-columns: 1fr 340px; grid-template-rows:auto 1fr;
     height:100vh; min-height:0; }}
-  header {{ grid-column:1 / -1; display:flex; align-items:baseline; gap:20px;
-    padding:14px 20px; border-bottom:1px solid var(--line); background:var(--panel); }}
-  header h1 {{ font-size:15px; letter-spacing:.14em; text-transform:uppercase;
-    margin:0; font-weight:700; }}
-  header .stats {{ font-size:12px; color:var(--muted); letter-spacing:.05em;
-    font-variant-numeric:tabular-nums; }}
-  header .stats b {{ color:var(--accent); font-weight:700; }}
+  header {{ grid-column:1 / -1; display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+    padding:16px 28px; background:var(--bar); color:#eef2f5; border-bottom:3px solid var(--accent); }}
+  header h1 {{ font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:15px;
+    letter-spacing:.16em; text-transform:uppercase; margin:0; font-weight:600; }}
+  header .stats {{ font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:11.5px;
+    color:#9fb0bd; letter-spacing:.05em; font-variant-numeric:tabular-nums; margin-left:auto; }}
+  header .stats b {{ color:#eef2f5; font-weight:600; }}
   #stage {{ position:relative; overflow:hidden; min-height:520px; min-width:0; }}
   canvas {{ display:block; width:100%; height:100%; }}
   aside {{ background:var(--panel); border-left:1px solid var(--line);
@@ -132,27 +132,28 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
   .side-h {{ font-size:11px; letter-spacing:.16em; text-transform:uppercase;
     color:var(--muted); padding:14px 16px 8px; }}
   .cluster {{ margin:0 12px 10px; background:var(--panel-2); border:1px solid var(--line);
-    border-radius:8px; padding:10px 12px; cursor:pointer; }}
+    border-radius:8px; padding:10px 12px; cursor:pointer;
+    box-shadow:0 1px 2px rgba(22,32,43,.04),0 4px 12px rgba(22,32,43,.04); }}
   .cluster:hover {{ border-color:var(--accent); }}
   .cluster .cid {{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:700;
-    color:var(--accent); font-size:13px; }}
+    color:var(--ink); font-size:13px; }}
   .cluster .sz {{ color:var(--muted); font-size:11px; float:right; }}
   .cluster .sig {{ font-size:11.5px; color:var(--ink); margin-top:6px; line-height:1.5; }}
-  .cluster .sig span {{ display:inline-block; background:#12181e; border:1px solid var(--line);
-    border-radius:4px; padding:1px 6px; margin:2px 3px 0 0;
-    font-family:ui-monospace,Menlo,Consolas,monospace; font-size:10.5px; color:var(--accent-2); }}
+  .cluster .sig span {{ display:inline-block; background:#f0e6d4; border:1px solid #e6d3b0;
+    border-radius:3px; padding:1px 6px; margin:2px 3px 0 0;
+    font-family:ui-monospace,Menlo,Consolas,monospace; font-size:10.5px; color:#7a4e12; }}
   .cluster .mem {{ font-size:10.5px; color:var(--muted); margin-top:7px;
     font-family:ui-monospace,Menlo,Consolas,monospace; }}
   #tip {{ position:absolute; pointer-events:none; z-index:9; max-width:280px;
-    background:#0b0f13ee; border:1px solid var(--accent); border-radius:8px;
+    background:#ffffff; color:var(--ink); border:1px solid var(--line); border-radius:8px;
     padding:9px 11px; font-size:11.5px; line-height:1.5; display:none;
-    box-shadow:0 8px 30px #0008; }}
-  #tip h4 {{ margin:0 0 5px; font-family:ui-monospace,monospace; color:var(--accent);
+    box-shadow:0 2px 6px rgba(22,32,43,.08),0 12px 32px rgba(22,32,43,.14); }}
+  #tip h4 {{ margin:0 0 5px; font-family:ui-monospace,monospace; color:var(--ink);
     font-size:12.5px; letter-spacing:.05em; }}
   #tip .k {{ color:var(--muted); }}
   #tip code {{ color:var(--accent-2); }}
   .legend {{ position:absolute; left:14px; bottom:12px; font-size:11px; color:var(--muted);
-    background:#0b0f13cc; border:1px solid var(--line); border-radius:8px; padding:8px 10px; }}
+    background:rgba(255,255,255,.92); border:1px solid var(--line); border-radius:8px; padding:8px 10px; }}
   .legend b {{ color:var(--ink); }}
   .hint {{ position:absolute; right:14px; bottom:12px; font-size:10.5px; color:var(--muted); }}
 </style></head>
@@ -182,9 +183,12 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
 const GRAPH = {data_json};
 const CLUSTERS = {clusters_json};
 const INC = {inc_json};
-const PALETTE = ["#e0b64a","#4ac5e0","#e07a5f","#8bd450","#b78be0","#e04a7a","#5f8be0"];
+// Muted cluster colours checked for colour-blind separation on this surface.
+// Never cycled: clusters past the 7th share a neutral grey (their ids still label them).
+const PALETTE = ["#b06a2c","#3b78b5","#4f9a5e","#8b5fb0","#c4553d","#00979c","#9a7d12"];
+const EXTRA = "#8f989e", UNLINKED = "#c3c9cc";
 const cidColor = {{}};
-CLUSTERS.forEach((c,i)=>{{ cidColor[c.cluster_id]=PALETTE[i%PALETTE.length]; }});
+CLUSTERS.forEach((c,i)=>{{ cidColor[c.cluster_id]= i<PALETTE.length? PALETTE[i] : EXTRA; }});
 
 const canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
 let W=0,H=0,DPR=window.devicePixelRatio||1;
@@ -199,7 +203,7 @@ resize();
 const nodes=GRAPH.nodes.map((n,i)=>({{
   ...n, idx:i, x:W/2+Math.cos(i)*120+(Math.random()-.5)*60,
   y:H/2+Math.sin(i)*120+(Math.random()-.5)*60, vx:0, vy:0,
-  color: n.cluster? cidColor[n.cluster] : "#5b6168" }}));
+  color: n.cluster? cidColor[n.cluster] : UNLINKED }}));
 const idx={{}}; nodes.forEach((n,i)=>idx[n.id]=i);
 const edges=GRAPH.edges.map(e=>({{...e, s:idx[e.source], t:idx[e.target]}}));
 
@@ -228,20 +232,6 @@ function step(){{
     if(n!==drag){{ n.x+=n.vx; n.y+=n.vy; }} }}
   alpha *= 0.988;
 }}
-function lighten(hex, amt){{
-  const n = parseInt(hex.replace('#',''),16);
-  const r = Math.min(255, (n>>16) + Math.round(255*amt));
-  const g = Math.min(255, ((n>>8)&0xff) + Math.round(255*amt));
-  const b = Math.min(255, (n&0xff) + Math.round(255*amt));
-  return `rgb(${{r}},${{g}},${{b}})`;
-}}
-function darken(hex, amt){{
-  const n = parseInt(hex.replace('#',''),16);
-  const r = Math.max(0, (n>>16) - Math.round(255*amt));
-  const g = Math.max(0, ((n>>8)&0xff) - Math.round(255*amt));
-  const b = Math.max(0, (n&0xff) - Math.round(255*amt));
-  return `rgb(${{r}},${{g}},${{b}})`;
-}}
 function draw(){{
   ctx.clearRect(0,0,W,H);
   ctx.save();
@@ -254,7 +244,7 @@ function draw(){{
     let dim;
     if(hoverIdx!=null){{ dim = !connectedToHover; }}
     else{{ dim = selectedCluster && a.cluster!==selectedCluster && b.cluster!==selectedCluster; }}
-    ctx.strokeStyle= e===hoverEdge? "#e0b64a" : connectedToHover? "#e0b64a" : dim? "rgba(120,132,146,.08)" : "rgba(120,132,146,.35)";
+    ctx.strokeStyle= e===hoverEdge? "#a8703a" : connectedToHover? "#a8703a" : dim? "rgba(58,70,82,.06)" : "rgba(58,70,82,.26)";
     ctx.lineWidth=(connectedToHover?1.7:1)*(0.5+3.2*e.score); ctx.beginPath();
     ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke(); }}
   for(const n of nodes){{
@@ -263,15 +253,13 @@ function draw(){{
     else{{ dim = selectedCluster && n.cluster!==selectedCluster; }}
     ctx.globalAlpha = dim? 0.15 : 1;
     const r = n===hoverNode?13:10;
-    const grad = ctx.createRadialGradient(n.x-r*0.4,n.y-r*0.4,0,n.x,n.y,r*1.05);
-    grad.addColorStop(0, lighten(n.color,0.8));
-    grad.addColorStop(0.35, n.color);
-    grad.addColorStop(1, darken(n.color,0.4));
     ctx.beginPath();ctx.arc(n.x,n.y,r,0,7);
-    ctx.fillStyle=grad;ctx.fill();
-    ctx.lineWidth=1.3;ctx.strokeStyle="rgba(11,15,19,0.75)";ctx.stroke();
-    ctx.fillStyle="#e6e9ec";ctx.font="700 9px ui-monospace,monospace";
-    ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(n.id,n.x,n.y-16);
+    ctx.fillStyle=n.color;ctx.fill();
+    ctx.lineWidth=2;ctx.strokeStyle="#f4f6f3";ctx.stroke();          // surface ring separates overlaps
+    ctx.font="600 9.5px ui-monospace,monospace";
+    ctx.textAlign="center";ctx.textBaseline="middle";
+    ctx.lineWidth=3;ctx.strokeStyle="rgba(244,246,243,.9)";ctx.strokeText(n.id,n.x,n.y-17);
+    ctx.fillStyle="#3a4652";ctx.fillText(n.id,n.x,n.y-17);
     ctx.globalAlpha = 1; }}
   ctx.restore();
 }}
@@ -339,7 +327,7 @@ const cp=document.getElementById('clusters');
 if(!CLUSTERS.length) cp.innerHTML='<div style="padding:0 16px;color:var(--muted);font-size:12px">No multi-incident clusters above threshold.</div>';
 CLUSTERS.forEach(c=>{{
   const el=document.createElement('div');el.className='cluster';
-  el.style.borderLeft='3px solid '+(cidColor[c.cluster_id]||'#5b6168');
+  el.style.borderLeft='4px solid '+(cidColor[c.cluster_id]||UNLINKED);
   el.innerHTML=`<div><span class="cid">${{c.cluster_id}}</span><span class="sz">${{c.size}} incidents</span></div>`+
     `<div class="sig">${{(c.signature.length?c.signature:['(no dominant shared features)']).map(s=>'<span>'+s+'</span>').join('')}}</div>`+
     `<div class="mem">${{c.members.join(' · ')}}</div>`;
@@ -347,7 +335,7 @@ CLUSTERS.forEach(c=>{{
     if(selectedCluster===c.cluster_id){{ selectedCluster=null; el.style.outline='none'; }}
     else{{
       document.querySelectorAll('.cluster').forEach(x=>x.style.outline='none');
-      selectedCluster=c.cluster_id; el.style.outline='2px solid '+(cidColor[c.cluster_id]||'#5b6168');
+      selectedCluster=c.cluster_id; el.style.outline='2px solid '+(cidColor[c.cluster_id]||UNLINKED);
       const m=new Set(c.members);
       nodes.forEach(n=>{{ if(m.has(n.id)){{ n.x=W/2+(Math.random()-.5)*160; n.y=H/2+(Math.random()-.5)*160; n.vx=n.vy=0; }} }});
       alpha=1;
