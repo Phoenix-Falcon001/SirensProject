@@ -28,7 +28,9 @@ def test_charts_add_up_to_the_incidents_in_view(client):
     assert "/static/vendor/chart.umd.js" in html
     for cid in ("c-timeline", "c-area", "c-init"):
         assert f'id="{cid}"' in html
-    assert html.count("Show table") == 3                          # every chart has a table twin
+    for cid in ("c-sig", "c-net", "c-hist"):
+        assert f'id="{cid}"' in html
+    assert html.count("Show table") == 5                          # every chart has a table twin
 
 
 def test_each_initiation_bar_matches_its_filter(client):
@@ -73,3 +75,48 @@ def test_confirmed_tile_counts_analyst_decisions(client):
 
 def test_console_links_to_dashboard(client):
     assert b'href="/dashboard"' in client.get("/").data
+
+
+def test_signature_feature_filter_and_counts(client):
+    client.post("/seed")
+    _, d, _ = _page(client)
+    trig = d["signatures"]["trigger"]
+    assert sum(trig["values"]) >= 40                              # every incident counted (some twice)
+    key, n = trig["keys"][0], trig["values"][0]
+    _, fd, tiles = _page(client, f"?feature=trigger:{key}")
+    assert tiles[0] == n
+    assert fd["signatures"]["trigger"]["labels"][0] == key.replace("_", " ")
+
+
+def test_networks_section_matches_link_tree(client):
+    from linker.cluster import Clusterer
+    from linker.match import Matcher
+    from linker import store
+    client.post("/seed")
+    incs = store.all_incidents()
+    links = Matcher().fit(incs).all_pairs(incs, threshold=0.25)
+    clusters = Clusterer(incs, links).clusters()
+    _, d, _ = _page(client)
+    assert sorted(d["networks"]["labels"]) == sorted(c.cluster_id for c in clusters)
+    assert sum(d["networks"]["values"]) == sum(c.size for c in clusters)
+
+
+def test_link_strength_and_review_progress(client):
+    client.post("/seed")
+    html, d, tiles = _page(client)
+    assert sum(d["hist"]["values"]) == tiles[2]                   # histogram covers every link
+    assert sum(tiles[4:7]) == tiles[2]                            # strong + medium + weak = links
+    assert "0%</div>" in html                                     # nothing reviewed yet
+    page = client.get("/review").data.decode()
+    a, b = re.search(r'name="a" value="([^"]+)"><input type="hidden" name="b" value="([^"]+)"', page).groups()
+    client.post("/review/decide", data={"a": a, "b": b, "decision": "reject"})
+    html = client.get("/dashboard").data.decode()
+    assert re.search(r"<b>Rejected</b><span>1 &middot;", html)
+
+
+def test_data_quality_section(client):
+    client.post("/seed")
+    html = client.get("/dashboard").data.decode()
+    assert "Completeness by field" in html
+    assert re.search(r"<b>Date</b><span>40 / 40 &middot; 100%</span>", html)
+    assert html.count('<tr><td class="mono"><strong>INC-') >= 5   # least complete reports listed

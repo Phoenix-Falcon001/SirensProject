@@ -1,7 +1,9 @@
-"""Dashboard: timeline + two breakdown charts over the incidents on record.
+"""Dashboard: statistics and charts over the incidents on record.
 
-A standalone Flask Blueprint (wired into app.py with one line). One filter
-row (date range, area, initiation method) scopes every tile, chart and table
+A standalone Flask Blueprint (wired into app.py with one line). Sections:
+overview tiles, time and place, signatures, candidate networks, link strength
+and analyst review, and data quality. One filter row (date range, area,
+initiation method, signature feature) scopes every tile, chart and table
 on the page. Charts use the vendored Chart.js (static/vendor/), so the page
 works with no network. Every chart has a table twin with the exact numbers.
 
@@ -15,7 +17,7 @@ from datetime import date
 
 from flask import Blueprint, render_template_string, request
 
-from linker import decisions, store
+from linker import decisions, stats, store
 from linker.match import Matcher
 
 dashboard_bp = Blueprint("dashboard", __name__)
@@ -38,13 +40,18 @@ def read_filters(args, incidents) -> dict:
     """Validated filters; anything malformed is ignored rather than erroring."""
     areas = sorted({i.location for i in incidents if i.location})
     inits = sorted({v for i in incidents for (k, v) in i.feature_keys() if k == "initiation"})
+    features = {f"{k}:{v}" for i in incidents for (k, v) in i.feature_keys() if k in stats.FACETS}
+    feature_opts = [(stats.FACET_LABELS[f], [(fv, stats.label(fv.split(":", 1)[1]))
+                     for fv in sorted(x for x in features if x.startswith(f + ":"))])
+                    for f in stats.FACETS]
     f = {
         "start": args.get("from", "") if _DATE.match(args.get("from", "")) else "",
         "end": args.get("to", "") if _DATE.match(args.get("to", "")) else "",
         "area": args.get("area", "") if args.get("area", "") in areas else "",
         "initiation": args.get("initiation", "") if args.get("initiation", "") in inits else "",
+        "feature": args.get("feature", "") if args.get("feature", "") in features else "",
     }
-    return f | {"areas": areas, "inits": inits}
+    return f | {"areas": areas, "inits": inits, "feature_opts": [g for g in feature_opts if g[1]]}
 
 
 def apply_filters(incidents, f) -> list:
@@ -59,6 +66,8 @@ def apply_filters(incidents, f) -> list:
         if f["area"] and i.location != f["area"]:
             continue
         if f["initiation"] and f["initiation"] not in _initiations(i):
+            continue
+        if f["feature"] and tuple(f["feature"].split(":", 1)) not in i.feature_keys():
             continue
         out.append(i)
     return out
@@ -80,7 +89,8 @@ def timeline(incidents) -> dict:
 
 
 def by_area(incidents) -> dict:
-    counts = Counter(i.location or "no location" for i in incidents).most_common()
+    counts = sorted(Counter(i.location or "no location" for i in incidents).items(),
+                    key=lambda kv: (-kv[1], kv[0]))
     top, rest = counts[:TOP_AREAS], counts[TOP_AREAS:]
     labels = [a for a, _ in top]
     values = [n for _, n in top]
@@ -92,7 +102,8 @@ def by_area(incidents) -> dict:
 
 def by_initiation(incidents) -> dict:
     """An incident reporting two methods counts under both, matching the filter."""
-    counts = Counter(v for i in incidents for v in _initiations(i)).most_common()
+    counts = sorted(Counter(v for i in incidents for v in _initiations(i)).items(),
+                    key=lambda kv: (-kv[1], kv[0]))      # ties: A-Z, stable across runs
     missing = sum(1 for i in incidents if not _initiations(i))
     labels = [_label(k) for k, _ in counts] + (["not recorded"] if missing else [])
     values = [n for _, n in counts] + ([missing] if missing else [])
@@ -100,12 +111,10 @@ def by_initiation(incidents) -> dict:
     return {"labels": labels, "values": values, "keys": [k for k, _ in counts], "multi": multi}
 
 
-def link_stats(all_incidents, shown) -> dict:
-    """Links whose two incidents are both in view (scored against the full record)."""
-    ids = {i.incident_id for i in shown}
-    links = Matcher().fit(all_incidents).all_pairs(all_incidents, threshold=THRESHOLD) if all_incidents else []
-    pairs = {tuple(sorted((l.a, l.b))) for l in links if l.a in ids and l.b in ids}
-    confirmed = sum(1 for p, d in decisions.current_decisions().items() if d == "confirm" and p in pairs)
+def link_stats(view_links, current) -> dict:
+    """Links whose two incidents are both in view, and how many an analyst confirmed."""
+    pairs = {tuple(sorted((l.a, l.b))) for l in view_links}
+    confirmed = sum(1 for p, d in current.items() if d == "confirm" and p in pairs)
     return {"links": len(pairs), "confirmed": confirmed}
 
 
@@ -114,13 +123,23 @@ def dashboard_page():
     incidents = store.all_incidents()
     f = read_filters(request.args, incidents)
     shown = apply_filters(incidents, f)
-    active = any(f[k] for k in ("start", "end", "area", "initiation"))
+    active = any(f[k] for k in ("start", "end", "area", "initiation", "feature"))
+    # Score every pair once (rarity weights fitted on the full record, as on /tree).
+    links = Matcher().fit(incidents).all_pairs(incidents, threshold=THRESHOLD) if incidents else []
+    view_links = stats.links_in_view(links, shown)
+    current = decisions.current_decisions()
+    nets = stats.networks(incidents, links, shown)
+    strength = stats.link_strength(view_links, current)
+    sig = stats.signatures(shown)
     return render_template_string(
         _TEMPLATE, f=f, active=active, total=len(incidents), shown=shown,
         n_areas=len({i.location for i in shown if i.location}),
-        stats=link_stats(incidents, shown),
+        stats=link_stats(view_links, current), nets=nets, strength=strength,
+        sig=sig, qual=stats.quality(shown),
         charts={"timeline": timeline(shown), "area": by_area(shown),
-                "initiation": by_initiation(shown)},
+                "initiation": by_initiation(shown), "signatures": sig,
+                "networks": {"labels": nets["labels"], "values": nets["values"]},
+                "hist": {"labels": strength["hist_labels"], "values": strength["hist_values"]}},
         label=_label, today=date.today().isoformat())
 
 
@@ -182,10 +201,37 @@ _TEMPLATE = r"""<!doctype html>
   .hint{font-size:12px;color:var(--weak);margin-top:8px}
   details{margin-top:10px;font-size:13px}
   summary{cursor:pointer;color:var(--link)}
-  table{border-collapse:collapse;margin-top:8px;font-variant-numeric:tabular-nums}
+  table{border-collapse:collapse;margin-top:8px;font-variant-numeric:tabular-nums;font-size:13.5px}
   th,td{text-align:left;padding:4px 18px 4px 0;border-bottom:1px solid var(--line-2)}
+  th{font-size:12px;font-weight:600;color:var(--ink-soft)}
+  .nowrap{white-space:nowrap}
   td.n{text-align:right}
   .empty{color:var(--weak);padding:20px 2px}
+  .jump{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}
+  .jump a{font-family:var(--mono);font-size:12px;text-decoration:none;color:var(--ink-soft);background:#fff;
+        border:1px solid var(--line);border-radius:3px;padding:5px 11px}
+  .jump a:hover{border-color:var(--ink-soft)}
+  h2.sec{font-size:15px;font-weight:600;margin:34px 0 4px;scroll-margin-top:16px}
+  p.lede{font-size:13px;color:var(--weak);margin:0 0 14px}
+  .cardtools{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+  .cardtools label{font-size:12px;font-weight:600;color:var(--ink-soft)}
+  .cardtools select{padding:6px 9px;border:1px solid var(--line);border-radius:4px;font-family:var(--sans);
+        font-size:13.5px;background:#fcfdfc;color:var(--ink)}
+  .chips{display:flex;flex-wrap:wrap;gap:4px}
+  .chip{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:3px;background:var(--sig-soft);
+        color:#7a4e12;border:1px solid #e6d3b0;white-space:nowrap}
+  .band{font-family:var(--mono);font-size:11px;padding:1px 6px;border-radius:3px;border:1px solid var(--line)}
+  .band-strong{background:#e7efe5;color:#3d6b45}.band-medium{background:#f3ecdf;color:#7a4e12}.band-weak{background:#eef0ee;color:var(--weak)}
+  table.wide{width:100%}
+  table.wide td{vertical-align:top;padding-top:7px;padding-bottom:7px}
+  .meters{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px 34px}
+  .mrow .top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
+  .mrow .top b{font-weight:600}
+  .mrow .top span{color:var(--weak);font-variant-numeric:tabular-nums}
+  .meter{height:8px;background:var(--line-2);border-radius:4px;overflow:hidden}
+  .meter span{display:block;height:100%;background:var(--sig);border-radius:4px}
+  .missing{font-size:12px;color:var(--ink-soft)}
+  .mono{font-family:var(--mono)}
 </style>
 </head>
 <body>
@@ -206,6 +252,12 @@ _TEMPLATE = r"""<!doctype html>
       <select id="initiation" name="initiation"><option value="">all methods</option>
         {% for v in f.inits %}<option value="{{ v }}" {{ 'selected' if v == f.initiation else '' }}>{{ label(v) }}</option>{% endfor %}
       </select></div>
+    <div><label for="feature">Signature feature</label>
+      <select id="feature" name="feature"><option value="">any feature</option>
+        {% for group, opts in f.feature_opts %}<optgroup label="{{ group }}">
+          {% for v, l in opts %}<option value="{{ v }}" {{ 'selected' if v == f.feature else '' }}>{{ l }}</option>{% endfor %}
+        </optgroup>{% endfor %}
+      </select></div>
     <div><button class="btn" type="submit">Apply</button>
       {% if active %}<a class="reset" href="{{ url_for('dashboard.dashboard_page') }}">reset</a>{% endif %}</div>
   </form>
@@ -215,7 +267,11 @@ _TEMPLATE = r"""<!doctype html>
   {% if total == 0 %}
     <p class="empty">No incidents on record yet. <a href="{{ url_for('demo.demo_page') }}">Load the demo data</a> first.</p>
   {% else %}
-  <div class="tiles">
+  <nav class="jump" aria-label="Dashboard sections">
+    <a href="#overview">Overview</a><a href="#time">Time and place</a><a href="#signatures">Signatures</a>
+    <a href="#networks">Networks</a><a href="#links">Links and review</a><a href="#quality">Data quality</a>
+  </nav>
+  <div class="tiles" id="overview">
     <div class="tile"><div class="k">Incidents</div><div class="v">{{ shown|length }}</div><div class="s">in view</div></div>
     <div class="tile"><div class="k">Areas</div><div class="v">{{ n_areas }}</div><div class="s">with at least one incident</div></div>
     <div class="tile"><div class="k">Links</div><div class="v">{{ stats.links }}</div><div class="s">between incidents in view (score &ge; 0.25)</div></div>
@@ -225,6 +281,8 @@ _TEMPLATE = r"""<!doctype html>
   {% if not shown %}
     <p class="empty">No incidents match these filters. <a href="{{ url_for('dashboard.dashboard_page') }}">Reset</a></p>
   {% else %}
+  <h2 class="sec" id="time">Time and place</h2>
+  <p class="lede">When and where incidents in view were reported.</p>
   <div class="grid">
     <section class="card wide"><h2>Incidents per month</h2><div class="body">
       <div class="plot"><canvas id="c-timeline" role="img" aria-label="Bar chart of incidents per month"></canvas></div>
@@ -251,6 +309,93 @@ _TEMPLATE = r"""<!doctype html>
       </table></details>
     </div></section>
   </div>
+
+  <h2 class="sec" id="signatures">Signatures</h2>
+  <p class="lede">Which descriptive features the reports in view mention most. An incident can report more than one value.</p>
+  <div class="grid">
+    <section class="card wide"><h2>Signature breakdown</h2><div class="body">
+      <div class="cardtools"><label for="facet">Feature</label>
+        <select id="facet">{% for k, v in sig.items() %}<option value="{{ k }}" {{ 'selected' if loop.first else '' }}>{{ v.name }}</option>{% endfor %}</select>
+      </div>
+      <div class="plot tall"><canvas id="c-sig" role="img" aria-label="Bar chart of the selected signature feature"></canvas></div>
+      <p class="hint">Click a bar to filter the whole page by that feature. The grey bar counts reports where the feature was not recorded.</p>
+      <details><summary>Show table</summary>
+        {% for k, v in sig.items() %}<table class="sig-table" data-facet="{{ k }}"{% if not loop.first %} hidden{% endif %}>
+          <tr><th>{{ v.name }}</th><th>Incidents</th></tr>
+          {% for l in v.labels %}<tr><td>{{ l }}</td><td class="n">{{ v['values'][loop.index0] }}</td></tr>{% endfor %}
+        </table>{% endfor %}
+      </details>
+    </div></section>
+  </div>
+
+  <h2 class="sec" id="networks">Networks</h2>
+  <p class="lede">Candidate networks from the same clustering as the <a href="{{ url_for('link_tree') }}">link tree</a>,
+    listed when at least one member is in view. A candidate network is a lead, not a finding.</p>
+  {% if nets.rows %}
+  <div class="grid">
+    <section class="card"><h2>Network sizes (incidents in view)</h2><div class="body">
+      <div class="plot"><canvas id="c-net" role="img" aria-label="Bar chart of incidents in view per candidate network"></canvas></div>
+      <p class="hint">{{ nets.rows|length }} candidate network(s); {{ nets.unlinked }} incident(s) in view are not in any network.</p>
+    </div></section>
+    <section class="card"><h2>Networks at a glance</h2><div class="body">
+      <table class="wide"><tr><th>Network</th><th>In view / total</th><th>Active</th><th>Areas</th><th>Strongest link</th></tr>
+        {% for r in nets.rows %}<tr><td class="mono"><strong>{{ r.id }}</strong></td><td>{{ r.in_view }} / {{ r.size }}</td>
+          <td class="nowrap">{{ r.first or '?' }} &ndash; {{ r.last or '?' }}</td><td>{{ r.areas }}</td>
+          <td class="nowrap">{% if r.best_band %}{{ '%.2f'|format(r.best) }} <span class="band band-{{ r.best_band }}">{{ r.best_band }}</span>{% endif %}</td></tr>{% endfor %}
+      </table>
+    </div></section>
+    <section class="card wide"><h2>What each network has in common</h2><div class="body">
+      <table class="wide"><tr><th>Network</th><th>Common signature (shared by most members)</th><th>Members in view</th></tr>
+        {% for r in nets.rows %}<tr><td class="mono"><strong>{{ r.id }}</strong></td>
+          <td><div class="chips">{% for x in r.signature %}<span class="chip">{{ x }}</span>{% else %}<span class="missing">none shared by most members</span>{% endfor %}</div></td>
+          <td class="missing">{{ r.members|join(', ') }}</td></tr>{% endfor %}
+      </table>
+    </div></section>
+  </div>
+  {% else %}<p class="empty">No candidate network has a member in view.</p>{% endif %}
+
+  <h2 class="sec" id="links">Links and review</h2>
+  <p class="lede">How strong the {{ strength.total }} link(s) between incidents in view are, and how many an analyst has reviewed.</p>
+  <div class="tiles">
+    {% for b in strength.bands %}<div class="tile"><div class="k">{{ b.band }} links</div><div class="v">{{ b.n }}</div>
+      <div class="s">{{ {'strong':'score 0.66 or more','medium':'score 0.40 to 0.66','weak':'score 0.25 to 0.40'}[b.band] }}</div></div>{% endfor %}
+    <div class="tile"><div class="k">Reviewed</div><div class="v">{{ strength.reviewed_pct }}%</div>
+      <div class="s">of links in view (<a href="{{ url_for('review.review_page', show='open') }}">review the rest</a>)</div></div>
+  </div>
+  <div class="grid">
+    <section class="card"><h2>Link score distribution</h2><div class="body">
+      <div class="plot"><canvas id="c-hist" role="img" aria-label="Histogram of link scores"></canvas></div>
+      <details><summary>Show table</summary><table><tr><th>Score</th><th>Links</th></tr>
+        {% for l in strength.hist_labels %}<tr><td>{{ l }}</td><td class="n">{{ strength.hist_values[loop.index0] }}</td></tr>{% endfor %}
+      </table></details>
+    </div></section>
+    <section class="card"><h2>Analyst review progress</h2><div class="body">
+      <div class="meters" style="grid-template-columns:1fr">
+        {% for r in strength.review %}<div class="mrow"><div class="top"><b>{{ r.label }}</b><span>{{ r.n }} &middot; {{ r.pct }}%</span></div>
+          <div class="meter" role="img" aria-label="{{ r.label }}: {{ r.pct }} percent"><span style="width:{{ r.pct }}%"></span></div></div>{% endfor %}
+      </div>
+      <p class="hint">Decisions are stored separately from the machine's scores and can always be undone.</p>
+    </div></section>
+  </div>
+
+  <h2 class="sec" id="quality">Data quality</h2>
+  <p class="lede">Which fields the reports in view carry, as found by Sirens in the report text. Low values can mean the
+    reports do not mention the field, or that the wording is not in the taxonomy yet.</p>
+  <div class="grid">
+    <section class="card wide"><h2>Completeness by field &middot; overall {{ qual.overall }}%</h2><div class="body">
+      <div class="meters">
+        {% for r in qual.fields %}<div class="mrow"><div class="top"><b>{{ r.label }}</b><span>{{ r.n }} / {{ shown|length }} &middot; {{ r.pct }}%</span></div>
+          <div class="meter" role="img" aria-label="{{ r.label }}: {{ r.pct }} percent"><span style="width:{{ r.pct }}%"></span></div></div>{% endfor %}
+      </div>
+    </div></section>
+    <section class="card wide"><h2>Least complete reports</h2><div class="body">
+      <table class="wide"><tr><th>Incident</th><th>Place &middot; date</th><th>Complete</th><th>Missing</th></tr>
+        {% for r in qual.weakest %}<tr><td class="mono"><strong>{{ r.id }}</strong></td><td class="nowrap">{{ r.location }} &middot; {{ r.date }}</td>
+          <td>{{ r.pct }}%</td><td class="missing">{{ r.missing|join(', ') or 'nothing' }}</td></tr>{% endfor %}
+      </table>
+      <p class="hint">Completeness = share of the {{ qual.n_fields }} fields above that a report carries.</p>
+    </div></section>
+  </div>
   {% endif %}
   {% endif %}
 </div>
@@ -269,7 +414,8 @@ _TEMPLATE = r"""<!doctype html>
     var cat = {grid: {display: false}, border: {color: '#e2e6e3'}};
     return horizontal ? {x: value, y: cat} : {x: cat, y: value};
   }
-  function bar(id, data, horizontal, onPick){
+  function bar(id, data, horizontal, onPick, unit){
+    unit = unit || 'incident(s)';
     // Grouped bars ("Other", "not recorded") are not one category: draw them muted.
     var n = data.keys ? data.keys.length : data.values.length;
     var fill = data.values.map(function(_, i){ return i < n ? ACCENT : MUTED; });
@@ -282,7 +428,7 @@ _TEMPLATE = r"""<!doctype html>
       options: {indexAxis: horizontal ? 'y' : 'x', responsive: true, maintainAspectRatio: false,
                 animation: false, plugins: {legend: {display: false},
                 tooltip: {displayColors: false, callbacks: {label: function(c){
-                  return c.parsed[horizontal ? 'x' : 'y'] + ' incident(s)'; }}}},
+                  return c.parsed[horizontal ? 'x' : 'y'] + ' ' + unit; }}}},
                 scales: axes(horizontal),
                 onHover: function(e, els){ e.native.target.style.cursor = (onPick && els.length) ? 'pointer' : 'default'; },
                 onClick: function(e, els){ if (onPick && els.length) onPick(els[0].index); }}
@@ -299,6 +445,32 @@ _TEMPLATE = r"""<!doctype html>
   bar('c-timeline', D.timeline, false, null);
   bar('c-area', D.area, true, filterBy('area', D.area.keys));
   bar('c-init', D.initiation, true, filterBy('initiation', D.initiation.keys));
+  if (document.getElementById('c-net')) bar('c-net', D.networks, true, null, 'incident(s) in view');
+  var hist = bar('c-hist', D.hist, false, null, 'link(s)');
+  // Axis shows where each 0.05-wide bin starts; tooltip and table give the full range.
+  hist.options.scales.x.ticks = {maxRotation: 0, autoSkip: true,
+    callback: function(v){ return this.getLabelForValue(v).split('–')[0]; }};
+  hist.options.plugins.tooltip.callbacks.title = function(items){ return 'score ' + items[0].label; };
+  hist.update();
+
+  // Signature breakdown: one chart, the selector swaps which feature it shows.
+  var sel = document.getElementById('facet');
+  var facet = sel.value;
+  var sigChart = bar('c-sig', D.signatures[facet], true, function(i){
+    var keys = D.signatures[facet].keys;
+    filterBy('feature', keys.map(function(k){ return facet + ':' + k; }))(i);
+  });
+  sel.addEventListener('change', function(){
+    facet = sel.value;
+    var d = D.signatures[facet], n = d.keys.length;
+    var fill = d.values.map(function(_, i){ return i < n ? ACCENT : MUTED; });
+    sigChart.data.labels = d.labels;
+    sigChart.data.datasets[0].data = d.values;
+    sigChart.data.datasets[0].backgroundColor = fill;
+    sigChart.data.datasets[0].hoverBackgroundColor = fill.map(function(c){ return c === ACCENT ? '#8c5a2b' : '#aeb6b1'; });
+    sigChart.update();
+    document.querySelectorAll('.sig-table').forEach(function(t){ t.hidden = t.dataset.facet !== facet; });
+  });
 })();
 </script>
 </body>
