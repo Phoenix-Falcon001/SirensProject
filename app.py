@@ -596,10 +596,16 @@ TEMPLATE = r"""{% macro ref_card(e) %}
   {% if not result %}
     <div class="card"><div class="body">
       {% if status.db_count == 0 %}
-        <p class="empty">The database is empty. Load the 13 sample incidents to try it, then paste a new report to see what it links to.</p>
-        <form method="post" action="/seed"><button class="btn" type="submit">Load sample incidents</button></form>
+        <p class="empty">The database is empty. Load the 40 fabricated sample incidents to try it, then paste a new report to see what it links to.</p>
+        <form method="post" action="/seed"><button class="btn" type="submit">Load demo data (fabricated)</button></form>
       {% else %}
         <p class="empty">Paste a report on the left and press <strong>Analyse</strong>. Sirens checks it against the {{ status.db_count }} incidents on record — by shared signature and by meaning — and, with AI on, explains the strongest links.</p>
+        <div class="subhead">Or explore the record</div>
+        <div class="matches">
+          <a class="match" href="/dashboard" style="display:block;text-decoration:none;color:inherit"><span class="mid">Dashboard</span> <span class="loc">statistics, networks and data quality</span></a>
+          <a class="match" href="/review" style="display:block;text-decoration:none;color:inherit"><span class="mid">Review links</span> <span class="loc">confirm, reject or flag each link</span></a>
+          <a class="match" href="/tree" style="display:block;text-decoration:none;color:inherit"><span class="mid">Link tree</span> <span class="loc">graph of linked incidents</span></a>
+        </div>
         <form method="post" action="/clear" onsubmit="return confirm('Delete all stored incidents?')">
           <button class="btn ghost" type="submit">Clear database</button></form>
       {% endif %}
