@@ -211,7 +211,7 @@ _TEMPLATE = r"""<!doctype html>
   .jump a{font-family:var(--mono);font-size:12px;text-decoration:none;color:var(--ink-soft);background:#fff;
         border:1px solid var(--line);border-radius:3px;padding:5px 11px}
   .jump a:hover{border-color:var(--ink-soft)}
-  h2.sec{font-size:15px;font-weight:600;margin:34px 0 4px;scroll-margin-top:16px}
+  h2.sec{font-size:15px;font-weight:600;margin:34px 0 4px}
   p.lede{font-size:13px;color:var(--weak);margin:0 0 14px}
   .cardtools{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
   .cardtools label{font-size:12px;font-weight:600;color:var(--ink-soft)}
