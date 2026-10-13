@@ -49,6 +49,7 @@ from demo_bp import demo_bp; app.register_blueprint(demo_bp)
 from review_bp import review_bp; app.register_blueprint(review_bp)
 from dashboard_bp import dashboard_bp; app.register_blueprint(dashboard_bp)
 from network_bp import network_bp; app.register_blueprint(network_bp)
+import ui_menu; ui_menu.register(app)
 
 # Load the extractor once (spaCy start-up cost paid a single time).
 _EXTRACTOR = FeatureExtractor(TAXONOMY, use_ner=True)
@@ -469,12 +470,7 @@ TEMPLATE = r"""{% macro ref_card(e) %}
 <body>
 <div class="bar">
   <div class="brand">Sirens<small>C-IED Incident Link Console</small></div>
-  <a href="/map" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">map &#8599;</a>
-  <a href="/tree" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">link tree &#8599;</a>
-  <a href="/review" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">review links</a>
-  <a href="/dashboard" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">dashboard</a>
-  <a href="/brief" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">brief &#8599;</a>
-  <a href="/demo" style="color:#cdd8e0;font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px">demo data</a>
+  {{ sirens_menu('console') }}
   <div class="badges">
     <span class="badge {{ 'on' if status.db_count else 'off' }}"><span class="dot"></span>{{ status.db_count }} in database</span>
     <span class="badge {{ 'on' if status.sem_ok else 'off' }}"><span class="dot"></span>meaning: {{ 'vectors' if status.sem_ok else 'lexical' }}</span>
@@ -1164,7 +1160,7 @@ def link_tree():
 
     html_page = report.html_report(
         incidents, links, clusters, payload,
-        title="Sirens — Incident Link Tree",
+        title="Sirens — Incident Link Tree", nav=ui_menu.menu("tree"),
     )
     return html_page
 
@@ -1360,7 +1356,7 @@ MAP_TEMPLATE = r"""<!doctype html>
   .empty{color:var(--weak);font-size:14px}
 </style></head><body>
 <div class="bar"><div class="brand">Sirens<small>Incident Map — Lebanon by caza</small></div>
-  <a href="/">&#8592; console</a></div>
+  {{ sirens_menu('map') }}</div>
 <div class="wrap">
 {% if not ready %}
   <h1>Incident map</h1>

@@ -78,14 +78,22 @@ def static_graph_png(clusterer, path: str | pathlib.Path) -> pathlib.Path:
 
 
 # ------------------------------------------------------------------ HTML -----
+_CONSOLE_LINK = ('<a href="http://127.0.0.1:5000/" style="color:#8b96a2;font-family:ui-monospace,'
+                 'Menlo,Consolas,monospace;font-size:11px;text-decoration:none;border:1px solid #2a323b;'
+                 'padding:5px 10px;border-radius:4px">&#8592; console</a>')
+
+
 def html_report(incidents, links, clusters, graph_payload,
-                title: str = "C-IED Incident Link Analysis") -> str:
+                title: str = "C-IED Incident Link Analysis", nav: str = "") -> str:
+    """Self-contained HTML link chart. `nav` is the web app's shared menu
+    (ui_menu.menu); standalone files from the CLI get a plain console link."""
     data_json = json.dumps(graph_payload)
     clusters_json = json.dumps([c.to_dict() for c in clusters])
     inc_json = json.dumps({i.incident_id: i.to_dict() for i in incidents})
 
     return _HTML_TEMPLATE.format(
         title=html.escape(title),
+        nav=nav or _CONSOLE_LINK,
         n_inc=len(incidents),
         n_link=len(links),
         n_clu=len(clusters),
@@ -152,9 +160,9 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
 <div class="wrap">
   <header>
     <h1>{title}</h1>
+    {nav}
     <div class="stats">INCIDENTS <b>{n_inc}</b> &nbsp;·&nbsp; LINKS <b>{n_link}</b>
       &nbsp;·&nbsp; CLUSTERS <b>{n_clu}</b></div>
-    <a href="http://127.0.0.1:5000/" style="margin-left:auto;color:#8b96a2;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;text-decoration:none;border:1px solid #2a323b;padding:5px 10px;border-radius:4px">&#8592; console</a>
   </header>
   <div id="stage">
     <canvas id="c"></canvas>

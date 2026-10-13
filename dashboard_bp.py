@@ -149,9 +149,6 @@ _TEMPLATE = r"""<!doctype html>
          text-transform:uppercase;font-size:15px}
   .brand small{display:block;letter-spacing:.06em;font-size:10px;color:#9fb0bd;
                font-weight:400;margin-top:2px}
-  .nav{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
-  .nav a{color:#cdd8e0;font-family:var(--mono);font-size:11px;
-    text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px}
   .wrap{max-width:1400px;margin:0 auto;padding:32px 48px 90px}
   @media(max-width:1000px){.wrap{padding:22px 18px 60px}}
   h1{font-size:20px;font-weight:600;margin:0 0 14px}
@@ -194,13 +191,7 @@ _TEMPLATE = r"""<!doctype html>
 <body>
 <div class="bar">
   <div class="brand">Sirens<small>dashboard · incidents on record</small></div>
-  <nav class="nav">
-    <a href="{{ url_for('incident_map') }}">map</a>
-    <a href="{{ url_for('link_tree') }}">link tree</a>
-    <a href="{{ url_for('review.review_page') }}">review links</a>
-    <a href="{{ url_for('brief.brief_page') }}">brief</a>
-    <a href="{{ url_for('index') }}">&#8592; console</a>
-  </nav>
+  {{ sirens_menu('dashboard') }}
 </div>
 <div class="wrap">
   <h1>Dashboard</h1>
