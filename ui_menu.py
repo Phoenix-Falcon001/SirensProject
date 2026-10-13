@@ -24,7 +24,7 @@ MENU = [
         ("dashboard", "Dashboard", "dashboard.dashboard_page", "Statistics and charts over the record"),
         ("review", "Review links", "review.review_page", "Confirm, reject or flag each link"),
         ("tree", "Link tree", "link_tree", "Graph of linked incidents and networks"),
-        ("map", "Map", "incident_map", "Incidents by caza"),
+        ("map", "Map", "incident_map", "Offline street map, incidents and MGRS grid"),
     ]),
     ("Data", [
         ("demo", "Load demo data", "demo.demo_page", "40 fabricated sample incidents"),
