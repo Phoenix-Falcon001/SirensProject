@@ -62,6 +62,13 @@ _SCRIPT = """<script>
   // .open = opened by click/keyboard; .shut = closed on purpose, so hover
   // does not reopen it until the pointer leaves.
   var groups = document.querySelectorAll('.sm .sm-group');
+  // Lift the bar holding the menu above the page body, so an open panel is
+  // never covered by content that shares the bar's stacking layer.
+  document.querySelectorAll('.sm').forEach(function(nav){
+    var host = nav.parentElement;
+    if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+    host.style.zIndex = '40';
+  });
   function set(g, open){ g.classList.toggle('open', open); g.classList.toggle('shut', !open);
     g.querySelector('.sm-head').setAttribute('aria-expanded', open ? 'true' : 'false'); }
   groups.forEach(function(g){
