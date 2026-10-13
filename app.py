@@ -27,6 +27,7 @@ from linker.match import Matcher
 from linker.cluster import Clusterer
 from linker import store, semantic, ai, reference, report
 from linker.models import Incident
+from linker.grid_ref import to_mgrs
 
 ROOT = pathlib.Path(__file__).resolve().parent
 TAXONOMY = ROOT / "data" / "taxonomy" / "cied_lexicon.json"
@@ -1040,12 +1041,16 @@ def incident_map():
         key = canon.get(_norm(d)) if d else None
         lat, lon = m.get("lat"), m.get("lon")
         exact = lat is not None and lon is not None
-        if not exact:
+        if exact:
+            mgrs_ref = to_mgrs(lat, lon)
+        else:
             if key not in centres:
                 unplaced += 1
                 continue
             idx = percaza.get(key, 0)
             percaza[key] = idx + 1
+            # the reference names the caza centre, not the display-spread marker
+            mgrs_ref = to_mgrs(centres[key][1], centres[key][0])
             lon, lat = map_bp.spread(*centres[key], idx)
         mun = _infer_munition(inc, m.get("munition"))
         typecounts[mun] = typecounts.get(mun, 0) + 1
@@ -1056,7 +1061,7 @@ def incident_map():
             "street": m.get("street", "") or "", "type": mun,
             "typelabel": _MUNITION_LABEL.get(mun, mun), "fill": _MUNITION_COLOR.get(mun, "#8a929a"),
             "item_color": m.get("color", "") or "", "condition": m.get("condition", []) or [],
-            "grid": m.get("grid") or (_fmt_grid(lat, lon) if exact else ""),
+            "grid": m.get("grid") or (_fmt_grid(lat, lon) if exact else ""), "mgrs": mgrs_ref,
             "snip": snip[:160] + ("…" if len(snip) > 160 else ""),
         })
     legend = [{"key": k, "label": l, "color": c, "count": typecounts[k]}

@@ -211,6 +211,11 @@ _PAGE = r"""<!doctype html>
   .pop .row{margin:2px 0}
   .pop .approx{font-size:11.5px;color:#7a4e12;background:var(--sig-soft);border-radius:4px;padding:2px 6px;display:inline-block;margin-top:4px}
   .pop .snip{color:var(--soft);font-size:12.5px;margin-top:6px}
+  .readout{position:absolute;z-index:4;left:50%;bottom:12px;transform:translateX(-50%);background:rgba(255,255,255,.95);
+       border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:12.5px;color:var(--soft);
+       box-shadow:0 2px 8px rgba(22,32,43,.12);white-space:nowrap}
+  .readout b{font-family:var(--mono);color:var(--ink);font-weight:600;letter-spacing:.02em}
+  .readout.copied{border-color:#c9dcc6;background:#e7efe5;color:#3d6b45}
 </style>
 </head><body>
 <div class="bar"><div class="brand">Sirens<small>incident map · Lebanon (offline street map)</small></div>{{ sirens_menu('map') }}</div>
@@ -234,11 +239,17 @@ _PAGE = r"""<!doctype html>
     <button type="button" class="inc" data-id="{{ i.id }}"><b>{{ i.id }}</b> · {{ i.typelabel }}
       <small>{{ i.loc or 'no location' }} · {{ i.date or 'no date' }} · {{ 'exact grid' if i.exact else 'approx. (caza level)' }}</small></button>
     {% else %}<p class="note">No incidents could be placed. Load the demo data or file a report with a caza.</p>{% endfor %}
+    <p class="note"><strong>MGRS grid</strong> (6-digit, 100 m): 100 km squares when zoomed out, 10 km lines at
+      district zoom, 1 km lines up close. Move over the map to read a reference; click to copy it.
+      Lebanon spans zones <b>36S</b> and <b>37S</b>, which meet at <b>36&deg;E</b> in the Bekaa: the grid jumps
+      at that line, which is correct.</p>
     <p class="note" style="margin-top:14px">Map data {{ attribution }}. Street map shown for orientation only.</p>
   </aside>
 </div>
 <script id="map-data" type="application/json">{{ {'incidents': incidents, 'bounds': bounds, 'have_map': have_map}|tojson }}</script>
 <script src="{{ url_for('static', filename='vendor/pmtiles/pmtiles.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/mgrs/mgrs.min.js') }}"></script>
+<script src="{{ url_for('static', filename='map/mgrs_grid.js') }}"></script>
 <script type="module">
 import * as maplibregl from "{{ url_for('static', filename='vendor/maplibre-gl/maplibre-gl.mjs') }}";
 const D = JSON.parse(document.getElementById('map-data').textContent);
@@ -257,7 +268,7 @@ function popupNode(i) {
   if (i.item_color) add('div', 'row', 'Colour / markings: ' + i.item_color);
   if (i.condition && i.condition.length) add('div', 'row', 'Condition: ' + i.condition.join(', '));
   if (i.grid) add('div', 'row', 'Grid: ' + i.grid);
-  if (i.mgrs) add('div', 'row', 'MGRS: ' + i.mgrs);
+  if (i.mgrs) add('div', 'row', 'MGRS: ' + i.mgrs + (i.exact ? '' : ' (approx., caza centre)'));
   add('span', 'approx', i.exact ? 'Exact: from the filed grid reference' : 'Approx. — placed at caza level');
   if (i.snip) add('div', 'snip', i.snip);
   return el;
@@ -325,6 +336,55 @@ if (D.have_map) {
       tip.style.left = (e.point.x + 14) + 'px'; tip.style.top = (e.point.y + 14) + 'px'; tip.style.display = 'block';
     });
     map.on('mouseout', () => { tip.style.display = 'none'; });
+    // ---- MGRS grid, live readout and click-to-copy ----
+    const G = window.SirensMGRS;
+    map.addSource('mgrs', {type: 'geojson', data: {type: 'FeatureCollection', features: []}});
+    map.addLayer({id: 'mgrs-lines', type: 'line', source: 'mgrs', filter: ['==', ['geometry-type'], 'LineString'],
+      paint: {'line-color': '#3a4652', 'line-opacity': ['case', ['get', 'major'], 0.5, 0.25], 'line-width': ['case', ['get', 'major'], 1.2, 0.7]}});
+    map.addLayer({id: 'mgrs-line-labels', type: 'symbol', source: 'mgrs', filter: ['all', ['==', ['geometry-type'], 'LineString'], ['!=', ['get', 'label'], '']],
+      layout: {'symbol-placement': 'line', 'symbol-spacing': 320, 'text-field': ['get', 'label'], 'text-font': ['Noto Sans Regular'], 'text-size': 11},
+      paint: {'text-color': '#3a4652', 'text-halo-color': '#ffffff', 'text-halo-width': 1.4}});
+    map.addLayer({id: 'mgrs-squares', type: 'symbol', source: 'mgrs', filter: ['has', 'square'],
+      layout: {'text-field': ['get', 'square'], 'text-font': ['Noto Sans Medium'], 'text-size': 14, 'text-allow-overlap': false},
+      paint: {'text-color': '#16202b', 'text-opacity': 0.55, 'text-halo-color': '#ffffff', 'text-halo-width': 1.6}});
+    map.addSource('seam', {type: 'geojson', data: {type: 'Feature', properties: {label: 'UTM zone 36S | 37S (36°E)'},
+      geometry: {type: 'LineString', coordinates: [[36, y0 - 0.2], [36, y1 + 0.2]]}}});
+    map.addLayer({id: 'zone-seam', type: 'line', source: 'seam', paint: {'line-color': '#a8703a', 'line-width': 1.4, 'line-opacity': 0.7}});
+    map.addLayer({id: 'zone-seam-label', type: 'symbol', source: 'seam', layout: {'symbol-placement': 'line', 'symbol-spacing': 600,
+      'text-field': ['get', 'label'], 'text-font': ['Noto Sans Medium'], 'text-size': 11}, paint: {'text-color': '#7a4e12', 'text-halo-color': '#fff', 'text-halo-width': 1.6}});
+    ['incidents'].forEach(id => map.moveLayer(id));      // markers stay on top of the grid
+
+    const spacing = z => z < 9 ? 100000 : z < 12 ? 10000 : 1000;
+    const refreshGrid = () => {
+      const b = map.getBounds();
+      const box = [Math.max(b.getWest(), x0 - padX), Math.max(b.getSouth(), y0 - padY), Math.min(b.getEast(), x1 + padX), Math.min(b.getNorth(), y1 + padY)];
+      map.getSource('mgrs').setData(G.gridFeatures(box, spacing(map.getZoom()), window.mgrs));
+      window.sirensGridSpacing = spacing(map.getZoom());
+    };
+    map.on('moveend', refreshGrid); refreshGrid();
+
+    const ro = document.createElement('div'); ro.className = 'readout'; ro.setAttribute('aria-live', 'polite');
+    const idle = 'Move over the map for an MGRS reference';
+    ro.textContent = idle; document.getElementById('map').appendChild(ro);
+    const refAt = ll => G.format(window.mgrs.forward([ll.lng, ll.lat], 3));
+    let copiedUntil = 0;
+    map.on('mousemove', e => {
+      if (Date.now() < copiedUntil) return;
+      ro.className = 'readout'; ro.replaceChildren('MGRS ', Object.assign(document.createElement('b'), {textContent: refAt(e.lngLat)}), ' · click to copy');
+    });
+    map.getCanvas().addEventListener('mouseleave', () => { if (Date.now() >= copiedUntil) { ro.className = 'readout'; ro.textContent = idle; } });
+    const copy = async text => {
+      try { await navigator.clipboard.writeText(text); return true; } catch (err) {
+        const t = Object.assign(document.createElement('textarea'), {value: text}); document.body.appendChild(t); t.select();
+        const ok = document.execCommand('copy'); t.remove(); return ok; }
+    };
+    map.on('click', async e => {
+      if (map.queryRenderedFeatures(e.point, {layers: ['incidents']}).length) return;   // a marker opens its popup instead
+      const ref = refAt(e.lngLat), ok = await copy(ref);
+      copiedUntil = Date.now() + 1800; ro.className = 'readout copied';
+      ro.replaceChildren(ok ? 'Copied ' : 'Could not copy ', Object.assign(document.createElement('b'), {textContent: ref}));
+      window.sirensLastCopied = ok ? ref : null;
+    });
     window.sirensMapReady = true;
   });
 }

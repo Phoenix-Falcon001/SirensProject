@@ -9,6 +9,7 @@ Do not replace these with CDN links.
 | chart.umd.js | Chart.js | 4.5.1 | MIT |  unpkg.com/chart.js@4.5.1/dist/chart.umd.js |
 | maplibre-gl/ (maplibre-gl.mjs, maplibre-gl-worker.mjs, maplibre-gl-shared.mjs, maplibre-gl.css, LICENSE.txt) | MapLibre GL JS | 6.14.0 | BSD-3-Clause | npm `maplibre-gl@6.14.0`, `dist/` |
 | pmtiles/pmtiles.js (+ LICENSE) | pmtiles (PMTiles reader) | 4.5.0 | BSD-3-Clause | npm `pmtiles@4.5.0`, `dist/pmtiles.js` |
+| mgrs/mgrs.min.js (+ LICENSE.md) | mgrs (proj4js project; lat/lon to MGRS) | 2.2.0 | MIT | npm `mgrs@2.2.0`, `dist/mgrs.min.js` |
 
 Map assets outside this folder, also local and committed:
 
