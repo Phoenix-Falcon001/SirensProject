@@ -282,9 +282,15 @@ const byId = Object.fromEntries(D.incidents.map(i => [i.id, i]));
 if (D.have_map) {
   const protocol = new pmtiles.Protocol();
   maplibregl.addProtocol('pmtiles', protocol.tile);
-  let style;
+  let style = null;
   try { style = await (await fetch("{{ url_for('static', filename='map/style.json') }}")).json(); }
-  catch (e) { throw new Error('map style could not be loaded: ' + e.message); }
+  catch (e) {   // e.g. the page is being left while it loads; say so calmly instead of failing
+    const box = document.createElement('div'); box.className = 'missing';
+    box.innerHTML = '<div class="card" role="status"><h1>The map style could not be loaded</h1>' +
+      '<p>Reload the page. The incidents are listed on the right.</p></div>';
+    document.getElementById('map').appendChild(box);
+  }
+  if (style) {
   style.sources.protomaps.url = 'pmtiles://' + location.origin + "{{ url_for('offmap.pmtiles_file') }}";
   const map = new maplibregl.Map({
     container: 'map', style, bounds: [[x0, y0], [x1, y1]], fitBoundsOptions: {padding: 20},
@@ -387,6 +393,7 @@ if (D.have_map) {
     });
     window.sirensMapReady = true;
   });
+  }
 }
 </script>
 </body></html>
