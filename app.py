@@ -50,6 +50,7 @@ from review_bp import review_bp; app.register_blueprint(review_bp)
 from dashboard_bp import dashboard_bp; app.register_blueprint(dashboard_bp)
 from network_bp import network_bp; app.register_blueprint(network_bp)
 import ui_menu; ui_menu.register(app)
+import forms_ui; forms_ui.register(app, lambda: sorted(set(_LOCATION_ALIASES) | set(_CAZA_NAMES)))
 
 # Load the extractor once (spaCy start-up cost paid a single time).
 _EXTRACTOR = FeatureExtractor(TAXONOMY, use_ner=True)
@@ -290,7 +291,7 @@ def _status() -> dict:
     }
 
 
-TEMPLATE = r"""{% macro ref_card(e) %}
+TEMPLATE = r"""{% import "forms_ui.html" as f %}{% macro ref_card(e) %}
 <div class="refcard">
   <div class="reftitle">{{ e.label }} <span class="refkey mono">{{ e.object_type }}</span></div>
   {% if e.summary %}<p class="refsum">{{ e.summary }}</p>{% endif %}
@@ -466,6 +467,7 @@ TEMPLATE = r"""{% macro ref_card(e) %}
     @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   }
 </style>
+{{ f.assets() }}
 </head>
 <body>
 <div class="bar">
@@ -479,114 +481,58 @@ TEMPLATE = r"""{% macro ref_card(e) %}
 </div>
 
 <div class="wrap">
-{% if error %}<div class="err">{{ error }}</div>{% endif %}
 <div class="grid">
 
   <!-- LEFT: input -->
   <section class="card">
     <h2>New report</h2>
     <div class="body">
-      <form method="post" action="/analyse" enctype="multipart/form-data">
-        <div class="row">
-          <div class="field">
-            <label for="incident_id">Incident ID</label>
-            <input type="text" id="incident_id" name="incident_id" class="mono"
-                   value="{{ form.incident_id or suggested_id }}">
+      {% if result and result.saved %}<div class="f-saved" role="status">Saved <strong class="mono">{{ result.incident.incident_id }}</strong> to the database. Its likely network is shown on the right.</div>{% endif %}
+      <form class="f-form" method="post" action="/analyse" enctype="multipart/form-data" novalidate>
+        {{ f.form_error(error) }}
+        {% call f.section("When & where") %}
+          {{ f.input("incident_id", "Incident ID", "incident_id", value=(form.incident_id or suggested_id), mono=True) }}
+          {{ f.input("date", "Date", "date", value=form.date, placeholder="2026-03-04", rules="date-advisory", optional=True) }}
+          {{ f.select("caza", "Caza (district)", "caza", cazas, selected=form.caza, blank="— select caza —", optional=True) }}
+          {{ f.input("street", "Town, village or street", "street", value=form.street, placeholder="e.g. Yaroun, main road",
+                     list="placelist", rules="place:placelist:caza", optional=True) }}
+          <datalist id="placelist">{% for pl in map_places() %}<option value="{{ pl }}">{% endfor %}</datalist>
+        {% endcall %}
+        {% call f.section("What happened") %}
+          {{ f.textarea("narrative", "Report narrative", "narrative", value=form.narrative, rules="required",
+                        placeholder="Paste the incident report here. Free text is fine: messy field reporting is what Sirens is built for.",
+                        required_msg="Paste the report narrative: it is the one field Sirens needs.") }}
+          {{ f.select("munition", "Munition / device type", "munition", munitions, selected=form.munition, blank="— select type —", optional=True) }}
+        {% endcall %}
+        {% set more_open = form.item_color or sel_conditions or form.utm_e or form.utm_n or form.lat or form.lon %}
+        {% call f.more("More details", open=more_open, sub="colour, condition, grid reference, photo") %}
+          {{ f.input("item_color", "Item colour / markings", "item_color", value=form.item_color, list="colorlist", placeholder="olive, rust, unpainted…", optional=True) }}
+          <datalist id="colorlist">{% for c in colors %}<option value="{{ c }}">{% endfor %}</datalist>
+          {{ f.choices("condition", "Condition", "condition", conditions, checked=sel_conditions, optional=True) }}
+          {{ f.choices("grid_mode", "Grid reference", "grid_mode", [("utm", "UTM"), ("latlon", "Lat / Lon")], checked=[form.grid_mode or 'utm'], kind="radio", optional=True) }}
+          <div class="f-wide f-gridrow" id="utmrow">
+            {{ f.select("utm_zone", "Zone", "utm_zone", [("36", "36"), ("37", "37")], selected=(form.utm_zone or "36")) }}
+            {{ f.input("utm_e", "Easting", "utm_e", value=form.utm_e, placeholder="731351", mono=True, inputmode="decimal", rules="number range:100000,900000 pair:utm_n") }}
+            {{ f.input("utm_n", "Northing", "utm_n", value=form.utm_n, placeholder="3753199", mono=True, inputmode="decimal", rules="number range:0,10000000 pair:utm_e") }}
           </div>
-          <div class="field">
-            <label for="date">Date</label>
-            <input type="text" id="date" name="date" placeholder="2026-03-04"
-                   value="{{ form.date or '' }}">
+          <div class="f-wide f-gridrow" id="llrow" style="display:none">
+            {{ f.input("lat", "Latitude", "lat", value=form.lat, placeholder="33.2700", mono=True, inputmode="decimal", rules="number range:-90,90 pair:lon") }}
+            {{ f.input("lon", "Longitude", "lon", value=form.lon, placeholder="35.2000", mono=True, inputmode="decimal", rules="number range:-180,180 pair:lat") }}
           </div>
-        </div>
-        <div class="row">
-          <div class="field">
-            <label for="caza">Caza (district)</label>
-            <select id="caza" name="caza">
-              <option value="">&mdash; select caza &mdash;</option>
-              {% for cz in cazas %}<option value="{{ cz }}"{{ ' selected' if form.caza == cz else '' }}>{{ cz }}</option>{% endfor %}
-            </select>
-            <div class="hint">Sets where this report lands on the map.</div>
-          </div>
-          <div class="field">
-            <label for="street">Street / exact place</label>
-            <input type="text" id="street" name="street"
-                   placeholder="Route Copper, near junction" value="{{ form.street or '' }}">
-          </div>
-        </div>
-        <div class="row">
-          <div class="field">
-            <label for="munition">Munition / device type</label>
-            <select id="munition" name="munition">
-              <option value="">&mdash; select type &mdash;</option>
-              {% for k, l, c in munitions %}<option value="{{ k }}"{{ ' selected' if form.munition == k else '' }}>{{ l }}</option>{% endfor %}
-            </select>
-            <div class="hint">Colours the pin on the map.</div>
-          </div>
-          <div class="field">
-            <label for="item_color">Item colour / markings</label>
-            <input type="text" id="item_color" name="item_color" list="colorlist"
-                   placeholder="olive, rust, unpainted&hellip;" value="{{ form.item_color or '' }}">
-            <datalist id="colorlist">{% for c in colors %}<option value="{{ c }}">{% endfor %}</datalist>
-          </div>
-        </div>
-        <div class="field">
-          <label>Condition <span style="font-weight:400;color:var(--weak)">(tick all that apply)</span></label>
-          <div class="checks">
-            {% for cnd in conditions %}
-            <label class="chk"><input type="checkbox" name="condition" value="{{ cnd }}"{{ ' checked' if cnd in sel_conditions else '' }}> {{ cnd }}</label>
-            {% endfor %}
-          </div>
-        </div>
-        <div class="field">
-          <label>Grid reference <span style="font-weight:400;color:var(--weak)">(optional &mdash; drops a precise pin inside the caza)</span></label>
-          <div class="gridmode">
-            <label class="chk"><input type="radio" name="grid_mode" value="utm"{{ ' checked' if (form.grid_mode or 'utm') == 'utm' else '' }}> UTM</label>
-            <label class="chk"><input type="radio" name="grid_mode" value="latlon"{{ ' checked' if form.grid_mode == 'latlon' else '' }}> Lat / Lon</label>
-          </div>
-          <div class="row gridrow" id="utmrow">
-            <div style="flex:0 0 92px">
-              <label for="utm_zone" class="mini">Zone</label>
-              <select id="utm_zone" name="utm_zone">
-                <option value="36"{{ ' selected' if form.utm_zone != '37' else '' }}>36N</option>
-                <option value="37"{{ ' selected' if form.utm_zone == '37' else '' }}>37N</option>
-              </select>
+          <div class="f-wide">
+            <div class="f-field">
+              {{ f.label("photo_file", "Photo", "photo_file", optional=True) }}
+              <input class="f-input" type="file" id="photo_file" name="photo_file" accept="image/*" aria-describedby="e-photo_file">
+              <div class="f-error" id="e-photo_file" aria-live="polite"></div>
             </div>
-            <div><label for="utm_e" class="mini">Easting</label>
-              <input type="text" id="utm_e" name="utm_e" class="mono" inputmode="decimal" placeholder="731351" value="{{ form.utm_e or '' }}"></div>
-            <div><label for="utm_n" class="mini">Northing</label>
-              <input type="text" id="utm_n" name="utm_n" class="mono" inputmode="decimal" placeholder="3753199" value="{{ form.utm_n or '' }}"></div>
           </div>
-          <div class="row gridrow" id="llrow" style="display:none">
-            <div><label for="lat" class="mini">Latitude</label>
-              <input type="text" id="lat" name="lat" class="mono" inputmode="decimal" placeholder="33.8938" value="{{ form.lat or '' }}"></div>
-            <div><label for="lon" class="mini">Longitude</label>
-              <input type="text" id="lon" name="lon" class="mono" inputmode="decimal" placeholder="35.5018" value="{{ form.lon or '' }}"></div>
-          </div>
-          <div class="hint">Lebanon spans UTM <span class="mono">36N</span> (coast &amp; most of the country) and <span class="mono">37N</span> (eastern Beqaa / Baalbek-Hermel). Leave blank to pin at the caza centre.</div>
+        {% endcall %}
+        <div class="f-actions">
+          <button class="f-btn" type="submit" name="action" value="analyse" data-busy-text="Analysing…">Analyse</button>
+          <button class="f-btn ghost" type="submit" name="action" value="save" data-busy-text="Saving…">Save to database</button>
+          {{ f.toggle("use_ai", "AI assessment", "use_ai", checked=status.ai_ok, disabled=not status.ai_ok,
+                      note=('' if status.ai_ok else 'Off: ' ~ status.ai_reason)) }}
         </div>
-        <div class="field">
-          <label for="narrative">Report narrative</label>
-          <textarea id="narrative" name="narrative"
-            placeholder="Paste the incident report here. Sirens reads the free text and pulls out the device signature, names, groups and numbers.">{{ form.narrative or '' }}</textarea>
-          <div class="hint">Free text is fine — messy field reporting is what it's built for.</div>
-        </div>
-        <div class="field">
-          <label for="photo_file">Photo <span style="font-weight:400;color:var(--weak)">(optional &mdash; filed &amp; shown for comparison, not analysed)</span></label>
-          <input type="file" id="photo_file" name="photo_file" accept="image/*">
-          <div class="hint">JPG, PNG, WEBP or GIF, up to 8&nbsp;MB. Filed under the <strong>location</strong> it was found (e.g. <span class="mono">route-copper-03.jpg</span>) and shown beside any incident it links to. Saved with the record on <strong>Save to database</strong>.</div>
-        </div>
-        <div class="actions">
-          <button class="btn" type="submit" name="action" value="analyse">Analyse</button>
-          <button class="btn ghost" type="submit" name="action" value="save">Save to database</button>
-          <label class="toggle {{ '' if status.ai_ok else 'disabled' }}">
-            <input type="checkbox" name="use_ai" {{ 'checked' if status.ai_ok else 'disabled' }}>
-            AI assessment
-          </label>
-        </div>
-        {% if not status.ai_ok %}
-          <div class="hint">AI assessment is off — {{ status.ai_reason }}</div>
-        {% endif %}
       </form>
     </div>
   </section>
