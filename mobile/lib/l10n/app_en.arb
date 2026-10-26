@@ -1,0 +1,106 @@
+{
+  "@@locale": "en",
+  "appTitle": "Sirens",
+  "chooseLanguage": "Choose your language",
+  "continueLabel": "Continue",
+  "welcomeTitle": "Report danger. Stay safe.",
+  "welcomeBody": "Run by the Lebanese Army.",
+  "iAmCivilian": "I am a civilian",
+  "iAmCivilianHint": "Report a suspicious object and get warnings for your area",
+  "iAmStaff": "Military / Admin",
+  "iAmStaffHint": "Sign in with your Army account. The Army VPN must be on.",
+  "emergencyBanner": "In danger now? Move away from the object and call the hotline.",
+  "phoneLabel": "Mobile number",
+  "phoneHint": "03 123 456",
+  "phoneInvalid": "Enter a valid mobile number.",
+  "phonePrivacy": "Your number is used only to sign you in and so the Army can contact you about your reports.",
+  "sendCode": "Send code by SMS",
+  "codeLabel": "6-digit code",
+  "codeSentTo": "We sent a code to {phone}.",
+  "@codeSentTo": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "codeInvalid": "Enter the 6 digits from the SMS.",
+  "verify": "Confirm",
+  "changeNumber": "Change number",
+  "resendCode": "Send a new code",
+  "username": "Username",
+  "password": "Password",
+  "fieldRequired": "Required",
+  "signIn": "Sign in",
+  "signOut": "Sign out",
+  "errorNetwork": "Cannot reach the server. Check your connection and try again.",
+  "errorNetworkStaff": "Cannot reach the Army server. Check that the VPN is on.",
+  "errorTooMany": "Too many attempts. Wait a few minutes and try again.",
+  "errorWrongCode": "Wrong or expired code.",
+  "errorWrongLogin": "Wrong username or password.",
+  "errorAccountLocked": "Account locked for a while after too many attempts.",
+  "errorAccountDisabled": "This account is disabled. Contact your admin.",
+  "errorGeneric": "Something went wrong. Try again.",
+  "sessionExpired": "Your session ended. Please sign in again.",
+  "reportObject": "Report a suspicious object",
+  "reportObjectHint": "Photo, place and a short description",
+  "myReports": "My reports",
+  "myReportsHint": "See whether your reports were received",
+  "warnings": "Area warnings",
+  "warningsHint": "Places to avoid, published by the Army",
+  "safety": "Safety and hotlines",
+  "safetyHint": "What to do, and who to call",
+  "staffGreeting": "Hello, {name}",
+  "@staffGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "roleAdmin": "Administrator",
+  "levelField": "Field",
+  "levelAnalyst": "Analyst",
+  "levelCommander": "Commander",
+  "regionsLabel": "Regions",
+  "allRegions": "All regions",
+  "menuNewReport": "New report",
+  "menuIncidents": "Incidents",
+  "menuBrief": "Pre-arrival brief",
+  "menuMap": "Map and MGRS",
+  "menuReview": "Review links",
+  "menuDashboard": "Dashboard",
+  "menuCivilReports": "Civilian reports",
+  "menuWarnings": "Publish warnings",
+  "menuUsers": "Manage accounts",
+  "menuAudit": "Audit log",
+  "comingSoon": "This part arrives in the next version of the app.",
+  "settings": "Settings",
+  "language": "Language",
+  "account": "Account",
+  "changePassword": "Change password",
+  "currentPassword": "Current password",
+  "newPassword": "New password",
+  "passwordTooShort": "At least {min} characters.",
+  "@passwordTooShort": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "passwordChanged": "Password changed.",
+  "deleteAccount": "Delete my account",
+  "deleteAccountBody": "Your account and phone number will be deleted from this app. Reports already received by the Army stay with the Army.",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "save": "Save",
+  "signedInAs": "Signed in as {who}",
+  "@signedInAs": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      }
+    }
+  }
+}
