@@ -28,7 +28,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get iAmCivilian => 'Je suis un civil';
 
   @override
-  String get iAmCivilianHint => 'Signalez un objet suspect et recevez les alertes de votre région';
+  String get iAmCivilianHint =>
+      'Signalez un objet suspect et recevez les alertes de votre région';
 
   @override
   String get iAmStaff => 'Militaire / Administrateur';
@@ -101,7 +102,8 @@ class AppLocalizationsFr extends AppLocalizations {
       'Impossible de joindre le serveur de l\'Armée. Vérifiez que le VPN est activé.';
 
   @override
-  String get errorTooMany => 'Trop de tentatives. Patientez quelques minutes puis réessayez.';
+  String get errorTooMany =>
+      'Trop de tentatives. Patientez quelques minutes puis réessayez.';
 
   @override
   String get errorWrongCode => 'Code erroné ou expiré.';
@@ -110,16 +112,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get errorWrongLogin => 'Nom d\'utilisateur ou mot de passe incorrect.';
 
   @override
-  String get errorAccountLocked => 'Compte bloqué temporairement après trop de tentatives.';
+  String get errorAccountLocked =>
+      'Compte bloqué temporairement après trop de tentatives.';
 
   @override
-  String get errorAccountDisabled => 'Ce compte est désactivé. Contactez votre administrateur.';
+  String get errorAccountDisabled =>
+      'Ce compte est désactivé. Contactez votre administrateur.';
 
   @override
   String get errorGeneric => 'Une erreur s\'est produite. Réessayez.';
 
   @override
-  String get sessionExpired => 'Votre session a expiré. Veuillez vous reconnecter.';
+  String get sessionExpired =>
+      'Votre session a expiré. Veuillez vous reconnecter.';
 
   @override
   String get reportObject => 'Signaler un objet suspect';
@@ -199,7 +204,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get menuAudit => 'Journal d\'audit';
 
   @override
-  String get comingSoon => 'Cette partie arrive dans la prochaine version de l\'application.';
+  String get comingSoon =>
+      'Cette partie arrive dans la prochaine version de l\'application.';
 
   @override
   String get settings => 'Paramètres';
@@ -277,13 +283,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get reportDescription => 'Description';
 
   @override
-  String get reportDescriptionHint => 'Son aspect et l\'endroit exact (rue, repère)';
+  String get reportDescriptionHint =>
+      'Son aspect et l\'endroit exact (rue, repère)';
 
   @override
   String get reportPhoto => 'Photo (facultatif)';
 
   @override
-  String get reportPhotoWarning => 'Ne vous approchez jamais pour prendre une photo.';
+  String get reportPhotoWarning =>
+      'Ne vous approchez jamais pour prendre une photo.';
 
   @override
   String get reportTakePhoto => 'Prendre une photo';
@@ -299,7 +307,8 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ce format de photo n\'est pas pris en charge. Utilisez JPEG ou PNG.';
 
   @override
-  String get photoTooLarge => 'Cette photo est trop volumineuse (plus de 5 Mo).';
+  String get photoTooLarge =>
+      'Cette photo est trop volumineuse (plus de 5 Mo).';
 
   @override
   String get reportLocation => 'Position';
@@ -317,7 +326,8 @@ class AppLocalizationsFr extends AppLocalizations {
       'Pas de position. Décrivez le lieu aussi précisément que possible.';
 
   @override
-  String get locationServiceOff => 'La localisation est désactivée sur ce téléphone.';
+  String get locationServiceOff =>
+      'La localisation est désactivée sur ce téléphone.';
 
   @override
   String get locationDenied => 'L\'autorisation de localisation a été refusée.';
@@ -421,7 +431,8 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get warningsPullHint => 'Tirez vers le bas pour vérifier les nouvelles alertes.';
+  String get warningsPullHint =>
+      'Tirez vers le bas pour vérifier les nouvelles alertes.';
 
   @override
   String get severityInfo => 'Information';

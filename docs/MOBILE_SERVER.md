@@ -61,6 +61,14 @@ python -m linker.accounts create-admin <username> --name "Full name"
 | GET | `/incidents[?caza=]` | field |
 | GET | `/incidents/<id>` | field |
 | POST | `/incidents` `{narrative, caza, street?, date?, munition?, lat?, lon?}` | field |
+| GET | `/incidents/<id>/network` (its candidate network, own regions only) | field |
+| GET | `/brief?location=&describe=` | field |
+| GET | `/map/markers`, `/map/info` | field |
+| GET | `/map/lebanon.pmtiles` (offline map download, resumable with `Range`) | field |
+| GET | `/links[?show=all\|open\|confirm\|reject\|unsure]` | analyst |
+| POST | `/links/decision` `{a, b, decision: confirm\|reject\|unsure\|undo}` | analyst |
+| POST | `/links/note` `{a, b, note}` | analyst |
+| GET | `/dashboard[?from=&to=&caza=]` | analyst |
 | GET | `/civil-reports[?status=]`, `/civil-reports/<id>`, `/civil-reports/<id>/photo` | commander |
 | PATCH | `/civil-reports/<id>` `{status, note?}` | commander |
 | GET | `/warnings[?active=1]` | signed in |
@@ -69,6 +77,15 @@ python -m linker.accounts create-admin <username> --name "Full name"
 | GET/POST | `/admin/users` | admin |
 | PATCH | `/admin/users/<id>` `{level?, regions?, active?, display_name?, password?}` | admin |
 | GET | `/admin/audit[?limit=]` | admin |
+
+* **Links across regions:** a link (and a network member) is shown only
+  when the user may see *both* incidents, so the app never reveals reports
+  from other regions. Admins see every link. Scores are always computed
+  over the whole record, so they match the web pages.
+* `POST /incidents` accepts an optional `client_ref`: a retry from the
+  phone's offline queue returns the report already filed instead of a copy.
+  The answer includes the new report's `network`.
+* Link decisions are recorded under the signed-in account's username.
 
 `title` and `body` of a warning are `{"ar": …, "en": …, "fr": …}` (at
 least one language).

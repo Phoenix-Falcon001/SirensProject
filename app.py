@@ -1025,16 +1025,15 @@ def link_tree():
     return html_page
 
 
-@app.route("/map")
-def incident_map():
-    """Offline street map (map_bp.py). This only gathers the incident markers:
-    an exact point when a grid was filed, otherwise the caza centre, spread so
-    markers placed at the same caza do not overlap."""
+def map_markers(incidents):
+    """Markers for the map (web page and mobile app): an exact point when a
+    grid was filed, otherwise the caza centre, spread so markers placed at the
+    same caza do not overlap. Returns (markers, legend, unplaced count)."""
     canon = {_norm(n): n for n in _CAZA_NAMES}
     centres = map_bp.caza_centres()
     meta = _load_meta()
-    incidents, typecounts, percaza, unplaced = [], {}, {}, 0
-    for inc in store.all_incidents():
+    markers, typecounts, percaza, unplaced = [], {}, {}, 0
+    for inc in incidents:
         iid = inc.incident_id
         m = meta.get(iid, {})
         d = m.get("caza") or _district(inc.location)
@@ -1055,7 +1054,7 @@ def incident_map():
         mun = _infer_munition(inc, m.get("munition"))
         typecounts[mun] = typecounts.get(mun, 0) + 1
         snip = (inc.narrative or "").strip().replace("\n", " ")
-        incidents.append({
+        markers.append({
             "id": iid, "lon": round(lon, 6), "lat": round(lat, 6), "exact": exact,
             "caza": key or "", "date": inc.date or "", "loc": inc.location or "",
             "street": m.get("street", "") or "", "type": mun,
@@ -1066,19 +1065,31 @@ def incident_map():
         })
     legend = [{"key": k, "label": l, "color": c, "count": typecounts[k]}
               for k, l, c in _MUNITIONS if typecounts.get(k)]
-    return map_bp.render_page(incidents, legend, unplaced=unplaced)
+    return markers, legend, unplaced
 
 
-def _region_of(inc):
-    """The incident's caza (canonical name), as the map places it."""
-    d = _load_meta().get(inc.incident_id, {}).get("caza") or _district(inc.location)
-    return {_norm(n): n for n in _CAZA_NAMES}.get(_norm(d)) if d else None
+@app.route("/map")
+def incident_map():
+    """Offline street map (map_bp.py); this only gathers the incident markers."""
+    markers, legend, unplaced = map_markers(store.all_incidents())
+    return map_bp.render_page(markers, legend, unplaced=unplaced)
+
+
+def _regions_of(incidents):
+    """{incident id: caza (canonical name) or None}, as the map places them."""
+    meta = _load_meta()
+    canon = {_norm(n): n for n in _CAZA_NAMES}
+    out = {}
+    for inc in incidents:
+        d = meta.get(inc.incident_id, {}).get("caza") or _district(inc.location)
+        out[inc.incident_id] = canon.get(_norm(d)) if d else None
+    return out
 
 
 # Mobile app interface (/api/v1): accounts, roles, regions. See api_bp.py.
 import api_bp
-api_bp.register(app, region_of=_region_of, extractor=_EXTRACTOR, put_meta=_put_meta,
-                fmt_grid=_fmt_grid, munitions=_MUNITIONS)
+api_bp.register(app, regions_of=_regions_of, extractor=_EXTRACTOR, put_meta=_put_meta,
+                fmt_grid=_fmt_grid, munitions=_MUNITIONS, map_markers=map_markers)
 
 
 def _open():

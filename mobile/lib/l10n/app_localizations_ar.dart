@@ -34,10 +34,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get iAmStaff => 'عسكري / مسؤول';
 
   @override
-  String get iAmStaffHint => 'سجّل الدخول بحسابك في الجيش. يجب تشغيل شبكة VPN الخاصة بالجيش.';
+  String get iAmStaffHint =>
+      'سجّل الدخول بحسابك في الجيش. يجب تشغيل شبكة VPN الخاصة بالجيش.';
 
   @override
-  String get emergencyBanner => 'في خطر الآن؟ ابتعد عن الجسم واتصل بالخط الساخن.';
+  String get emergencyBanner =>
+      'في خطر الآن؟ ابتعد عن الجسم واتصل بالخط الساخن.';
 
   @override
   String get phoneLabel => 'رقم الهاتف الخلوي';
@@ -91,10 +93,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get signOut => 'تسجيل الخروج';
 
   @override
-  String get errorNetwork => 'تعذّر الوصول إلى الخادم. تحقّق من الاتصال وحاول مجدداً.';
+  String get errorNetwork =>
+      'تعذّر الوصول إلى الخادم. تحقّق من الاتصال وحاول مجدداً.';
 
   @override
-  String get errorNetworkStaff => 'تعذّر الوصول إلى خادم الجيش. تأكّد من تشغيل VPN.';
+  String get errorNetworkStaff =>
+      'تعذّر الوصول إلى خادم الجيش. تأكّد من تشغيل VPN.';
 
   @override
   String get errorTooMany => 'محاولات كثيرة. انتظر بضع دقائق وحاول مجدداً.';
@@ -263,7 +267,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reportSafeDistance => 'أنا على مسافة آمنة من الجسم';
 
   @override
-  String get reportSafeDistanceRequired => 'ابتعد أولاً. أرسل البلاغ فقط من مسافة آمنة.';
+  String get reportSafeDistanceRequired =>
+      'ابتعد أولاً. أرسل البلاغ فقط من مسافة آمنة.';
 
   @override
   String get reportWhat => 'ماذا رأيت؟';
@@ -272,7 +277,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reportDescription => 'الوصف';
 
   @override
-  String get reportDescriptionHint => 'شكله ومكانه بالتحديد (الشارع، معلم قريب)';
+  String get reportDescriptionHint =>
+      'شكله ومكانه بالتحديد (الشارع، معلم قريب)';
 
   @override
   String get reportPhoto => 'صورة (اختياري)';
@@ -290,7 +296,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reportRemovePhoto => 'إزالة الصورة';
 
   @override
-  String get photoUnsupported => 'صيغة هذه الصورة غير مدعومة. استخدم JPEG أو PNG.';
+  String get photoUnsupported =>
+      'صيغة هذه الصورة غير مدعومة. استخدم JPEG أو PNG.';
 
   @override
   String get photoTooLarge => 'هذه الصورة كبيرة جداً (أكثر من 5 ميغابايت).';
@@ -316,7 +323,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get locationDenied => 'تم رفض إذن الوصول إلى الموقع.';
 
   @override
-  String get locationTimeout => 'تعذّر تحديد الموقع. حاول مجدداً في مكان مكشوف.';
+  String get locationTimeout =>
+      'تعذّر تحديد الموقع. حاول مجدداً في مكان مكشوف.';
 
   @override
   String get locationOutside => 'هذا الموقع خارج لبنان.';

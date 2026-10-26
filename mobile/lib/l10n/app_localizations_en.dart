@@ -28,16 +28,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get iAmCivilian => 'I am a civilian';
 
   @override
-  String get iAmCivilianHint => 'Report a suspicious object and get warnings for your area';
+  String get iAmCivilianHint =>
+      'Report a suspicious object and get warnings for your area';
 
   @override
   String get iAmStaff => 'Military / Admin';
 
   @override
-  String get iAmStaffHint => 'Sign in with your Army account. The Army VPN must be on.';
+  String get iAmStaffHint =>
+      'Sign in with your Army account. The Army VPN must be on.';
 
   @override
-  String get emergencyBanner => 'In danger now? Move away from the object and call the hotline.';
+  String get emergencyBanner =>
+      'In danger now? Move away from the object and call the hotline.';
 
   @override
   String get phoneLabel => 'Mobile number';
@@ -91,13 +94,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signOut => 'Sign out';
 
   @override
-  String get errorNetwork => 'Cannot reach the server. Check your connection and try again.';
+  String get errorNetwork =>
+      'Cannot reach the server. Check your connection and try again.';
 
   @override
-  String get errorNetworkStaff => 'Cannot reach the Army server. Check that the VPN is on.';
+  String get errorNetworkStaff =>
+      'Cannot reach the Army server. Check that the VPN is on.';
 
   @override
-  String get errorTooMany => 'Too many attempts. Wait a few minutes and try again.';
+  String get errorTooMany =>
+      'Too many attempts. Wait a few minutes and try again.';
 
   @override
   String get errorWrongCode => 'Wrong or expired code.';
@@ -106,10 +112,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorWrongLogin => 'Wrong username or password.';
 
   @override
-  String get errorAccountLocked => 'Account locked for a while after too many attempts.';
+  String get errorAccountLocked =>
+      'Account locked for a while after too many attempts.';
 
   @override
-  String get errorAccountDisabled => 'This account is disabled. Contact your admin.';
+  String get errorAccountDisabled =>
+      'This account is disabled. Contact your admin.';
 
   @override
   String get errorGeneric => 'Something went wrong. Try again.';
@@ -292,7 +300,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportRemovePhoto => 'Remove photo';
 
   @override
-  String get photoUnsupported => 'This photo format is not supported. Use JPEG or PNG.';
+  String get photoUnsupported =>
+      'This photo format is not supported. Use JPEG or PNG.';
 
   @override
   String get photoTooLarge => 'This photo is too large (over 5 MB).';
@@ -309,7 +318,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get reportLocationNone => 'No location. Describe the place as precisely as you can.';
+  String get reportLocationNone =>
+      'No location. Describe the place as precisely as you can.';
 
   @override
   String get locationServiceOff => 'Location is turned off on this phone.';
@@ -318,7 +328,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get locationDenied => 'Location permission was refused.';
 
   @override
-  String get locationTimeout => 'Could not get a location. Try again in the open.';
+  String get locationTimeout =>
+      'Could not get a location. Try again in the open.';
 
   @override
   String get locationOutside => 'That position is outside Lebanon.';
