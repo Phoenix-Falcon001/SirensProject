@@ -63,8 +63,7 @@ import 'app_localizations_fr.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -72,8 +71,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -94,11 +92,7 @@ abstract class AppLocalizations {
       ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[
-    Locale('ar'),
-    Locale('en'),
-    Locale('fr'),
-  ];
+  static const List<Locale> supportedLocales = <Locale>[Locale('ar'), Locale('en'), Locale('fr')];
 
   /// No description provided for @appTitle.
   ///
@@ -915,10 +909,525 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not start the call. Dial {number} yourself.'**
   String callFailed(String number);
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get retry;
+
+  /// No description provided for @notFoundOrOutside.
+  ///
+  /// In en, this message translates to:
+  /// **'Not found, or outside your regions.'**
+  String get notFoundOrOutside;
+
+  /// No description provided for @leadsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Every link is a lead for a human analyst, never a conclusion.'**
+  String get leadsNote;
+
+  /// No description provided for @bandStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong'**
+  String get bandStrong;
+
+  /// No description provided for @bandMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get bandMedium;
+
+  /// No description provided for @bandWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get bandWeak;
+
+  /// No description provided for @decisionConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get decisionConfirm;
+
+  /// No description provided for @decisionReject.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get decisionReject;
+
+  /// No description provided for @decisionUnsure.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsure'**
+  String get decisionUnsure;
+
+  /// No description provided for @decisionUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get decisionUndo;
+
+  /// No description provided for @decidedConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get decidedConfirm;
+
+  /// No description provided for @decidedReject.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get decidedReject;
+
+  /// No description provided for @decidedUnsure.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsure'**
+  String get decidedUnsure;
+
+  /// No description provided for @decidedOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Not reviewed'**
+  String get decidedOpen;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// No description provided for @addNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Add note'**
+  String get addNote;
+
+  /// No description provided for @noteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What you checked or decided'**
+  String get noteHint;
+
+  /// No description provided for @notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notes;
+
+  /// No description provided for @reviewEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No links to review in your regions.'**
+  String get reviewEmpty;
+
+  /// No description provided for @scoreLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Score {score}'**
+  String scoreLabel(String score);
+
+  /// No description provided for @incidentsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No reports in your regions yet.'**
+  String get incidentsEmpty;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by place, ID or text'**
+  String get searchHint;
+
+  /// No description provided for @allCazas.
+  ///
+  /// In en, this message translates to:
+  /// **'All cazas'**
+  String get allCazas;
+
+  /// No description provided for @narrative.
+  ///
+  /// In en, this message translates to:
+  /// **'Report text'**
+  String get narrative;
+
+  /// No description provided for @extractedFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'What Sirens read in it'**
+  String get extractedFeatures;
+
+  /// No description provided for @people.
+  ///
+  /// In en, this message translates to:
+  /// **'People'**
+  String get people;
+
+  /// No description provided for @groups.
+  ///
+  /// In en, this message translates to:
+  /// **'Groups'**
+  String get groups;
+
+  /// No description provided for @phones.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone numbers'**
+  String get phones;
+
+  /// No description provided for @networkTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Likely network'**
+  String get networkTitle;
+
+  /// No description provided for @networkNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Not linked to other reports in your regions.'**
+  String get networkNone;
+
+  /// No description provided for @networkTentative.
+  ///
+  /// In en, this message translates to:
+  /// **'Tentative: all links are weak.'**
+  String get networkTentative;
+
+  /// No description provided for @networkShares.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared features'**
+  String get networkShares;
+
+  /// No description provided for @newReportCaza.
+  ///
+  /// In en, this message translates to:
+  /// **'Caza'**
+  String get newReportCaza;
+
+  /// No description provided for @newReportStreet.
+  ///
+  /// In en, this message translates to:
+  /// **'Street / place'**
+  String get newReportStreet;
+
+  /// No description provided for @newReportDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get newReportDate;
+
+  /// No description provided for @newReportType.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get newReportType;
+
+  /// No description provided for @typeUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Not sure (Sirens will guess from the text)'**
+  String get typeUnknown;
+
+  /// No description provided for @newReportText.
+  ///
+  /// In en, this message translates to:
+  /// **'Report text'**
+  String get newReportText;
+
+  /// No description provided for @newReportTextHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What happened, what was found, where, and who reported it'**
+  String get newReportTextHint;
+
+  /// No description provided for @gridRef.
+  ///
+  /// In en, this message translates to:
+  /// **'MGRS {ref}'**
+  String gridRef(String ref);
+
+  /// No description provided for @fileReport.
+  ///
+  /// In en, this message translates to:
+  /// **'File report'**
+  String get fileReport;
+
+  /// No description provided for @reportFiled.
+  ///
+  /// In en, this message translates to:
+  /// **'Report filed as {id}'**
+  String reportFiled(String id);
+
+  /// No description provided for @reportQueuedStaff.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved on this phone. It will be filed when the Army VPN is back.'**
+  String get reportQueuedStaff;
+
+  /// No description provided for @draftsWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports waiting for the VPN: {n}'**
+  String draftsWaiting(int n);
+
+  /// No description provided for @outsideRegions.
+  ///
+  /// In en, this message translates to:
+  /// **'That caza is outside your regions.'**
+  String get outsideRegions;
+
+  /// No description provided for @briefLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Location (town or street)'**
+  String get briefLocation;
+
+  /// No description provided for @briefDescribe.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you expect to find? (optional)'**
+  String get briefDescribe;
+
+  /// No description provided for @briefRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Get brief'**
+  String get briefRun;
+
+  /// No description provided for @briefInArea.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} past reports in this area'**
+  String briefInArea(int n);
+
+  /// No description provided for @briefObjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Objects reported here'**
+  String get briefObjects;
+
+  /// No description provided for @briefSignature.
+  ///
+  /// In en, this message translates to:
+  /// **'Common features here'**
+  String get briefSignature;
+
+  /// No description provided for @briefMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Most similar past reports'**
+  String get briefMatches;
+
+  /// No description provided for @briefIncidents.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports in this area'**
+  String get briefIncidents;
+
+  /// No description provided for @briefNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Record-based only: what was reported here before. It does not identify any object and gives no handling guidance.'**
+  String get briefNote;
+
+  /// No description provided for @briefNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No past reports match this place in your regions.'**
+  String get briefNone;
+
+  /// No description provided for @lastSeen.
+  ///
+  /// In en, this message translates to:
+  /// **'last {date}'**
+  String lastSeen(String date);
+
+  /// No description provided for @dashTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} reports'**
+  String dashTotal(int n);
+
+  /// No description provided for @dashTimeline.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports per month'**
+  String get dashTimeline;
+
+  /// No description provided for @dashUndated.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} without a date'**
+  String dashUndated(int n);
+
+  /// No description provided for @dashByCaza.
+  ///
+  /// In en, this message translates to:
+  /// **'By caza'**
+  String get dashByCaza;
+
+  /// No description provided for @dashByInitiation.
+  ///
+  /// In en, this message translates to:
+  /// **'By initiation method'**
+  String get dashByInitiation;
+
+  /// No description provided for @dashLinks.
+  ///
+  /// In en, this message translates to:
+  /// **'Links and review'**
+  String get dashLinks;
+
+  /// No description provided for @dashLinksTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} links'**
+  String dashLinksTotal(int n);
+
+  /// No description provided for @dashReviewed.
+  ///
+  /// In en, this message translates to:
+  /// **'{pct}% reviewed'**
+  String dashReviewed(int pct);
+
+  /// No description provided for @dashNetworks.
+  ///
+  /// In en, this message translates to:
+  /// **'Candidate networks'**
+  String get dashNetworks;
+
+  /// No description provided for @dashNetworkRow.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} reports'**
+  String dashNetworkRow(int n);
+
+  /// No description provided for @dashUnlinked.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} reports not linked'**
+  String dashUnlinked(int n);
+
+  /// No description provided for @dashQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Data completeness'**
+  String get dashQuality;
+
+  /// No description provided for @dashQualityOverall.
+  ///
+  /// In en, this message translates to:
+  /// **'{pct}% complete on average'**
+  String dashQualityOverall(int pct);
+
+  /// No description provided for @dashFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get dashFrom;
+
+  /// No description provided for @dashTo.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get dashTo;
+
+  /// No description provided for @clearFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clearFilters;
+
+  /// No description provided for @mapCentre.
+  ///
+  /// In en, this message translates to:
+  /// **'Centre {mgrs}'**
+  String mapCentre(String mgrs);
+
+  /// No description provided for @mapCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied {mgrs}'**
+  String mapCopied(String mgrs);
+
+  /// No description provided for @mapNoStreetMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Street map not on this phone: showing caza outlines only.'**
+  String get mapNoStreetMap;
+
+  /// No description provided for @mapDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Download street map ({mb} MB)'**
+  String mapDownload(String mb);
+
+  /// No description provided for @mapDownloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading… {pct}%'**
+  String mapDownloading(int pct);
+
+  /// No description provided for @mapDownloadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Download stopped: {reason}. Try again to resume.'**
+  String mapDownloadFailed(String reason);
+
+  /// No description provided for @mapNotOnServer.
+  ///
+  /// In en, this message translates to:
+  /// **'The street map is not installed on the server yet.'**
+  String get mapNotOnServer;
+
+  /// No description provided for @mapApprox.
+  ///
+  /// In en, this message translates to:
+  /// **'Approx. — placed at caza centre'**
+  String get mapApprox;
+
+  /// No description provided for @mapExact.
+  ///
+  /// In en, this message translates to:
+  /// **'Filed grid reference'**
+  String get mapExact;
+
+  /// No description provided for @mapZoneNote.
+  ///
+  /// In en, this message translates to:
+  /// **'The grid jumps at 36°E, where UTM zones 36 and 37 meet.'**
+  String get mapZoneNote;
+
+  /// No description provided for @mapDeleteMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete street map from phone'**
+  String get mapDeleteMap;
+
+  /// No description provided for @mapGrid.
+  ///
+  /// In en, this message translates to:
+  /// **'MGRS grid'**
+  String get mapGrid;
+
+  /// No description provided for @openReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Open report'**
+  String get openReport;
+
+  /// No description provided for @copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get copy;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -927,8 +1436,7 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['ar', 'en', 'fr'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['ar', 'en', 'fr'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;

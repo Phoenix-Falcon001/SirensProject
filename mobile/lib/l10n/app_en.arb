@@ -219,5 +219,217 @@
         "type": "String"
       }
     }
-  }
+  },
+  "retry": "Try again",
+  "notFoundOrOutside": "Not found, or outside your regions.",
+  "leadsNote": "Every link is a lead for a human analyst, never a conclusion.",
+  "bandStrong": "Strong",
+  "bandMedium": "Medium",
+  "bandWeak": "Weak",
+  "decisionConfirm": "Confirm",
+  "decisionReject": "Reject",
+  "decisionUnsure": "Unsure",
+  "decisionUndo": "Undo",
+  "decidedConfirm": "Confirmed",
+  "decidedReject": "Rejected",
+  "decidedUnsure": "Unsure",
+  "decidedOpen": "Not reviewed",
+  "filterAll": "All",
+  "addNote": "Add note",
+  "noteHint": "What you checked or decided",
+  "notes": "Notes",
+  "reviewEmpty": "No links to review in your regions.",
+  "scoreLabel": "Score {score}",
+  "@scoreLabel": {
+    "placeholders": {
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "incidentsEmpty": "No reports in your regions yet.",
+  "searchHint": "Search by place, ID or text",
+  "allCazas": "All cazas",
+  "narrative": "Report text",
+  "extractedFeatures": "What Sirens read in it",
+  "people": "People",
+  "groups": "Groups",
+  "phones": "Phone numbers",
+  "networkTitle": "Likely network",
+  "networkNone": "Not linked to other reports in your regions.",
+  "networkTentative": "Tentative: all links are weak.",
+  "networkShares": "Shared features",
+  "newReportCaza": "Caza",
+  "newReportStreet": "Street / place",
+  "newReportDate": "Date",
+  "newReportType": "Type",
+  "typeUnknown": "Not sure (Sirens will guess from the text)",
+  "newReportText": "Report text",
+  "newReportTextHint": "What happened, what was found, where, and who reported it",
+  "gridRef": "MGRS {ref}",
+  "@gridRef": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "fileReport": "File report",
+  "reportFiled": "Report filed as {id}",
+  "@reportFiled": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "reportQueuedStaff": "Saved on this phone. It will be filed when the Army VPN is back.",
+  "draftsWaiting": "Reports waiting for the VPN: {n}",
+  "@draftsWaiting": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "outsideRegions": "That caza is outside your regions.",
+  "briefLocation": "Location (town or street)",
+  "briefDescribe": "What do you expect to find? (optional)",
+  "briefRun": "Get brief",
+  "briefInArea": "{n} past reports in this area",
+  "@briefInArea": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "briefObjects": "Objects reported here",
+  "briefSignature": "Common features here",
+  "briefMatches": "Most similar past reports",
+  "briefIncidents": "Reports in this area",
+  "briefNote": "Record-based only: what was reported here before. It does not identify any object and gives no handling guidance.",
+  "briefNone": "No past reports match this place in your regions.",
+  "lastSeen": "last {date}",
+  "@lastSeen": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "dashTotal": "{n} reports",
+  "@dashTotal": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "dashTimeline": "Reports per month",
+  "dashUndated": "{n} without a date",
+  "@dashUndated": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "dashByCaza": "By caza",
+  "dashByInitiation": "By initiation method",
+  "dashLinks": "Links and review",
+  "dashLinksTotal": "{n} links",
+  "@dashLinksTotal": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "dashReviewed": "{pct}% reviewed",
+  "@dashReviewed": {
+    "placeholders": {
+      "pct": {
+        "type": "int"
+      }
+    }
+  },
+  "dashNetworks": "Candidate networks",
+  "dashNetworkRow": "{n} reports",
+  "@dashNetworkRow": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "dashUnlinked": "{n} reports not linked",
+  "@dashUnlinked": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "dashQuality": "Data completeness",
+  "dashQualityOverall": "{pct}% complete on average",
+  "@dashQualityOverall": {
+    "placeholders": {
+      "pct": {
+        "type": "int"
+      }
+    }
+  },
+  "dashFrom": "From",
+  "dashTo": "To",
+  "clearFilters": "Clear",
+  "mapCentre": "Centre {mgrs}",
+  "@mapCentre": {
+    "placeholders": {
+      "mgrs": {
+        "type": "String"
+      }
+    }
+  },
+  "mapCopied": "Copied {mgrs}",
+  "@mapCopied": {
+    "placeholders": {
+      "mgrs": {
+        "type": "String"
+      }
+    }
+  },
+  "mapNoStreetMap": "Street map not on this phone: showing caza outlines only.",
+  "mapDownload": "Download street map ({mb} MB)",
+  "@mapDownload": {
+    "placeholders": {
+      "mb": {
+        "type": "String"
+      }
+    }
+  },
+  "mapDownloading": "Downloading… {pct}%",
+  "@mapDownloading": {
+    "placeholders": {
+      "pct": {
+        "type": "int"
+      }
+    }
+  },
+  "mapDownloadFailed": "Download stopped: {reason}. Try again to resume.",
+  "@mapDownloadFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "mapNotOnServer": "The street map is not installed on the server yet.",
+  "mapApprox": "Approx. — placed at caza centre",
+  "mapExact": "Filed grid reference",
+  "mapZoneNote": "The grid jumps at 36°E, where UTM zones 36 and 37 meet.",
+  "mapDeleteMap": "Delete street map from phone",
+  "mapGrid": "MGRS grid",
+  "openReport": "Open report",
+  "copy": "Copy"
 }

@@ -22,8 +22,8 @@ which one; it can be changed later in Settings.
 | 1. Server: accounts, roles + regions, `/api/v1`, public gateway, sync | done |
 | 2. App foundation: sign-in for all users, 3 languages + RTL, home per role, settings | done |
 | 3. Civilian features: report, my reports, warnings, safety + hotline | done |
-| 4. Military features: new report, brief, offline map + MGRS, review, dashboard | next (tiles show "coming in next version") |
-| 5. Admin features: accounts, civilian report triage, warnings | to do (server side already done) |
+| 4. Military features: new report, incidents, brief, offline map + MGRS, review, dashboard | done |
+| 5. Admin features: accounts, civilian report triage, warnings | next (server side already done) |
 | 6. Android APK pilot, then iPhone through TestFlight | to do |
 
 ## Civilian features
@@ -49,15 +49,54 @@ which one; it can be changed later in Settings.
   no connection at all (copy bundled in the app). Shows a notice while the
   text is still the placeholder; numbers not yet confirmed have no button.
 
+## Military features
+
+Everything is limited to the user's assigned cazas (admins: all). A link
+between two reports is shown only when the user may see both.
+
+* **New report** (field+). Caza (own regions only), street/place, date, type
+  (or "not sure"), report text, and the phone's position shown as MGRS.
+  After filing, the report's **likely network** is shown, as on the web
+  console. Without the VPN the report is kept on the phone and filed when the
+  VPN is back (*Send now*, or automatically at sign-in); retries never file
+  twice.
+* **Incidents** (field+). Search and caza filter; each report shows its text,
+  what Sirens read in it, and its network with strength and reasons.
+* **Pre-arrival brief** (field+). Past reporting at a place: objects reported
+  there, common features, the most similar reports. Record-based only; it
+  never identifies an object and gives no handling guidance.
+* **Map and MGRS** (field+).
+  * Caza outlines and the MGRS grid always work offline (outlines are bundled).
+  * The **street map** is the same OpenStreetMap file as the web map
+    (`lebanon.pmtiles`), downloaded once from the internal server over the VPN:
+    resumable, checked against its SHA-256, then fully offline.
+  * Grid lines every 100 km / 10 km / 1 km depending on zoom; the grid jumps at
+    36°E where UTM zones 36 and 37 meet.
+  * The MGRS reference of the map centre (crosshair) is always shown and can
+    be copied. MGRS is computed on the phone with a port of
+    `linker/grid_ref.py`, tested to give identical references on 208 points.
+  * Incident markers coloured by type; a thick white ring means a filed grid
+    reference, a thin one "approx. — placed at caza centre".
+* **Review links** (analyst+). Confirm / reject / unsure / undo and notes,
+  recorded under the signed-in account; filters with counts.
+* **Dashboard** (analyst+). Reports per month, by caza, by initiation method,
+  link strength and review progress, candidate networks, data completeness;
+  bars with the numbers written out. Counts only.
+
+Analysis results are not stored on the phone; only reports waiting for the
+VPN and the street map are.
+
 ## Layout
 
 ```
 lib/
   config.dart          server addresses (set at build time)
   api/                 HTTP client, gateway calls, internal-server calls
-  models/              data shown to civilians
-  services/device.dart camera, GPS, phone dialer (faked in tests)
-  state/               session, secure storage, app state, civilian service, offline outbox
+  models/              data for civilians and for military users
+  services/            camera, GPS, dialer; offline map download (faked in tests)
+  geo/                 MGRS (port of linker/grid_ref.py), street map + caza outlines
+  state/               session, secure storage, app state, civilian and military
+                       services, offline queues (civilian reports, military drafts)
   ui/                  screens; menu.dart decides tiles from permissions
   l10n/app_*.arb       all text, in ar / en / fr
 test/                  unit + widget tests against a fake server
@@ -97,7 +136,15 @@ this on a private test network: the web console pages have no sign-in yet.
 ```bash
 cd mobile
 flutter analyze     # expect: No issues found
-flutter test        # expect: 37 tests pass
+flutter test        # expect: 60 tests pass (3 live tests skipped)
+```
+
+Live tests against running servers (skipped unless the variables are set):
+
+```bash
+SIRENS_LIVE_GATEWAY=http://127.0.0.1:5100 SIRENS_GW_LOG=<gateway log> flutter test test/live_gateway_test.dart
+SIRENS_LIVE_INTERNAL=http://127.0.0.1:5000 SIRENS_LIVE_USER=<admin> SIRENS_LIVE_PASSWORD=<pw> \
+  flutter test test/live_internal_test.dart test/live_map_download_test.dart
 ```
 
 ## Build for direct install

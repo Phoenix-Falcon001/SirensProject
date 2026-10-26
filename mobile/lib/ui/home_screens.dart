@@ -9,11 +9,14 @@ import 'civilian/report_screen.dart';
 import 'civilian/safety_screen.dart';
 import 'civilian/warnings_screen.dart';
 import 'common.dart';
+import 'staff/brief_screen.dart';
+import 'staff/dashboard_screen.dart';
+import 'staff/incidents_screen.dart';
+import 'staff/map_screen.dart';
+import 'staff/new_report_screen.dart';
+import 'staff/review_screen.dart';
 import 'menu.dart';
 import 'settings_screen.dart';
-
-void _open(BuildContext context, String title) =>
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => ComingSoonScreen(title: title)));
 
 IconButton _settingsButton(BuildContext context) => IconButton(
   key: const Key('open-settings'),
@@ -88,6 +91,23 @@ class StaffHome extends StatefulWidget {
 }
 
 class _StaffHomeState extends State<StaffHome> {
+  void _openStaff(BuildContext context, MenuEntry e, AppState state) {
+    final svc = state.staffService!;
+    final s = state.session!;
+    // Admins may pick any caza; military users only their own.
+    final regions = s.allRegions ? svc.regionChoices : s.regions;
+    final Widget screen = switch (e.id) {
+      'new_report' => NewReportScreen(service: svc, device: state.device, regions: regions),
+      'incidents' => IncidentsScreen(service: svc),
+      'brief' => BriefScreen(service: svc),
+      'map' => MapScreen(service: svc),
+      'review' => ReviewScreen(service: svc),
+      'dashboard' => DashboardScreen(service: svc, regions: regions),
+      _ => ComingSoonScreen(title: e.label(AppLocalizations.of(context))),
+    };
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -127,7 +147,7 @@ class _StaffHomeState extends State<StaffHome> {
                   key: Key('tile-${e.id}'),
                   icon: e.icon,
                   title: e.label(l),
-                  onTap: () => _open(context, e.label(l)),
+                  onTap: () => _openStaff(context, e, state),
                 ),
             ],
           ),

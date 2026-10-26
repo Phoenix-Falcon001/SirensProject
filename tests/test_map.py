@@ -129,3 +129,14 @@ def test_map_page_requests_only_this_server(with_map):
         url = next(g for g in m.groups() if g)
         assert url.startswith("/") or url.startswith("#"), url
     assert "maplibregl.addProtocol('pmtiles'" in html
+
+
+def test_app_bundles_the_same_map_style_and_outlines():
+    """The phone draws the offline map with copies of these files; they must
+    match the web map's."""
+    import pathlib
+    root = pathlib.Path(__file__).resolve().parents[1]
+    pairs = [("static/map/style.json", "mobile/assets/map_style.json"),
+             ("data/regions.json", "mobile/assets/regions.json")]
+    for web, app in pairs:
+        assert (root / web).read_bytes() == (root / app).read_bytes(), f"copy {web} to {app}"

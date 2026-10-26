@@ -66,10 +66,10 @@ void main() {
     expect(find.byKey(const Key('tile-map')), findsOneWidget);
     expect(find.byKey(const Key('tile-review')), findsNothing);
     expect(find.byKey(const Key('tile-users')), findsNothing);
-    // A tile opens its (not yet built) screen.
+    // The map tile opens the map with the MGRS reference of its centre.
     await tester.tap(find.byKey(const Key('tile-map')));
     await tester.pumpAndSettle();
-    expect(find.text('This part arrives in the next version of the app.'), findsOneWidget);
+    expect(find.byKey(const Key('centre-ref')), findsOneWidget);
   });
 
   testWidgets('admin sees every tile and can sign out', (tester) async {

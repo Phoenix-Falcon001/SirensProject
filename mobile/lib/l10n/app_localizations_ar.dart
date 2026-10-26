@@ -34,12 +34,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get iAmStaff => 'عسكري / مسؤول';
 
   @override
-  String get iAmStaffHint =>
-      'سجّل الدخول بحسابك في الجيش. يجب تشغيل شبكة VPN الخاصة بالجيش.';
+  String get iAmStaffHint => 'سجّل الدخول بحسابك في الجيش. يجب تشغيل شبكة VPN الخاصة بالجيش.';
 
   @override
-  String get emergencyBanner =>
-      'في خطر الآن؟ ابتعد عن الجسم واتصل بالخط الساخن.';
+  String get emergencyBanner => 'في خطر الآن؟ ابتعد عن الجسم واتصل بالخط الساخن.';
 
   @override
   String get phoneLabel => 'رقم الهاتف الخلوي';
@@ -93,12 +91,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get signOut => 'تسجيل الخروج';
 
   @override
-  String get errorNetwork =>
-      'تعذّر الوصول إلى الخادم. تحقّق من الاتصال وحاول مجدداً.';
+  String get errorNetwork => 'تعذّر الوصول إلى الخادم. تحقّق من الاتصال وحاول مجدداً.';
 
   @override
-  String get errorNetworkStaff =>
-      'تعذّر الوصول إلى خادم الجيش. تأكّد من تشغيل VPN.';
+  String get errorNetworkStaff => 'تعذّر الوصول إلى خادم الجيش. تأكّد من تشغيل VPN.';
 
   @override
   String get errorTooMany => 'محاولات كثيرة. انتظر بضع دقائق وحاول مجدداً.';
@@ -267,8 +263,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reportSafeDistance => 'أنا على مسافة آمنة من الجسم';
 
   @override
-  String get reportSafeDistanceRequired =>
-      'ابتعد أولاً. أرسل البلاغ فقط من مسافة آمنة.';
+  String get reportSafeDistanceRequired => 'ابتعد أولاً. أرسل البلاغ فقط من مسافة آمنة.';
 
   @override
   String get reportWhat => 'ماذا رأيت؟';
@@ -277,8 +272,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reportDescription => 'الوصف';
 
   @override
-  String get reportDescriptionHint =>
-      'شكله ومكانه بالتحديد (الشارع، معلم قريب)';
+  String get reportDescriptionHint => 'شكله ومكانه بالتحديد (الشارع، معلم قريب)';
 
   @override
   String get reportPhoto => 'صورة (اختياري)';
@@ -296,8 +290,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reportRemovePhoto => 'إزالة الصورة';
 
   @override
-  String get photoUnsupported =>
-      'صيغة هذه الصورة غير مدعومة. استخدم JPEG أو PNG.';
+  String get photoUnsupported => 'صيغة هذه الصورة غير مدعومة. استخدم JPEG أو PNG.';
 
   @override
   String get photoTooLarge => 'هذه الصورة كبيرة جداً (أكثر من 5 ميغابايت).';
@@ -323,8 +316,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get locationDenied => 'تم رفض إذن الوصول إلى الموقع.';
 
   @override
-  String get locationTimeout =>
-      'تعذّر تحديد الموقع. حاول مجدداً في مكان مكشوف.';
+  String get locationTimeout => 'تعذّر تحديد الموقع. حاول مجدداً في مكان مكشوف.';
 
   @override
   String get locationOutside => 'هذا الموقع خارج لبنان.';
@@ -453,4 +445,299 @@ class AppLocalizationsAr extends AppLocalizations {
   String callFailed(String number) {
     return 'تعذّر بدء الاتصال. اطلب الرقم $number بنفسك.';
   }
+
+  @override
+  String get retry => 'حاول مجدداً';
+
+  @override
+  String get notFoundOrOutside => 'غير موجود، أو خارج مناطقك.';
+
+  @override
+  String get leadsNote => 'كل رابط هو مؤشر للمحلل البشري، وليس استنتاجاً.';
+
+  @override
+  String get bandStrong => 'قوي';
+
+  @override
+  String get bandMedium => 'متوسط';
+
+  @override
+  String get bandWeak => 'ضعيف';
+
+  @override
+  String get decisionConfirm => 'تأكيد';
+
+  @override
+  String get decisionReject => 'رفض';
+
+  @override
+  String get decisionUnsure => 'غير متأكد';
+
+  @override
+  String get decisionUndo => 'تراجع';
+
+  @override
+  String get decidedConfirm => 'مؤكد';
+
+  @override
+  String get decidedReject => 'مرفوض';
+
+  @override
+  String get decidedUnsure => 'غير متأكد';
+
+  @override
+  String get decidedOpen => 'لم تتم مراجعته';
+
+  @override
+  String get filterAll => 'الكل';
+
+  @override
+  String get addNote => 'إضافة ملاحظة';
+
+  @override
+  String get noteHint => 'ما تحققت منه أو قررته';
+
+  @override
+  String get notes => 'ملاحظات';
+
+  @override
+  String get reviewEmpty => 'لا توجد روابط للمراجعة في مناطقك.';
+
+  @override
+  String scoreLabel(String score) {
+    return 'الدرجة $score';
+  }
+
+  @override
+  String get incidentsEmpty => 'لا توجد بلاغات في مناطقك بعد.';
+
+  @override
+  String get searchHint => 'ابحث بالمكان أو الرقم أو النص';
+
+  @override
+  String get allCazas => 'كل الأقضية';
+
+  @override
+  String get narrative => 'نص البلاغ';
+
+  @override
+  String get extractedFeatures => 'ما استخرجه Sirens منه';
+
+  @override
+  String get people => 'أشخاص';
+
+  @override
+  String get groups => 'مجموعات';
+
+  @override
+  String get phones => 'أرقام هواتف';
+
+  @override
+  String get networkTitle => 'الشبكة المحتملة';
+
+  @override
+  String get networkNone => 'غير مرتبط ببلاغات أخرى في مناطقك.';
+
+  @override
+  String get networkTentative => 'مبدئي: كل الروابط ضعيفة.';
+
+  @override
+  String get networkShares => 'سمات مشتركة';
+
+  @override
+  String get newReportCaza => 'القضاء';
+
+  @override
+  String get newReportStreet => 'الشارع / المكان';
+
+  @override
+  String get newReportDate => 'التاريخ';
+
+  @override
+  String get newReportType => 'النوع';
+
+  @override
+  String get typeUnknown => 'غير متأكد (سيستنتج Sirens من النص)';
+
+  @override
+  String get newReportText => 'نص البلاغ';
+
+  @override
+  String get newReportTextHint => 'ماذا حدث، ماذا وُجد، أين، ومن أبلغ';
+
+  @override
+  String gridRef(String ref) {
+    return 'MGRS $ref';
+  }
+
+  @override
+  String get fileReport => 'تسجيل البلاغ';
+
+  @override
+  String reportFiled(String id) {
+    return 'سُجّل البلاغ برقم $id';
+  }
+
+  @override
+  String get reportQueuedStaff => 'حُفظ على هذا الهاتف. سيُسجَّل عند عودة اتصال VPN الخاص بالجيش.';
+
+  @override
+  String draftsWaiting(int n) {
+    return 'بلاغات بانتظار VPN: $n';
+  }
+
+  @override
+  String get outsideRegions => 'هذا القضاء خارج مناطقك.';
+
+  @override
+  String get briefLocation => 'الموقع (بلدة أو شارع)';
+
+  @override
+  String get briefDescribe => 'ماذا تتوقع أن تجد؟ (اختياري)';
+
+  @override
+  String get briefRun => 'عرض الإحاطة';
+
+  @override
+  String briefInArea(int n) {
+    return '$n بلاغات سابقة في هذه المنطقة';
+  }
+
+  @override
+  String get briefObjects => 'أجسام أُبلغ عنها هنا';
+
+  @override
+  String get briefSignature => 'سمات شائعة هنا';
+
+  @override
+  String get briefMatches => 'أكثر البلاغات السابقة تشابهاً';
+
+  @override
+  String get briefIncidents => 'بلاغات في هذه المنطقة';
+
+  @override
+  String get briefNote =>
+      'مبني على السجلات فقط: ما أُبلغ عنه هنا سابقاً. لا يحدد أي جسم ولا يقدم أي إرشادات للتعامل معه.';
+
+  @override
+  String get briefNone => 'لا توجد بلاغات سابقة تطابق هذا المكان في مناطقك.';
+
+  @override
+  String lastSeen(String date) {
+    return 'آخرها $date';
+  }
+
+  @override
+  String dashTotal(int n) {
+    return '$n بلاغات';
+  }
+
+  @override
+  String get dashTimeline => 'البلاغات شهرياً';
+
+  @override
+  String dashUndated(int n) {
+    return '$n بلا تاريخ';
+  }
+
+  @override
+  String get dashByCaza => 'حسب القضاء';
+
+  @override
+  String get dashByInitiation => 'حسب طريقة التفجير';
+
+  @override
+  String get dashLinks => 'الروابط والمراجعة';
+
+  @override
+  String dashLinksTotal(int n) {
+    return '$n روابط';
+  }
+
+  @override
+  String dashReviewed(int pct) {
+    return 'تمت مراجعة $pct%';
+  }
+
+  @override
+  String get dashNetworks => 'شبكات محتملة';
+
+  @override
+  String dashNetworkRow(int n) {
+    return '$n بلاغات';
+  }
+
+  @override
+  String dashUnlinked(int n) {
+    return '$n بلاغات غير مرتبطة';
+  }
+
+  @override
+  String get dashQuality => 'اكتمال البيانات';
+
+  @override
+  String dashQualityOverall(int pct) {
+    return 'مكتملة بنسبة $pct% في المتوسط';
+  }
+
+  @override
+  String get dashFrom => 'من';
+
+  @override
+  String get dashTo => 'إلى';
+
+  @override
+  String get clearFilters => 'مسح';
+
+  @override
+  String mapCentre(String mgrs) {
+    return 'المركز $mgrs';
+  }
+
+  @override
+  String mapCopied(String mgrs) {
+    return 'تم نسخ $mgrs';
+  }
+
+  @override
+  String get mapNoStreetMap => 'خريطة الشوارع غير موجودة على الهاتف: تظهر حدود الأقضية فقط.';
+
+  @override
+  String mapDownload(String mb) {
+    return 'تنزيل خريطة الشوارع ($mb ميغابايت)';
+  }
+
+  @override
+  String mapDownloading(int pct) {
+    return 'جارٍ التنزيل… $pct%';
+  }
+
+  @override
+  String mapDownloadFailed(String reason) {
+    return 'توقف التنزيل: $reason. حاول مجدداً للمتابعة.';
+  }
+
+  @override
+  String get mapNotOnServer => 'خريطة الشوارع غير مثبتة على الخادم بعد.';
+
+  @override
+  String get mapApprox => 'تقريبي — موضوع في مركز القضاء';
+
+  @override
+  String get mapExact => 'إحداثيات مسجلة';
+
+  @override
+  String get mapZoneNote => 'تنقطع الشبكة عند خط 36° شرقاً حيث تلتقي منطقتا UTM 36 و37.';
+
+  @override
+  String get mapDeleteMap => 'حذف خريطة الشوارع من الهاتف';
+
+  @override
+  String get mapGrid => 'شبكة MGRS';
+
+  @override
+  String get openReport => 'فتح البلاغ';
+
+  @override
+  String get copy => 'نسخ';
 }

@@ -28,8 +28,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get iAmCivilian => 'Je suis un civil';
 
   @override
-  String get iAmCivilianHint =>
-      'Signalez un objet suspect et recevez les alertes de votre région';
+  String get iAmCivilianHint => 'Signalez un objet suspect et recevez les alertes de votre région';
 
   @override
   String get iAmStaff => 'Militaire / Administrateur';
@@ -102,8 +101,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Impossible de joindre le serveur de l\'Armée. Vérifiez que le VPN est activé.';
 
   @override
-  String get errorTooMany =>
-      'Trop de tentatives. Patientez quelques minutes puis réessayez.';
+  String get errorTooMany => 'Trop de tentatives. Patientez quelques minutes puis réessayez.';
 
   @override
   String get errorWrongCode => 'Code erroné ou expiré.';
@@ -112,19 +110,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get errorWrongLogin => 'Nom d\'utilisateur ou mot de passe incorrect.';
 
   @override
-  String get errorAccountLocked =>
-      'Compte bloqué temporairement après trop de tentatives.';
+  String get errorAccountLocked => 'Compte bloqué temporairement après trop de tentatives.';
 
   @override
-  String get errorAccountDisabled =>
-      'Ce compte est désactivé. Contactez votre administrateur.';
+  String get errorAccountDisabled => 'Ce compte est désactivé. Contactez votre administrateur.';
 
   @override
   String get errorGeneric => 'Une erreur s\'est produite. Réessayez.';
 
   @override
-  String get sessionExpired =>
-      'Votre session a expiré. Veuillez vous reconnecter.';
+  String get sessionExpired => 'Votre session a expiré. Veuillez vous reconnecter.';
 
   @override
   String get reportObject => 'Signaler un objet suspect';
@@ -204,8 +199,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get menuAudit => 'Journal d\'audit';
 
   @override
-  String get comingSoon =>
-      'Cette partie arrive dans la prochaine version de l\'application.';
+  String get comingSoon => 'Cette partie arrive dans la prochaine version de l\'application.';
 
   @override
   String get settings => 'Paramètres';
@@ -283,15 +277,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get reportDescription => 'Description';
 
   @override
-  String get reportDescriptionHint =>
-      'Son aspect et l\'endroit exact (rue, repère)';
+  String get reportDescriptionHint => 'Son aspect et l\'endroit exact (rue, repère)';
 
   @override
   String get reportPhoto => 'Photo (facultatif)';
 
   @override
-  String get reportPhotoWarning =>
-      'Ne vous approchez jamais pour prendre une photo.';
+  String get reportPhotoWarning => 'Ne vous approchez jamais pour prendre une photo.';
 
   @override
   String get reportTakePhoto => 'Prendre une photo';
@@ -307,8 +299,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ce format de photo n\'est pas pris en charge. Utilisez JPEG ou PNG.';
 
   @override
-  String get photoTooLarge =>
-      'Cette photo est trop volumineuse (plus de 5 Mo).';
+  String get photoTooLarge => 'Cette photo est trop volumineuse (plus de 5 Mo).';
 
   @override
   String get reportLocation => 'Position';
@@ -326,8 +317,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Pas de position. Décrivez le lieu aussi précisément que possible.';
 
   @override
-  String get locationServiceOff =>
-      'La localisation est désactivée sur ce téléphone.';
+  String get locationServiceOff => 'La localisation est désactivée sur ce téléphone.';
 
   @override
   String get locationDenied => 'L\'autorisation de localisation a été refusée.';
@@ -431,8 +421,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get warningsPullHint =>
-      'Tirez vers le bas pour vérifier les nouvelles alertes.';
+  String get warningsPullHint => 'Tirez vers le bas pour vérifier les nouvelles alertes.';
 
   @override
   String get severityInfo => 'Information';
@@ -463,4 +452,302 @@ class AppLocalizationsFr extends AppLocalizations {
   String callFailed(String number) {
     return 'Impossible de lancer l\'appel. Composez le $number vous-même.';
   }
+
+  @override
+  String get retry => 'Réessayer';
+
+  @override
+  String get notFoundOrOutside => 'Introuvable, ou hors de vos régions.';
+
+  @override
+  String get leadsNote => 'Chaque lien est une piste pour un analyste, jamais une conclusion.';
+
+  @override
+  String get bandStrong => 'Fort';
+
+  @override
+  String get bandMedium => 'Moyen';
+
+  @override
+  String get bandWeak => 'Faible';
+
+  @override
+  String get decisionConfirm => 'Confirmer';
+
+  @override
+  String get decisionReject => 'Rejeter';
+
+  @override
+  String get decisionUnsure => 'Incertain';
+
+  @override
+  String get decisionUndo => 'Annuler';
+
+  @override
+  String get decidedConfirm => 'Confirmé';
+
+  @override
+  String get decidedReject => 'Rejeté';
+
+  @override
+  String get decidedUnsure => 'Incertain';
+
+  @override
+  String get decidedOpen => 'Non examiné';
+
+  @override
+  String get filterAll => 'Tous';
+
+  @override
+  String get addNote => 'Ajouter une note';
+
+  @override
+  String get noteHint => 'Ce que vous avez vérifié ou décidé';
+
+  @override
+  String get notes => 'Notes';
+
+  @override
+  String get reviewEmpty => 'Aucun lien à examiner dans vos régions.';
+
+  @override
+  String scoreLabel(String score) {
+    return 'Score $score';
+  }
+
+  @override
+  String get incidentsEmpty => 'Aucun rapport dans vos régions pour l\'instant.';
+
+  @override
+  String get searchHint => 'Rechercher par lieu, numéro ou texte';
+
+  @override
+  String get allCazas => 'Tous les cazas';
+
+  @override
+  String get narrative => 'Texte du rapport';
+
+  @override
+  String get extractedFeatures => 'Ce que Sirens y a relevé';
+
+  @override
+  String get people => 'Personnes';
+
+  @override
+  String get groups => 'Groupes';
+
+  @override
+  String get phones => 'Numéros de téléphone';
+
+  @override
+  String get networkTitle => 'Réseau probable';
+
+  @override
+  String get networkNone => 'Lié à aucun autre rapport de vos régions.';
+
+  @override
+  String get networkTentative => 'Provisoire : tous les liens sont faibles.';
+
+  @override
+  String get networkShares => 'Caractéristiques communes';
+
+  @override
+  String get newReportCaza => 'Caza';
+
+  @override
+  String get newReportStreet => 'Rue / lieu';
+
+  @override
+  String get newReportDate => 'Date';
+
+  @override
+  String get newReportType => 'Type';
+
+  @override
+  String get typeUnknown => 'Incertain (Sirens le déduira du texte)';
+
+  @override
+  String get newReportText => 'Texte du rapport';
+
+  @override
+  String get newReportTextHint =>
+      'Ce qui s\'est passé, ce qui a été trouvé, où, et qui l\'a signalé';
+
+  @override
+  String gridRef(String ref) {
+    return 'MGRS $ref';
+  }
+
+  @override
+  String get fileReport => 'Enregistrer le rapport';
+
+  @override
+  String reportFiled(String id) {
+    return 'Rapport enregistré sous $id';
+  }
+
+  @override
+  String get reportQueuedStaff =>
+      'Enregistré sur ce téléphone. Il sera transmis au retour du VPN de l\'Armée.';
+
+  @override
+  String draftsWaiting(int n) {
+    return 'Rapports en attente du VPN : $n';
+  }
+
+  @override
+  String get outsideRegions => 'Ce caza est hors de vos régions.';
+
+  @override
+  String get briefLocation => 'Lieu (ville ou rue)';
+
+  @override
+  String get briefDescribe => 'Que pensez-vous trouver ? (facultatif)';
+
+  @override
+  String get briefRun => 'Obtenir le briefing';
+
+  @override
+  String briefInArea(int n) {
+    return '$n rapports passés dans cette zone';
+  }
+
+  @override
+  String get briefObjects => 'Objets signalés ici';
+
+  @override
+  String get briefSignature => 'Caractéristiques fréquentes ici';
+
+  @override
+  String get briefMatches => 'Rapports passés les plus proches';
+
+  @override
+  String get briefIncidents => 'Rapports dans cette zone';
+
+  @override
+  String get briefNote =>
+      'Fondé uniquement sur les archives : ce qui a été signalé ici. N\'identifie aucun objet et ne donne aucune consigne de manipulation.';
+
+  @override
+  String get briefNone => 'Aucun rapport passé ne correspond à ce lieu dans vos régions.';
+
+  @override
+  String lastSeen(String date) {
+    return 'dernier le $date';
+  }
+
+  @override
+  String dashTotal(int n) {
+    return '$n rapports';
+  }
+
+  @override
+  String get dashTimeline => 'Rapports par mois';
+
+  @override
+  String dashUndated(int n) {
+    return '$n sans date';
+  }
+
+  @override
+  String get dashByCaza => 'Par caza';
+
+  @override
+  String get dashByInitiation => 'Par mode de déclenchement';
+
+  @override
+  String get dashLinks => 'Liens et examen';
+
+  @override
+  String dashLinksTotal(int n) {
+    return '$n liens';
+  }
+
+  @override
+  String dashReviewed(int pct) {
+    return '$pct % examinés';
+  }
+
+  @override
+  String get dashNetworks => 'Réseaux candidats';
+
+  @override
+  String dashNetworkRow(int n) {
+    return '$n rapports';
+  }
+
+  @override
+  String dashUnlinked(int n) {
+    return '$n rapports non liés';
+  }
+
+  @override
+  String get dashQuality => 'Complétude des données';
+
+  @override
+  String dashQualityOverall(int pct) {
+    return 'Complet à $pct % en moyenne';
+  }
+
+  @override
+  String get dashFrom => 'Du';
+
+  @override
+  String get dashTo => 'Au';
+
+  @override
+  String get clearFilters => 'Effacer';
+
+  @override
+  String mapCentre(String mgrs) {
+    return 'Centre $mgrs';
+  }
+
+  @override
+  String mapCopied(String mgrs) {
+    return '$mgrs copié';
+  }
+
+  @override
+  String get mapNoStreetMap =>
+      'Plan des rues absent du téléphone : seuls les contours des cazas sont affichés.';
+
+  @override
+  String mapDownload(String mb) {
+    return 'Télécharger le plan des rues ($mb Mo)';
+  }
+
+  @override
+  String mapDownloading(int pct) {
+    return 'Téléchargement… $pct %';
+  }
+
+  @override
+  String mapDownloadFailed(String reason) {
+    return 'Téléchargement interrompu : $reason. Réessayez pour reprendre.';
+  }
+
+  @override
+  String get mapNotOnServer => 'Le plan des rues n\'est pas encore installé sur le serveur.';
+
+  @override
+  String get mapApprox => 'Approx. — placé au centre du caza';
+
+  @override
+  String get mapExact => 'Coordonnées enregistrées';
+
+  @override
+  String get mapZoneNote => 'La grille saute à 36° E, où se rejoignent les zones UTM 36 et 37.';
+
+  @override
+  String get mapDeleteMap => 'Supprimer le plan des rues du téléphone';
+
+  @override
+  String get mapGrid => 'Grille MGRS';
+
+  @override
+  String get openReport => 'Ouvrir le rapport';
+
+  @override
+  String get copy => 'Copier';
 }

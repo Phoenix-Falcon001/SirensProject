@@ -7,9 +7,12 @@ import '../api/gateway_api.dart';
 import '../api/staff_api.dart';
 import '../config.dart';
 import '../services/device.dart';
+import '../services/map_files.dart';
 import 'civilian.dart';
+import 'drafts.dart';
 import 'outbox.dart';
 import 'session.dart';
+import 'staff.dart';
 import 'storage.dart';
 
 const supportedLanguages = ['ar', 'en', 'fr'];
@@ -22,10 +25,14 @@ class AppState extends ChangeNotifier {
     required this.prefs,
     OutboxStore? outbox,
     DeviceServices? device,
+    DraftStore? drafts,
+    MapFiles? maps,
     ApiClient? gatewayClient,
     ApiClient? internalClient,
   }) : outbox = outbox ?? FileOutboxStore(),
        device = device ?? RealDeviceServices(),
+       drafts = drafts ?? FileDraftStore(),
+       maps = maps ?? FileMapFiles(),
        gatewayClient = gatewayClient ?? ApiClient(config.gatewayUrl),
        internalClient = internalClient ?? ApiClient(config.internalUrl) {
     this.gatewayClient.onUnauthorized = _expired;
@@ -42,6 +49,10 @@ class AppState extends ChangeNotifier {
 
   /// Camera, GPS and dialer.
   final DeviceServices device;
+
+  /// Military reports waiting for the VPN, and the offline street map.
+  final DraftStore drafts;
+  final MapFiles maps;
   final ApiClient gatewayClient;
   final ApiClient internalClient;
 
@@ -54,6 +65,9 @@ class AppState extends ChangeNotifier {
 
   /// Set while a civilian is signed in.
   CivilianService? civilian;
+
+  /// Set while a military or admin user is signed in.
+  StaffService? staffService;
 
   /// Set when the server ended the session; the sign-in screen shows a note.
   bool sessionExpired = false;
@@ -76,6 +90,7 @@ class AppState extends ChangeNotifier {
     notifyListeners();
     if (session?.kind == AccountKind.staff) await refreshStaff();
     await _startCivilian();
+    await _startStaff();
   }
 
   Future<void> setLanguage(String code) async {
@@ -86,7 +101,18 @@ class AppState extends ChangeNotifier {
 
   void _use(Session? s) {
     if (s?.kind != AccountKind.civilian || s?.phone != session?.phone) civilian = null;
+    if (s?.kind != AccountKind.staff || s?.username != session?.username) staffService = null;
     session = s;
+    if (s?.kind == AccountKind.staff) {
+      staffService ??= StaffService(
+        api: staff,
+        drafts: drafts,
+        maps: maps,
+        username: s!.username!,
+        internalUrl: config.internalUrl,
+        tokenOf: () => internalClient.token,
+      );
+    }
     if (s?.kind == AccountKind.civilian) {
       civilian ??= CivilianService(api: gateway, outbox: outbox, cache: prefs, phone: s!.phone!);
     }
@@ -150,6 +176,20 @@ class AppState extends ChangeNotifier {
         r['user'] as Map<String, dynamic>,
       ),
     );
+    await _startStaff();
+  }
+
+  /// Loads form lists and sends reports drafted without the VPN.
+  Future<void> _startStaff() async {
+    final st = staffService;
+    if (st == null) return;
+    try {
+      await st.loadPending();
+      await st.loadMeta();
+      await st.flush();
+    } on Object {
+      // Offline: the drafts wait; the forms fall back to the user's own regions.
+    }
   }
 
   /// Picks up level or region changes an admin made since sign-in. Offline is

@@ -28,19 +28,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get iAmCivilian => 'I am a civilian';
 
   @override
-  String get iAmCivilianHint =>
-      'Report a suspicious object and get warnings for your area';
+  String get iAmCivilianHint => 'Report a suspicious object and get warnings for your area';
 
   @override
   String get iAmStaff => 'Military / Admin';
 
   @override
-  String get iAmStaffHint =>
-      'Sign in with your Army account. The Army VPN must be on.';
+  String get iAmStaffHint => 'Sign in with your Army account. The Army VPN must be on.';
 
   @override
-  String get emergencyBanner =>
-      'In danger now? Move away from the object and call the hotline.';
+  String get emergencyBanner => 'In danger now? Move away from the object and call the hotline.';
 
   @override
   String get phoneLabel => 'Mobile number';
@@ -94,16 +91,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signOut => 'Sign out';
 
   @override
-  String get errorNetwork =>
-      'Cannot reach the server. Check your connection and try again.';
+  String get errorNetwork => 'Cannot reach the server. Check your connection and try again.';
 
   @override
-  String get errorNetworkStaff =>
-      'Cannot reach the Army server. Check that the VPN is on.';
+  String get errorNetworkStaff => 'Cannot reach the Army server. Check that the VPN is on.';
 
   @override
-  String get errorTooMany =>
-      'Too many attempts. Wait a few minutes and try again.';
+  String get errorTooMany => 'Too many attempts. Wait a few minutes and try again.';
 
   @override
   String get errorWrongCode => 'Wrong or expired code.';
@@ -112,12 +106,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorWrongLogin => 'Wrong username or password.';
 
   @override
-  String get errorAccountLocked =>
-      'Account locked for a while after too many attempts.';
+  String get errorAccountLocked => 'Account locked for a while after too many attempts.';
 
   @override
-  String get errorAccountDisabled =>
-      'This account is disabled. Contact your admin.';
+  String get errorAccountDisabled => 'This account is disabled. Contact your admin.';
 
   @override
   String get errorGeneric => 'Something went wrong. Try again.';
@@ -300,8 +292,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportRemovePhoto => 'Remove photo';
 
   @override
-  String get photoUnsupported =>
-      'This photo format is not supported. Use JPEG or PNG.';
+  String get photoUnsupported => 'This photo format is not supported. Use JPEG or PNG.';
 
   @override
   String get photoTooLarge => 'This photo is too large (over 5 MB).';
@@ -318,8 +309,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get reportLocationNone =>
-      'No location. Describe the place as precisely as you can.';
+  String get reportLocationNone => 'No location. Describe the place as precisely as you can.';
 
   @override
   String get locationServiceOff => 'Location is turned off on this phone.';
@@ -328,8 +318,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get locationDenied => 'Location permission was refused.';
 
   @override
-  String get locationTimeout =>
-      'Could not get a location. Try again in the open.';
+  String get locationTimeout => 'Could not get a location. Try again in the open.';
 
   @override
   String get locationOutside => 'That position is outside Lebanon.';
@@ -458,4 +447,300 @@ class AppLocalizationsEn extends AppLocalizations {
   String callFailed(String number) {
     return 'Could not start the call. Dial $number yourself.';
   }
+
+  @override
+  String get retry => 'Try again';
+
+  @override
+  String get notFoundOrOutside => 'Not found, or outside your regions.';
+
+  @override
+  String get leadsNote => 'Every link is a lead for a human analyst, never a conclusion.';
+
+  @override
+  String get bandStrong => 'Strong';
+
+  @override
+  String get bandMedium => 'Medium';
+
+  @override
+  String get bandWeak => 'Weak';
+
+  @override
+  String get decisionConfirm => 'Confirm';
+
+  @override
+  String get decisionReject => 'Reject';
+
+  @override
+  String get decisionUnsure => 'Unsure';
+
+  @override
+  String get decisionUndo => 'Undo';
+
+  @override
+  String get decidedConfirm => 'Confirmed';
+
+  @override
+  String get decidedReject => 'Rejected';
+
+  @override
+  String get decidedUnsure => 'Unsure';
+
+  @override
+  String get decidedOpen => 'Not reviewed';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get addNote => 'Add note';
+
+  @override
+  String get noteHint => 'What you checked or decided';
+
+  @override
+  String get notes => 'Notes';
+
+  @override
+  String get reviewEmpty => 'No links to review in your regions.';
+
+  @override
+  String scoreLabel(String score) {
+    return 'Score $score';
+  }
+
+  @override
+  String get incidentsEmpty => 'No reports in your regions yet.';
+
+  @override
+  String get searchHint => 'Search by place, ID or text';
+
+  @override
+  String get allCazas => 'All cazas';
+
+  @override
+  String get narrative => 'Report text';
+
+  @override
+  String get extractedFeatures => 'What Sirens read in it';
+
+  @override
+  String get people => 'People';
+
+  @override
+  String get groups => 'Groups';
+
+  @override
+  String get phones => 'Phone numbers';
+
+  @override
+  String get networkTitle => 'Likely network';
+
+  @override
+  String get networkNone => 'Not linked to other reports in your regions.';
+
+  @override
+  String get networkTentative => 'Tentative: all links are weak.';
+
+  @override
+  String get networkShares => 'Shared features';
+
+  @override
+  String get newReportCaza => 'Caza';
+
+  @override
+  String get newReportStreet => 'Street / place';
+
+  @override
+  String get newReportDate => 'Date';
+
+  @override
+  String get newReportType => 'Type';
+
+  @override
+  String get typeUnknown => 'Not sure (Sirens will guess from the text)';
+
+  @override
+  String get newReportText => 'Report text';
+
+  @override
+  String get newReportTextHint => 'What happened, what was found, where, and who reported it';
+
+  @override
+  String gridRef(String ref) {
+    return 'MGRS $ref';
+  }
+
+  @override
+  String get fileReport => 'File report';
+
+  @override
+  String reportFiled(String id) {
+    return 'Report filed as $id';
+  }
+
+  @override
+  String get reportQueuedStaff =>
+      'Saved on this phone. It will be filed when the Army VPN is back.';
+
+  @override
+  String draftsWaiting(int n) {
+    return 'Reports waiting for the VPN: $n';
+  }
+
+  @override
+  String get outsideRegions => 'That caza is outside your regions.';
+
+  @override
+  String get briefLocation => 'Location (town or street)';
+
+  @override
+  String get briefDescribe => 'What do you expect to find? (optional)';
+
+  @override
+  String get briefRun => 'Get brief';
+
+  @override
+  String briefInArea(int n) {
+    return '$n past reports in this area';
+  }
+
+  @override
+  String get briefObjects => 'Objects reported here';
+
+  @override
+  String get briefSignature => 'Common features here';
+
+  @override
+  String get briefMatches => 'Most similar past reports';
+
+  @override
+  String get briefIncidents => 'Reports in this area';
+
+  @override
+  String get briefNote =>
+      'Record-based only: what was reported here before. It does not identify any object and gives no handling guidance.';
+
+  @override
+  String get briefNone => 'No past reports match this place in your regions.';
+
+  @override
+  String lastSeen(String date) {
+    return 'last $date';
+  }
+
+  @override
+  String dashTotal(int n) {
+    return '$n reports';
+  }
+
+  @override
+  String get dashTimeline => 'Reports per month';
+
+  @override
+  String dashUndated(int n) {
+    return '$n without a date';
+  }
+
+  @override
+  String get dashByCaza => 'By caza';
+
+  @override
+  String get dashByInitiation => 'By initiation method';
+
+  @override
+  String get dashLinks => 'Links and review';
+
+  @override
+  String dashLinksTotal(int n) {
+    return '$n links';
+  }
+
+  @override
+  String dashReviewed(int pct) {
+    return '$pct% reviewed';
+  }
+
+  @override
+  String get dashNetworks => 'Candidate networks';
+
+  @override
+  String dashNetworkRow(int n) {
+    return '$n reports';
+  }
+
+  @override
+  String dashUnlinked(int n) {
+    return '$n reports not linked';
+  }
+
+  @override
+  String get dashQuality => 'Data completeness';
+
+  @override
+  String dashQualityOverall(int pct) {
+    return '$pct% complete on average';
+  }
+
+  @override
+  String get dashFrom => 'From';
+
+  @override
+  String get dashTo => 'To';
+
+  @override
+  String get clearFilters => 'Clear';
+
+  @override
+  String mapCentre(String mgrs) {
+    return 'Centre $mgrs';
+  }
+
+  @override
+  String mapCopied(String mgrs) {
+    return 'Copied $mgrs';
+  }
+
+  @override
+  String get mapNoStreetMap => 'Street map not on this phone: showing caza outlines only.';
+
+  @override
+  String mapDownload(String mb) {
+    return 'Download street map ($mb MB)';
+  }
+
+  @override
+  String mapDownloading(int pct) {
+    return 'Downloading… $pct%';
+  }
+
+  @override
+  String mapDownloadFailed(String reason) {
+    return 'Download stopped: $reason. Try again to resume.';
+  }
+
+  @override
+  String get mapNotOnServer => 'The street map is not installed on the server yet.';
+
+  @override
+  String get mapApprox => 'Approx. — placed at caza centre';
+
+  @override
+  String get mapExact => 'Filed grid reference';
+
+  @override
+  String get mapZoneNote => 'The grid jumps at 36°E, where UTM zones 36 and 37 meet.';
+
+  @override
+  String get mapDeleteMap => 'Delete street map from phone';
+
+  @override
+  String get mapGrid => 'MGRS grid';
+
+  @override
+  String get openReport => 'Open report';
+
+  @override
+  String get copy => 'Copy';
 }
