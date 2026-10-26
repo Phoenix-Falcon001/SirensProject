@@ -253,6 +253,14 @@ hit this ceiling as hard. Not yet verified against real data.
 - **Structure** — swap connected-components for community detection to split
   large loose clusters.
 
+## Mobile app (Android and iPhone)
+
+Sirens has a mobile app for admins, military users and civilians, run by the
+Lebanese Army: Flutter app in `mobile/`, app interface `/api/v1` in
+`api_bp.py`, the civilian-facing public gateway in `gateway/`, and the sync
+job `sync_gateway.py`. See [docs/MOBILE_SERVER.md](docs/MOBILE_SERVER.md) and
+[mobile/README.md](mobile/README.md).
+
 ## Known limitations
 
 - Extraction is only as good as the taxonomy + base NER model — every link is

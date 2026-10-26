@@ -1069,6 +1069,18 @@ def incident_map():
     return map_bp.render_page(incidents, legend, unplaced=unplaced)
 
 
+def _region_of(inc):
+    """The incident's caza (canonical name), as the map places it."""
+    d = _load_meta().get(inc.incident_id, {}).get("caza") or _district(inc.location)
+    return {_norm(n): n for n in _CAZA_NAMES}.get(_norm(d)) if d else None
+
+
+# Mobile app interface (/api/v1): accounts, roles, regions. See api_bp.py.
+import api_bp
+api_bp.register(app, region_of=_region_of, extractor=_EXTRACTOR, put_meta=_put_meta,
+                fmt_grid=_fmt_grid, munitions=_MUNITIONS)
+
+
 def _open():
     webbrowser.open("http://127.0.0.1:5000")
 

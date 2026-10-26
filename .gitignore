@@ -18,3 +18,5 @@ data/report_meta.json
 data/map/*.pmtiles
 data/map/*.part
 .tools/
+# public gateway database (civilian accounts and reports in transit)
+data/gateway.db*
