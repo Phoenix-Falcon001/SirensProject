@@ -71,6 +71,25 @@ class ApiClient {
     return http.Response.fromStream(await _http.send(req));
   });
 
+  /// Raw bytes (e.g. a report photo).
+  Future<List<int>> getBytes(String path) async {
+    final http.Response resp;
+    try {
+      resp = await _http
+          .get(_uri(path), headers: {if (token != null) 'Authorization': 'Bearer $token'})
+          .timeout(timeout);
+    } on TimeoutException {
+      throw ApiException(null, 'timeout');
+    } on SocketException catch (e) {
+      throw ApiException(null, e.message);
+    } on http.ClientException catch (e) {
+      throw ApiException(null, e.message);
+    }
+    if (resp.statusCode == 200) return resp.bodyBytes;
+    if (resp.statusCode == 401 && token != null) onUnauthorized?.call();
+    throw ApiException(resp.statusCode, 'HTTP ${resp.statusCode}');
+  }
+
   Future<Map<String, dynamic>> delete(String path) =>
       _send(() => _http.delete(_uri(path), headers: _headers));
 

@@ -27,6 +27,7 @@ class StaffService extends ChangeNotifier {
     required this.username,
     required this.internalUrl,
     required this.tokenOf,
+    this.canFile = true,
   });
 
   final StaffApi api;
@@ -35,6 +36,9 @@ class StaffService extends ChangeNotifier {
   final String username;
   final String internalUrl;
   final String? Function() tokenOf;
+
+  /// Whether this account may file reports (decides the "file as report" button).
+  final bool canFile;
 
   List<StaffDraft> pending = [];
   List<String> regionChoices = const [];

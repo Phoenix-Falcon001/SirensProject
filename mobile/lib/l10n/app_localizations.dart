@@ -1425,6 +1425,318 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copy'**
   String get copy;
+
+  /// No description provided for @civilEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No civilian reports in your regions.'**
+  String get civilEmpty;
+
+  /// No description provided for @civilNoCaza.
+  ///
+  /// In en, this message translates to:
+  /// **'Outside the known cazas (admins only)'**
+  String get civilNoCaza;
+
+  /// No description provided for @civilObserved.
+  ///
+  /// In en, this message translates to:
+  /// **'Seen {date}'**
+  String civilObserved(String date);
+
+  /// No description provided for @civilReporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Reporter'**
+  String get civilReporter;
+
+  /// No description provided for @civilReporterDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted; no number'**
+  String get civilReporterDeleted;
+
+  /// No description provided for @civilNoLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'No GPS position: see description'**
+  String get civilNoLocation;
+
+  /// No description provided for @civilAccuracy.
+  ///
+  /// In en, this message translates to:
+  /// **'± {meters} m'**
+  String civilAccuracy(int meters);
+
+  /// No description provided for @civilSetStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Set status'**
+  String get civilSetStatus;
+
+  /// No description provided for @civilStatusNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Internal note (not shown to the civilian)'**
+  String get civilStatusNote;
+
+  /// No description provided for @civilStatusSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Status saved. The civilian sees it after the next sync.'**
+  String get civilStatusSaved;
+
+  /// No description provided for @civilLastChange.
+  ///
+  /// In en, this message translates to:
+  /// **'{status} by {who}'**
+  String civilLastChange(String status, String who);
+
+  /// No description provided for @civilToReport.
+  ///
+  /// In en, this message translates to:
+  /// **'File as military report'**
+  String get civilToReport;
+
+  /// No description provided for @civilPhotoFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo could not be loaded.'**
+  String get civilPhotoFailed;
+
+  /// No description provided for @civilFromCivilian.
+  ///
+  /// In en, this message translates to:
+  /// **'From civilian report {id}'**
+  String civilFromCivilian(String id);
+
+  /// No description provided for @warnActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get warnActive;
+
+  /// No description provided for @warnPast.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired or withdrawn'**
+  String get warnPast;
+
+  /// No description provided for @warnNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New warning'**
+  String get warnNew;
+
+  /// No description provided for @warnWithdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw'**
+  String get warnWithdraw;
+
+  /// No description provided for @warnWithdrawConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw this warning? Civilians stop seeing it after the next sync.'**
+  String get warnWithdrawConfirm;
+
+  /// No description provided for @warnWithdrawn.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawn'**
+  String get warnWithdrawn;
+
+  /// No description provided for @warnBy.
+  ///
+  /// In en, this message translates to:
+  /// **'By {who}'**
+  String warnBy(String who);
+
+  /// No description provided for @warnSeverity.
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get warnSeverity;
+
+  /// No description provided for @warnDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown for'**
+  String get warnDuration;
+
+  /// No description provided for @warnHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} hours'**
+  String warnHours(int n);
+
+  /// No description provided for @warnDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} days'**
+  String warnDays(int n);
+
+  /// No description provided for @warnTitleIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Title ({lang})'**
+  String warnTitleIn(String lang);
+
+  /// No description provided for @warnBodyIn.
+  ///
+  /// In en, this message translates to:
+  /// **'What civilians should do ({lang})'**
+  String warnBodyIn(String lang);
+
+  /// No description provided for @warnNeedsText.
+  ///
+  /// In en, this message translates to:
+  /// **'Write the title and text in at least one language, the same one.'**
+  String get warnNeedsText;
+
+  /// No description provided for @warnGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Say only what civilians should do (avoid, keep away). No incident details.'**
+  String get warnGuidance;
+
+  /// No description provided for @warnPublish.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish'**
+  String get warnPublish;
+
+  /// No description provided for @warnPublished.
+  ///
+  /// In en, this message translates to:
+  /// **'Published. Civilians see it after the next sync.'**
+  String get warnPublished;
+
+  /// No description provided for @warnEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No warnings.'**
+  String get warnEmpty;
+
+  /// No description provided for @usersNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New account'**
+  String get usersNew;
+
+  /// No description provided for @usersRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get usersRole;
+
+  /// No description provided for @usersRoleMilitary.
+  ///
+  /// In en, this message translates to:
+  /// **'Military'**
+  String get usersRoleMilitary;
+
+  /// No description provided for @usersLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get usersLevel;
+
+  /// No description provided for @usersRegions.
+  ///
+  /// In en, this message translates to:
+  /// **'Regions (at least one)'**
+  String get usersRegions;
+
+  /// No description provided for @usersDisplayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name and rank'**
+  String get usersDisplayName;
+
+  /// No description provided for @usersTempPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary password'**
+  String get usersTempPassword;
+
+  /// No description provided for @usersGenerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate'**
+  String get usersGenerate;
+
+  /// No description provided for @usersPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Give it to the person in person; they change it after signing in.'**
+  String get usersPasswordHint;
+
+  /// No description provided for @usersActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Account active'**
+  String get usersActive;
+
+  /// No description provided for @usersDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get usersDisabled;
+
+  /// No description provided for @usersResetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get usersResetPassword;
+
+  /// No description provided for @usersResetDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset. Their sessions were ended.'**
+  String get usersResetDone;
+
+  /// No description provided for @usersSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved.'**
+  String get usersSaved;
+
+  /// No description provided for @usersCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Account {name} created.'**
+  String usersCreated(String name);
+
+  /// No description provided for @usersSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search accounts'**
+  String get usersSearch;
+
+  /// No description provided for @usersYou.
+  ///
+  /// In en, this message translates to:
+  /// **'you'**
+  String get usersYou;
+
+  /// No description provided for @usersCannotDisableSelf.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot disable your own account.'**
+  String get usersCannotDisableSelf;
+
+  /// No description provided for @auditEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing recorded yet.'**
+  String get auditEmpty;
+
+  /// No description provided for @serverSaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Not accepted: {reason}'**
+  String serverSaid(String reason);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -21,6 +21,9 @@ class NewReportScreen extends StatefulWidget {
     required this.service,
     required this.device,
     required this.regions,
+    this.initialText,
+    this.initialCaza,
+    this.initialFix,
   });
 
   final StaffService service;
@@ -28,6 +31,11 @@ class NewReportScreen extends StatefulWidget {
 
   /// Cazas this user may file in.
   final List<String> regions;
+
+  /// Pre-filled values, e.g. when filing from a civilian report.
+  final String? initialText;
+  final String? initialCaza;
+  final GeoFix? initialFix;
 
   @override
   State<NewReportScreen> createState() => _NewReportScreenState();
@@ -49,6 +57,11 @@ class _NewReportScreenState extends State<NewReportScreen> {
   void initState() {
     super.initState();
     if (widget.regions.length == 1) _caza = widget.regions.single;
+    if (widget.initialCaza != null && widget.regions.contains(widget.initialCaza)) {
+      _caza = widget.initialCaza;
+    }
+    _text.text = widget.initialText ?? '';
+    _fix = widget.initialFix;
   }
 
   @override

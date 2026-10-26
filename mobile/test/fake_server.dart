@@ -64,6 +64,50 @@ class FakeServers {
   final linkNotes = <String, List<Map<String, dynamic>>>{};
   bool mapOnServer = true;
 
+  // Commander / admin data
+  final civil = <String, Map<String, dynamic>>{
+    'CR-1': {
+      'id': 'CR-1',
+      'submitted_at': '2026-10-25T10:00:00+00:00',
+      'observed_at': '2026-10-25T09:30:00+00:00',
+      'category': 'unexploded_ordnance',
+      'description': 'Rocket in the olive grove',
+      'lat': 33.27,
+      'lon': 35.2,
+      'accuracy_m': 8.0,
+      'caza': 'Sour',
+      'mgrs': '36S YB 049 833',
+      'reporter_phone': '+9613123456',
+      'has_photo': true,
+      'status': 'received',
+      'status_note': '',
+      'status_by': null,
+      'status_at': null,
+    },
+  };
+  final staffWarnings = <Map<String, dynamic>>[];
+  final adminUsers = <Map<String, dynamic>>[
+    {
+      'id': 1,
+      'username': 'admin',
+      'display_name': '',
+      'role': 'admin',
+      'level': null,
+      'regions': [],
+      'active': true,
+    },
+    {
+      'id': 2,
+      'username': 'field1',
+      'display_name': 'Sgt. Haddad',
+      'role': 'military',
+      'level': 'field',
+      'regions': ['Sour'],
+      'active': true,
+    },
+  ];
+  final userPatches = <Map<String, dynamic>>[];
+
   Map<String, dynamic> _inc(String id, String loc) => {
     'id': id,
     'date': '2026-05-20',
@@ -109,7 +153,95 @@ class FakeServers {
       'tentative': false,
       'note': 'Leads for a human analyst, never conclusions.',
     };
+    final civilMatch = RegExp(r'^/api/v1/civil-reports/([^/]+)(/photo)?$').firstMatch(path);
+    if (civilMatch != null) {
+      final r = civil[civilMatch.group(1)];
+      if (r == null) return _json({'error': 'not found'}, 404);
+      if (civilMatch.group(2) != null) {
+        return http.Response.bytes([0xFF, 0xD8, 0xFF, 0xE0, 1, 2, 3], 200);
+      }
+      if (req.method == 'PATCH') {
+        r['status'] = body['status'];
+        r['status_note'] = body['note'];
+        r['status_by'] = 'admin';
+      }
+      return _json(r);
+    }
+    final withdraw = RegExp(r'^/api/v1/warnings/(\d+)/withdraw$').firstMatch(path);
+    if (withdraw != null) {
+      final w = staffWarnings.firstWhere((w) => '${w['id']}' == withdraw.group(1));
+      w['withdrawn'] = true;
+      return _json(w);
+    }
+    final userMatch = RegExp(r'^/api/v1/admin/users/(\d+)$').firstMatch(path);
+    if (userMatch != null) {
+      final u = adminUsers.firstWhere((u) => '${u['id']}' == userMatch.group(1));
+      userPatches.add(body);
+      for (final k in ['level', 'regions', 'active', 'display_name']) {
+        if (body.containsKey(k)) u[k] = body[k];
+      }
+      return _json(u);
+    }
     switch ('${req.method} $path') {
+      case 'GET /api/v1/civil-reports':
+        final st = req.url.queryParameters['status'];
+        return _json({
+          'reports': [
+            for (final r in civil.values)
+              if (st == null || r['status'] == st) r,
+          ],
+        });
+      case 'GET /api/v1/warnings':
+        return _json({'warnings': staffWarnings});
+      case 'POST /api/v1/warnings':
+        final w = {
+          'id': staffWarnings.length + 1,
+          'caza': body['caza'],
+          'severity': body['severity'],
+          'title': body['title'],
+          'body': body['body'],
+          'created_by': 'admin',
+          'created_at': DateTime.now().toUtc().toIso8601String(),
+          'expires_at': body['expires_at'],
+          'withdrawn': false,
+        };
+        staffWarnings.add(w);
+        return _json(w, 201);
+      case 'GET /api/v1/admin/users':
+        return _json({'users': adminUsers});
+      case 'POST /api/v1/admin/users':
+        if (adminUsers.any((u) => u['username'] == body['username'])) {
+          return _json({'error': 'that username is already taken'}, 400);
+        }
+        final u = {
+          'id': adminUsers.length + 1,
+          'username': body['username'],
+          'display_name': body['display_name'] ?? '',
+          'role': body['role'],
+          'level': body['level'],
+          'regions': body['regions'] ?? [],
+          'active': true,
+          'password_sent': body['password'],
+        };
+        adminUsers.add(u);
+        return _json(u, 201);
+      case 'GET /api/v1/admin/audit':
+        return _json({
+          'entries': [
+            {
+              'at': '2026-10-26T10:00:00+00:00',
+              'actor': 'field1',
+              'action': 'login.ok',
+              'detail': {},
+            },
+            {
+              'at': '2026-10-26T09:00:00+00:00',
+              'actor': 'admin',
+              'action': 'user.create',
+              'detail': {'user': 'field1'},
+            },
+          ],
+        });
       case 'GET /api/v1/meta':
         return _json({
           'regions': ['Beirut', 'Saida', 'Sour'],

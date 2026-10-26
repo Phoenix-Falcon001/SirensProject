@@ -750,4 +750,186 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get copy => 'Copier';
+
+  @override
+  String get civilEmpty => 'Aucun signalement civil dans vos régions.';
+
+  @override
+  String get civilNoCaza => 'Hors des cazas connus (administrateurs seulement)';
+
+  @override
+  String civilObserved(String date) {
+    return 'Vu le $date';
+  }
+
+  @override
+  String get civilReporter => 'Auteur du signalement';
+
+  @override
+  String get civilReporterDeleted => 'Compte supprimé ; pas de numéro';
+
+  @override
+  String get civilNoLocation => 'Pas de position GPS : voir la description';
+
+  @override
+  String civilAccuracy(int meters) {
+    return '± $meters m';
+  }
+
+  @override
+  String get civilSetStatus => 'Changer le statut';
+
+  @override
+  String get civilStatusNote => 'Note interne (non visible par le civil)';
+
+  @override
+  String get civilStatusSaved =>
+      'Statut enregistré. Le civil le verra après la prochaine synchronisation.';
+
+  @override
+  String civilLastChange(String status, String who) {
+    return '$status par $who';
+  }
+
+  @override
+  String get civilToReport => 'Enregistrer comme rapport militaire';
+
+  @override
+  String get civilPhotoFailed => 'Impossible de charger la photo.';
+
+  @override
+  String civilFromCivilian(String id) {
+    return 'D\'après le signalement civil $id';
+  }
+
+  @override
+  String get warnActive => 'En cours';
+
+  @override
+  String get warnPast => 'Expirées ou retirées';
+
+  @override
+  String get warnNew => 'Nouvelle alerte';
+
+  @override
+  String get warnWithdraw => 'Retirer';
+
+  @override
+  String get warnWithdrawConfirm =>
+      'Retirer cette alerte ? Les civils ne la verront plus après la prochaine synchronisation.';
+
+  @override
+  String get warnWithdrawn => 'Retirée';
+
+  @override
+  String warnBy(String who) {
+    return 'Par $who';
+  }
+
+  @override
+  String get warnSeverity => 'Niveau';
+
+  @override
+  String get warnDuration => 'Affichée pendant';
+
+  @override
+  String warnHours(int n) {
+    return '$n heures';
+  }
+
+  @override
+  String warnDays(int n) {
+    return '$n jours';
+  }
+
+  @override
+  String warnTitleIn(String lang) {
+    return 'Titre ($lang)';
+  }
+
+  @override
+  String warnBodyIn(String lang) {
+    return 'Ce que les civils doivent faire ($lang)';
+  }
+
+  @override
+  String get warnNeedsText => 'Rédigez le titre et le texte dans au moins une langue, la même.';
+
+  @override
+  String get warnGuidance =>
+      'Indiquez seulement ce que les civils doivent faire (éviter, s\'éloigner). Aucun détail d\'incident.';
+
+  @override
+  String get warnPublish => 'Publier';
+
+  @override
+  String get warnPublished => 'Publiée. Les civils la verront après la prochaine synchronisation.';
+
+  @override
+  String get warnEmpty => 'Aucune alerte.';
+
+  @override
+  String get usersNew => 'Nouveau compte';
+
+  @override
+  String get usersRole => 'Rôle';
+
+  @override
+  String get usersRoleMilitary => 'Militaire';
+
+  @override
+  String get usersLevel => 'Niveau';
+
+  @override
+  String get usersRegions => 'Régions (au moins une)';
+
+  @override
+  String get usersDisplayName => 'Nom complet et grade';
+
+  @override
+  String get usersTempPassword => 'Mot de passe provisoire';
+
+  @override
+  String get usersGenerate => 'Générer';
+
+  @override
+  String get usersPasswordHint =>
+      'Remettez-le en main propre ; la personne le change après connexion.';
+
+  @override
+  String get usersActive => 'Compte actif';
+
+  @override
+  String get usersDisabled => 'Désactivé';
+
+  @override
+  String get usersResetPassword => 'Réinitialiser le mot de passe';
+
+  @override
+  String get usersResetDone => 'Mot de passe réinitialisé. Ses sessions ont été fermées.';
+
+  @override
+  String get usersSaved => 'Enregistré.';
+
+  @override
+  String usersCreated(String name) {
+    return 'Compte $name créé.';
+  }
+
+  @override
+  String get usersSearch => 'Rechercher un compte';
+
+  @override
+  String get usersYou => 'vous';
+
+  @override
+  String get usersCannotDisableSelf => 'Vous ne pouvez pas désactiver votre propre compte.';
+
+  @override
+  String get auditEmpty => 'Rien d\'enregistré pour l\'instant.';
+
+  @override
+  String serverSaid(String reason) {
+    return 'Refusé : $reason';
+  }
 }

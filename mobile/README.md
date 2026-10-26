@@ -23,8 +23,8 @@ which one; it can be changed later in Settings.
 | 2. App foundation: sign-in for all users, 3 languages + RTL, home per role, settings | done |
 | 3. Civilian features: report, my reports, warnings, safety + hotline | done |
 | 4. Military features: new report, incidents, brief, offline map + MGRS, review, dashboard | done |
-| 5. Admin features: accounts, civilian report triage, warnings | next (server side already done) |
-| 6. Android APK pilot, then iPhone through TestFlight | to do |
+| 5. Commander and admin features: civilian reports, warnings, accounts, audit log | done |
+| 6. Android APK pilot, then iPhone through TestFlight | next (needs a laptop) |
 
 ## Civilian features
 
@@ -86,6 +86,27 @@ between two reports is shown only when the user may see both.
 Analysis results are not stored on the phone; only reports waiting for the
 VPN and the street map are.
 
+## Commander and admin features
+
+* **Civilian reports** (commander+, own regions; admins also see reports
+  outside every caza). Filter by status; each report shows its text, photo,
+  when it was seen, MGRS and caza, and the reporter's number with a *Call*
+  button. *Set status* (received / under review / closed / not followed up)
+  with an internal note; the civilian sees only the status, after the next
+  sync. *File as military report* opens New report pre-filled with the
+  text, caza and position.
+* **Publish warnings** (commander+, own regions). Caza, level (information /
+  caution / danger), how long it shows (6 h – 7 days), and title + text in
+  Arabic, English and/or French (each language used needs both). A reminder
+  says to state only what civilians should do. Active warnings can be
+  withdrawn; past ones are listed with who wrote them.
+* **Manage accounts** (admin). Create military accounts (level + at least
+  one region) or admin accounts, with a generated 14-character temporary
+  password to hand over in person. Change level, regions, name; disable
+  (not your own account); reset a password (ends that person's sessions).
+* **Audit log** (admin). Sign-ins (failed ones flagged), account changes,
+  reports filed, link decisions, status changes, warnings.
+
 ## Layout
 
 ```
@@ -136,7 +157,7 @@ this on a private test network: the web console pages have no sign-in yet.
 ```bash
 cd mobile
 flutter analyze     # expect: No issues found
-flutter test        # expect: 60 tests pass (3 live tests skipped)
+flutter test        # expect: 69 tests pass (4 live tests skipped)
 ```
 
 Live tests against running servers (skipped unless the variables are set):
@@ -144,7 +165,7 @@ Live tests against running servers (skipped unless the variables are set):
 ```bash
 SIRENS_LIVE_GATEWAY=http://127.0.0.1:5100 SIRENS_GW_LOG=<gateway log> flutter test test/live_gateway_test.dart
 SIRENS_LIVE_INTERNAL=http://127.0.0.1:5000 SIRENS_LIVE_USER=<admin> SIRENS_LIVE_PASSWORD=<pw> \
-  flutter test test/live_internal_test.dart test/live_map_download_test.dart
+  flutter test test/live_internal_test.dart test/live_map_download_test.dart test/live_admin_test.dart
 ```
 
 ## Build for direct install

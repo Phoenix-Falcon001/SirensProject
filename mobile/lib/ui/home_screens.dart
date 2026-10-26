@@ -10,6 +10,9 @@ import 'civilian/safety_screen.dart';
 import 'civilian/warnings_screen.dart';
 import 'common.dart';
 import 'staff/brief_screen.dart';
+import 'staff/civil_reports_screen.dart';
+import 'staff/users_screen.dart';
+import 'staff/warnings_admin_screen.dart';
 import 'staff/dashboard_screen.dart';
 import 'staff/incidents_screen.dart';
 import 'staff/map_screen.dart';
@@ -74,6 +77,12 @@ class CivilianHome extends StatelessWidget {
   }
 }
 
+String levelLabel(String? level, AppLocalizations l) => switch (level) {
+  'commander' => l.levelCommander,
+  'analyst' => l.levelAnalyst,
+  _ => l.levelField,
+};
+
 String roleLabel(Session s, AppLocalizations l) {
   if (s.isAdmin) return l.roleAdmin;
   return switch (s.level) {
@@ -103,6 +112,10 @@ class _StaffHomeState extends State<StaffHome> {
       'map' => MapScreen(service: svc),
       'review' => ReviewScreen(service: svc),
       'dashboard' => DashboardScreen(service: svc, regions: regions),
+      'civil_reports' => CivilReportsScreen(service: svc, device: state.device, regions: regions),
+      'warnings' => WarningsAdminScreen(service: svc, regions: regions, lang: state.lang),
+      'users' => UsersScreen(service: svc, me: s.username!),
+      'audit' => AuditScreen(service: svc),
       _ => ComingSoonScreen(title: e.label(AppLocalizations.of(context))),
     };
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));

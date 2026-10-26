@@ -111,6 +111,7 @@ class AppState extends ChangeNotifier {
         username: s!.username!,
         internalUrl: config.internalUrl,
         tokenOf: () => internalClient.token,
+        canFile: s.can('incidents:create'),
       );
     }
     if (s?.kind == AccountKind.civilian) {

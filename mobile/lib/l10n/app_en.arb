@@ -431,5 +431,137 @@
   "mapDeleteMap": "Delete street map from phone",
   "mapGrid": "MGRS grid",
   "openReport": "Open report",
-  "copy": "Copy"
+  "copy": "Copy",
+  "civilEmpty": "No civilian reports in your regions.",
+  "civilNoCaza": "Outside the known cazas (admins only)",
+  "civilObserved": "Seen {date}",
+  "@civilObserved": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "civilReporter": "Reporter",
+  "civilReporterDeleted": "Account deleted; no number",
+  "civilNoLocation": "No GPS position: see description",
+  "civilAccuracy": "± {meters} m",
+  "@civilAccuracy": {
+    "placeholders": {
+      "meters": {
+        "type": "int"
+      }
+    }
+  },
+  "civilSetStatus": "Set status",
+  "civilStatusNote": "Internal note (not shown to the civilian)",
+  "civilStatusSaved": "Status saved. The civilian sees it after the next sync.",
+  "civilLastChange": "{status} by {who}",
+  "@civilLastChange": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "civilToReport": "File as military report",
+  "civilPhotoFailed": "Photo could not be loaded.",
+  "civilFromCivilian": "From civilian report {id}",
+  "@civilFromCivilian": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "warnActive": "Active",
+  "warnPast": "Expired or withdrawn",
+  "warnNew": "New warning",
+  "warnWithdraw": "Withdraw",
+  "warnWithdrawConfirm": "Withdraw this warning? Civilians stop seeing it after the next sync.",
+  "warnWithdrawn": "Withdrawn",
+  "warnBy": "By {who}",
+  "@warnBy": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "warnSeverity": "Level",
+  "warnDuration": "Shown for",
+  "warnHours": "{n} hours",
+  "@warnHours": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "warnDays": "{n} days",
+  "@warnDays": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "warnTitleIn": "Title ({lang})",
+  "@warnTitleIn": {
+    "placeholders": {
+      "lang": {
+        "type": "String"
+      }
+    }
+  },
+  "warnBodyIn": "What civilians should do ({lang})",
+  "@warnBodyIn": {
+    "placeholders": {
+      "lang": {
+        "type": "String"
+      }
+    }
+  },
+  "warnNeedsText": "Write the title and text in at least one language, the same one.",
+  "warnGuidance": "Say only what civilians should do (avoid, keep away). No incident details.",
+  "warnPublish": "Publish",
+  "warnPublished": "Published. Civilians see it after the next sync.",
+  "warnEmpty": "No warnings.",
+  "usersNew": "New account",
+  "usersRole": "Role",
+  "usersRoleMilitary": "Military",
+  "usersLevel": "Level",
+  "usersRegions": "Regions (at least one)",
+  "usersDisplayName": "Full name and rank",
+  "usersTempPassword": "Temporary password",
+  "usersGenerate": "Generate",
+  "usersPasswordHint": "Give it to the person in person; they change it after signing in.",
+  "usersActive": "Account active",
+  "usersDisabled": "Disabled",
+  "usersResetPassword": "Reset password",
+  "usersResetDone": "Password reset. Their sessions were ended.",
+  "usersSaved": "Saved.",
+  "usersCreated": "Account {name} created.",
+  "@usersCreated": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "usersSearch": "Search accounts",
+  "usersYou": "you",
+  "usersCannotDisableSelf": "You cannot disable your own account.",
+  "auditEmpty": "Nothing recorded yet.",
+  "serverSaid": "Not accepted: {reason}",
+  "@serverSaid": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  }
 }

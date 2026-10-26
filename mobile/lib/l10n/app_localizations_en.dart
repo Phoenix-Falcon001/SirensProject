@@ -743,4 +743,185 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get copy => 'Copy';
+
+  @override
+  String get civilEmpty => 'No civilian reports in your regions.';
+
+  @override
+  String get civilNoCaza => 'Outside the known cazas (admins only)';
+
+  @override
+  String civilObserved(String date) {
+    return 'Seen $date';
+  }
+
+  @override
+  String get civilReporter => 'Reporter';
+
+  @override
+  String get civilReporterDeleted => 'Account deleted; no number';
+
+  @override
+  String get civilNoLocation => 'No GPS position: see description';
+
+  @override
+  String civilAccuracy(int meters) {
+    return '± $meters m';
+  }
+
+  @override
+  String get civilSetStatus => 'Set status';
+
+  @override
+  String get civilStatusNote => 'Internal note (not shown to the civilian)';
+
+  @override
+  String get civilStatusSaved => 'Status saved. The civilian sees it after the next sync.';
+
+  @override
+  String civilLastChange(String status, String who) {
+    return '$status by $who';
+  }
+
+  @override
+  String get civilToReport => 'File as military report';
+
+  @override
+  String get civilPhotoFailed => 'Photo could not be loaded.';
+
+  @override
+  String civilFromCivilian(String id) {
+    return 'From civilian report $id';
+  }
+
+  @override
+  String get warnActive => 'Active';
+
+  @override
+  String get warnPast => 'Expired or withdrawn';
+
+  @override
+  String get warnNew => 'New warning';
+
+  @override
+  String get warnWithdraw => 'Withdraw';
+
+  @override
+  String get warnWithdrawConfirm =>
+      'Withdraw this warning? Civilians stop seeing it after the next sync.';
+
+  @override
+  String get warnWithdrawn => 'Withdrawn';
+
+  @override
+  String warnBy(String who) {
+    return 'By $who';
+  }
+
+  @override
+  String get warnSeverity => 'Level';
+
+  @override
+  String get warnDuration => 'Shown for';
+
+  @override
+  String warnHours(int n) {
+    return '$n hours';
+  }
+
+  @override
+  String warnDays(int n) {
+    return '$n days';
+  }
+
+  @override
+  String warnTitleIn(String lang) {
+    return 'Title ($lang)';
+  }
+
+  @override
+  String warnBodyIn(String lang) {
+    return 'What civilians should do ($lang)';
+  }
+
+  @override
+  String get warnNeedsText => 'Write the title and text in at least one language, the same one.';
+
+  @override
+  String get warnGuidance =>
+      'Say only what civilians should do (avoid, keep away). No incident details.';
+
+  @override
+  String get warnPublish => 'Publish';
+
+  @override
+  String get warnPublished => 'Published. Civilians see it after the next sync.';
+
+  @override
+  String get warnEmpty => 'No warnings.';
+
+  @override
+  String get usersNew => 'New account';
+
+  @override
+  String get usersRole => 'Role';
+
+  @override
+  String get usersRoleMilitary => 'Military';
+
+  @override
+  String get usersLevel => 'Level';
+
+  @override
+  String get usersRegions => 'Regions (at least one)';
+
+  @override
+  String get usersDisplayName => 'Full name and rank';
+
+  @override
+  String get usersTempPassword => 'Temporary password';
+
+  @override
+  String get usersGenerate => 'Generate';
+
+  @override
+  String get usersPasswordHint =>
+      'Give it to the person in person; they change it after signing in.';
+
+  @override
+  String get usersActive => 'Account active';
+
+  @override
+  String get usersDisabled => 'Disabled';
+
+  @override
+  String get usersResetPassword => 'Reset password';
+
+  @override
+  String get usersResetDone => 'Password reset. Their sessions were ended.';
+
+  @override
+  String get usersSaved => 'Saved.';
+
+  @override
+  String usersCreated(String name) {
+    return 'Account $name created.';
+  }
+
+  @override
+  String get usersSearch => 'Search accounts';
+
+  @override
+  String get usersYou => 'you';
+
+  @override
+  String get usersCannotDisableSelf => 'You cannot disable your own account.';
+
+  @override
+  String get auditEmpty => 'Nothing recorded yet.';
+
+  @override
+  String serverSaid(String reason) {
+    return 'Not accepted: $reason';
+  }
 }

@@ -740,4 +740,183 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get copy => 'نسخ';
+
+  @override
+  String get civilEmpty => 'لا توجد بلاغات مدنيين في مناطقك.';
+
+  @override
+  String get civilNoCaza => 'خارج الأقضية المعروفة (للمسؤولين فقط)';
+
+  @override
+  String civilObserved(String date) {
+    return 'شوهد في $date';
+  }
+
+  @override
+  String get civilReporter => 'المُبلِّغ';
+
+  @override
+  String get civilReporterDeleted => 'الحساب محذوف؛ لا يوجد رقم';
+
+  @override
+  String get civilNoLocation => 'لا يوجد موقع GPS: راجع الوصف';
+
+  @override
+  String civilAccuracy(int meters) {
+    return '± $meters م';
+  }
+
+  @override
+  String get civilSetStatus => 'تحديد الحالة';
+
+  @override
+  String get civilStatusNote => 'ملاحظة داخلية (لا تظهر للمدني)';
+
+  @override
+  String get civilStatusSaved => 'حُفظت الحالة. سيراها المدني بعد المزامنة التالية.';
+
+  @override
+  String civilLastChange(String status, String who) {
+    return '$status بواسطة $who';
+  }
+
+  @override
+  String get civilToReport => 'تسجيل كبلاغ عسكري';
+
+  @override
+  String get civilPhotoFailed => 'تعذّر تحميل الصورة.';
+
+  @override
+  String civilFromCivilian(String id) {
+    return 'من بلاغ مدني $id';
+  }
+
+  @override
+  String get warnActive => 'نشطة';
+
+  @override
+  String get warnPast => 'منتهية أو مسحوبة';
+
+  @override
+  String get warnNew => 'تحذير جديد';
+
+  @override
+  String get warnWithdraw => 'سحب';
+
+  @override
+  String get warnWithdrawConfirm => 'سحب هذا التحذير؟ لن يراه المدنيون بعد المزامنة التالية.';
+
+  @override
+  String get warnWithdrawn => 'مسحوب';
+
+  @override
+  String warnBy(String who) {
+    return 'بواسطة $who';
+  }
+
+  @override
+  String get warnSeverity => 'المستوى';
+
+  @override
+  String get warnDuration => 'تُعرض لمدة';
+
+  @override
+  String warnHours(int n) {
+    return '$n ساعات';
+  }
+
+  @override
+  String warnDays(int n) {
+    return '$n أيام';
+  }
+
+  @override
+  String warnTitleIn(String lang) {
+    return 'العنوان ($lang)';
+  }
+
+  @override
+  String warnBodyIn(String lang) {
+    return 'ما يجب على المدنيين فعله ($lang)';
+  }
+
+  @override
+  String get warnNeedsText => 'اكتب العنوان والنص بلغة واحدة على الأقل، وباللغة نفسها.';
+
+  @override
+  String get warnGuidance =>
+      'اذكر فقط ما يجب على المدنيين فعله (تجنّب، ابتعد). لا تفاصيل عن الحوادث.';
+
+  @override
+  String get warnPublish => 'نشر';
+
+  @override
+  String get warnPublished => 'نُشر. سيراه المدنيون بعد المزامنة التالية.';
+
+  @override
+  String get warnEmpty => 'لا توجد تحذيرات.';
+
+  @override
+  String get usersNew => 'حساب جديد';
+
+  @override
+  String get usersRole => 'الدور';
+
+  @override
+  String get usersRoleMilitary => 'عسكري';
+
+  @override
+  String get usersLevel => 'المستوى';
+
+  @override
+  String get usersRegions => 'المناطق (واحدة على الأقل)';
+
+  @override
+  String get usersDisplayName => 'الاسم الكامل والرتبة';
+
+  @override
+  String get usersTempPassword => 'كلمة مرور مؤقتة';
+
+  @override
+  String get usersGenerate => 'توليد';
+
+  @override
+  String get usersPasswordHint => 'سلّمها للشخص مباشرة؛ ويغيّرها بعد تسجيل الدخول.';
+
+  @override
+  String get usersActive => 'الحساب مفعّل';
+
+  @override
+  String get usersDisabled => 'معطّل';
+
+  @override
+  String get usersResetPassword => 'إعادة تعيين كلمة المرور';
+
+  @override
+  String get usersResetDone => 'أُعيد تعيين كلمة المرور. أُنهيت جلساته.';
+
+  @override
+  String get usersSaved => 'تم الحفظ.';
+
+  @override
+  String usersCreated(String name) {
+    return 'تم إنشاء الحساب $name.';
+  }
+
+  @override
+  String get usersSearch => 'البحث في الحسابات';
+
+  @override
+  String get usersYou => 'أنت';
+
+  @override
+  String get usersCannotDisableSelf => 'لا يمكنك تعطيل حسابك.';
+
+  @override
+  String get auditEmpty => 'لا يوجد شيء مسجّل بعد.';
+
+  @override
+  String serverSaid(String reason) {
+    return 'لم يُقبل: $reason';
+  }
 }

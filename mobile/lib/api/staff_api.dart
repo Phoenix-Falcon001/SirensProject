@@ -1,3 +1,4 @@
+import '../models/admin.dart';
 import '../models/staff.dart';
 import 'api_client.dart';
 
@@ -84,4 +85,69 @@ class StaffApi {
       sha256: j['sha256'] as String?,
     );
   }
+
+  // -- commander: civilian reports and warnings ---------------------------------
+  Future<List<CivilReportFull>> civilReports({String? status}) async {
+    final q = status == null ? '' : '?status=$status';
+    return [
+      for (final j in (await client.get('/api/v1/civil-reports$q'))['reports'] as List)
+        CivilReportFull.fromJson(Map<String, dynamic>.from(j as Map)),
+    ];
+  }
+
+  Future<CivilReportFull> civilReport(String id) async => CivilReportFull.fromJson(
+    await client.get('/api/v1/civil-reports/${Uri.encodeComponent(id)}'),
+  );
+
+  Future<List<int>> civilPhoto(String id) =>
+      client.getBytes('/api/v1/civil-reports/${Uri.encodeComponent(id)}/photo');
+
+  Future<CivilReportFull> setCivilStatus(String id, String status, String note) async =>
+      CivilReportFull.fromJson(
+        await client.patch('/api/v1/civil-reports/${Uri.encodeComponent(id)}', {
+          'status': status,
+          'note': note,
+        }),
+      );
+
+  Future<List<StaffWarning>> warnings() async => [
+    for (final j in (await client.get('/api/v1/warnings'))['warnings'] as List)
+      StaffWarning.fromJson(Map<String, dynamic>.from(j as Map)),
+  ];
+
+  Future<StaffWarning> publishWarning({
+    required String caza,
+    required String severity,
+    required Map<String, String> title,
+    required Map<String, String> body,
+    required DateTime expiresAt,
+  }) async => StaffWarning.fromJson(
+    await client.post('/api/v1/warnings', {
+      'caza': caza,
+      'severity': severity,
+      'title': title,
+      'body': body,
+      'expires_at': expiresAt.toUtc().toIso8601String(),
+    }),
+  );
+
+  Future<StaffWarning> withdrawWarning(int id) async =>
+      StaffWarning.fromJson(await client.post('/api/v1/warnings/$id/withdraw'));
+
+  // -- admin -------------------------------------------------------------------
+  Future<List<AdminUser>> users() async => [
+    for (final j in (await client.get('/api/v1/admin/users'))['users'] as List)
+      AdminUser.fromJson(Map<String, dynamic>.from(j as Map)),
+  ];
+
+  Future<AdminUser> createUser(Map<String, dynamic> body) async =>
+      AdminUser.fromJson(await client.post('/api/v1/admin/users', body));
+
+  Future<AdminUser> updateUser(int id, Map<String, dynamic> changes) async =>
+      AdminUser.fromJson(await client.patch('/api/v1/admin/users/$id', changes));
+
+  Future<List<AuditEntry>> audit({int limit = 200}) async => [
+    for (final j in (await client.get('/api/v1/admin/audit?limit=$limit'))['entries'] as List)
+      AuditEntry.fromJson(Map<String, dynamic>.from(j as Map)),
+  ];
 }
