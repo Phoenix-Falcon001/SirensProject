@@ -4,6 +4,10 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../state/app_state.dart';
 import '../state/session.dart';
+import 'civilian/my_reports_screen.dart';
+import 'civilian/report_screen.dart';
+import 'civilian/safety_screen.dart';
+import 'civilian/warnings_screen.dart';
 import 'common.dart';
 import 'menu.dart';
 import 'settings_screen.dart';
@@ -22,26 +26,45 @@ IconButton _settingsButton(BuildContext context) => IconButton(
 class CivilianHome extends StatelessWidget {
   const CivilianHome({super.key});
 
+  Widget _screen(String id, AppState state) {
+    final svc = state.civilian!;
+    return switch (id) {
+      'report' => ReportScreen(service: svc, device: state.device),
+      'my_reports' => MyReportsScreen(service: svc),
+      'warnings' => WarningsScreen(service: svc, lang: state.lang),
+      _ => SafetyScreen(service: svc, device: state.device, lang: state.lang),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final state = context.watch<AppState>();
+    final svc = state.civilian!;
     return Scaffold(
       appBar: AppBar(title: Text(l.appTitle), actions: [_settingsButton(context)]),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            const EmergencyBanner(),
-            const SizedBox(height: 16),
-            for (final e in civilianMenu)
-              MenuTile(
-                key: Key('tile-${e.id}'),
-                icon: e.icon,
-                title: e.label(l),
-                subtitle: civilianHint(e.id, l),
-                onTap: () => _open(context, e.label(l)),
-              ),
-          ],
+        child: ListenableBuilder(
+          listenable: svc,
+          builder: (context, _) => ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              const EmergencyBanner(),
+              const SizedBox(height: 16),
+              for (final e in civilianMenu)
+                MenuTile(
+                  key: Key('tile-${e.id}'),
+                  icon: e.icon,
+                  title: e.label(l),
+                  subtitle: e.id == 'my_reports' && svc.pending.isNotEmpty
+                      ? '${civilianHint(e.id, l)} · ${l.pendingSection}: ${svc.pending.length}'
+                      : civilianHint(e.id, l),
+                  onTap: () =>
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) => _screen(e.id, state))),
+                ),
+            ],
+          ),
         ),
       ),
     );

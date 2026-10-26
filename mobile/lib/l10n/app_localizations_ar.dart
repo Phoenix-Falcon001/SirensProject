@@ -243,4 +243,206 @@ class AppLocalizationsAr extends AppLocalizations {
   String signedInAs(String who) {
     return 'مسجّل الدخول باسم $who';
   }
+
+  @override
+  String get catSuspiciousObject => 'جسم مشبوه';
+
+  @override
+  String get catUnexplodedOrdnance => 'قذيفة أو صاروخ أو قنبلة غير منفجرة';
+
+  @override
+  String get catSuspiciousVehicle => 'مركبة مشبوهة';
+
+  @override
+  String get catSuspiciousActivity => 'نشاط مشبوه';
+
+  @override
+  String get catOther => 'غير ذلك';
+
+  @override
+  String get reportSafeDistance => 'أنا على مسافة آمنة من الجسم';
+
+  @override
+  String get reportSafeDistanceRequired => 'ابتعد أولاً. أرسل البلاغ فقط من مسافة آمنة.';
+
+  @override
+  String get reportWhat => 'ماذا رأيت؟';
+
+  @override
+  String get reportDescription => 'الوصف';
+
+  @override
+  String get reportDescriptionHint => 'شكله ومكانه بالتحديد (الشارع، معلم قريب)';
+
+  @override
+  String get reportPhoto => 'صورة (اختياري)';
+
+  @override
+  String get reportPhotoWarning => 'لا تقترب أبداً لالتقاط صورة.';
+
+  @override
+  String get reportTakePhoto => 'التقاط صورة';
+
+  @override
+  String get reportChoosePhoto => 'من المعرض';
+
+  @override
+  String get reportRemovePhoto => 'إزالة الصورة';
+
+  @override
+  String get photoUnsupported => 'صيغة هذه الصورة غير مدعومة. استخدم JPEG أو PNG.';
+
+  @override
+  String get photoTooLarge => 'هذه الصورة كبيرة جداً (أكثر من 5 ميغابايت).';
+
+  @override
+  String get reportLocation => 'الموقع';
+
+  @override
+  String get reportUseLocation => 'استخدم موقعي الحالي';
+
+  @override
+  String reportLocationFix(int meters) {
+    return 'تمت إضافة الموقع (بدقة $meters م تقريباً)';
+  }
+
+  @override
+  String get reportLocationNone => 'لا يوجد موقع. صِف المكان بأكبر دقة ممكنة.';
+
+  @override
+  String get locationServiceOff => 'خدمة الموقع متوقفة على هذا الهاتف.';
+
+  @override
+  String get locationDenied => 'تم رفض إذن الوصول إلى الموقع.';
+
+  @override
+  String get locationTimeout => 'تعذّر تحديد الموقع. حاول مجدداً في مكان مكشوف.';
+
+  @override
+  String get locationOutside => 'هذا الموقع خارج لبنان.';
+
+  @override
+  String get reportNeedsContent => 'أضف وصفاً أو صورة.';
+
+  @override
+  String get reportSend => 'إرسال البلاغ';
+
+  @override
+  String get reportSentTitle => 'تم استلام البلاغ';
+
+  @override
+  String reportSentBody(String id) {
+    return 'المرجع $id. سيقوم الجيش بمراجعته. ابقَ بعيداً عن الجسم.';
+  }
+
+  @override
+  String get reportQueuedTitle => 'تم الحفظ على هذا الهاتف';
+
+  @override
+  String get reportQueuedBody =>
+      'لا يوجد اتصال. سيُرسل البلاغ تلقائياً عند عودة الاتصال. إذا كان هناك خطر فوري، اتصل بالخط الساخن.';
+
+  @override
+  String get reportDailyLimit =>
+      'لقد أرسلت بلاغات كثيرة اليوم. يرجى الاتصال بالخط الساخن بدلاً من ذلك.';
+
+  @override
+  String get ok => 'حسناً';
+
+  @override
+  String get myReportsEmpty => 'لم ترسل أي بلاغ بعد.';
+
+  @override
+  String get pendingSection => 'بانتظار الإرسال';
+
+  @override
+  String get sentSection => 'المُرسلة';
+
+  @override
+  String get sendNow => 'أرسل الآن';
+
+  @override
+  String get discard => 'تجاهل';
+
+  @override
+  String notSentReason(String reason) {
+    return 'لم يُقبل: $reason';
+  }
+
+  @override
+  String get statusReceived => 'تم الاستلام';
+
+  @override
+  String get statusUnderReview => 'قيد المراجعة';
+
+  @override
+  String get statusClosed => 'مُغلق';
+
+  @override
+  String get statusRejected => 'لم تتم متابعته';
+
+  @override
+  String get statusWaiting => 'بانتظار الإرسال';
+
+  @override
+  String get deliveredToArmy => 'وصل إلى الجيش';
+
+  @override
+  String sentOn(String date) {
+    return 'أُرسل في $date';
+  }
+
+  @override
+  String savedOn(String date) {
+    return 'حُفظ في $date';
+  }
+
+  @override
+  String showingSaved(String date) {
+    return 'لا يوجد اتصال. يتم عرض النسخة المحفوظة في $date.';
+  }
+
+  @override
+  String get warningsEmpty => 'لا توجد تحذيرات حالية.';
+
+  @override
+  String get warningsAllAreas => 'كل المناطق';
+
+  @override
+  String warningsUntil(String date) {
+    return 'حتى $date';
+  }
+
+  @override
+  String get warningsPullHint => 'اسحب للأسفل للتحقق من التحذيرات الجديدة.';
+
+  @override
+  String get severityInfo => 'معلومة';
+
+  @override
+  String get severityCaution => 'تنبيه';
+
+  @override
+  String get severityDanger => 'خطر';
+
+  @override
+  String get safetyPlaceholder =>
+      'نص تجريبي. ستحلّ محله التعليمات والأرقام الرسمية من الجيش اللبناني.';
+
+  @override
+  String get safetySteps => 'إذا رأيت جسماً مشبوهاً';
+
+  @override
+  String get safetyHotlines => 'الخطوط الساخنة';
+
+  @override
+  String get call => 'اتصال';
+
+  @override
+  String get numberToBeConfirmed => 'الرقم قيد التأكيد';
+
+  @override
+  String callFailed(String number) {
+    return 'تعذّر بدء الاتصال. اطلب الرقم $number بنفسك.';
+  }
 }

@@ -6,6 +6,9 @@ import '../api/api_client.dart';
 import '../api/gateway_api.dart';
 import '../api/staff_api.dart';
 import '../config.dart';
+import '../services/device.dart';
+import 'civilian.dart';
+import 'outbox.dart';
 import 'session.dart';
 import 'storage.dart';
 
@@ -17,9 +20,13 @@ class AppState extends ChangeNotifier {
     required this.config,
     required this.secure,
     required this.prefs,
+    OutboxStore? outbox,
+    DeviceServices? device,
     ApiClient? gatewayClient,
     ApiClient? internalClient,
-  }) : gatewayClient = gatewayClient ?? ApiClient(config.gatewayUrl),
+  }) : outbox = outbox ?? FileOutboxStore(),
+       device = device ?? RealDeviceServices(),
+       gatewayClient = gatewayClient ?? ApiClient(config.gatewayUrl),
        internalClient = internalClient ?? ApiClient(config.internalUrl) {
     this.gatewayClient.onUnauthorized = _expired;
     this.internalClient.onUnauthorized = _expired;
@@ -31,6 +38,10 @@ class AppState extends ChangeNotifier {
   final AppConfig config;
   final KeyValueStore secure;
   final KeyValueStore prefs;
+  final OutboxStore outbox;
+
+  /// Camera, GPS and dialer.
+  final DeviceServices device;
   final ApiClient gatewayClient;
   final ApiClient internalClient;
 
@@ -40,6 +51,9 @@ class AppState extends ChangeNotifier {
   bool ready = false;
   Locale? locale;
   Session? session;
+
+  /// Set while a civilian is signed in.
+  CivilianService? civilian;
 
   /// Set when the server ended the session; the sign-in screen shows a note.
   bool sessionExpired = false;
@@ -61,6 +75,7 @@ class AppState extends ChangeNotifier {
     ready = true;
     notifyListeners();
     if (session?.kind == AccountKind.staff) await refreshStaff();
+    await _startCivilian();
   }
 
   Future<void> setLanguage(String code) async {
@@ -70,7 +85,11 @@ class AppState extends ChangeNotifier {
   }
 
   void _use(Session? s) {
+    if (s?.kind != AccountKind.civilian || s?.phone != session?.phone) civilian = null;
     session = s;
+    if (s?.kind == AccountKind.civilian) {
+      civilian ??= CivilianService(api: gateway, outbox: outbox, cache: prefs, phone: s!.phone!);
+    }
     gatewayClient.token = s?.kind == AccountKind.civilian ? s!.token : null;
     internalClient.token = s?.kind == AccountKind.staff ? s!.token : null;
   }
@@ -99,10 +118,24 @@ class AppState extends ChangeNotifier {
     final r = await gateway.verify(phone, code, lang);
     sessionExpired = false;
     await _save(Session.civilian(r));
+    await _startCivilian();
+  }
+
+  /// Shows queued reports and sends any that were waiting for a connection.
+  Future<void> _startCivilian() async {
+    final c = civilian;
+    if (c == null) return;
+    try {
+      await c.loadPending();
+      await c.flush();
+    } on Object {
+      // Never block start-up on sending; the queue is retried later.
+    }
   }
 
   Future<void> deleteCivilianAccount() async {
     await gateway.deleteAccount();
+    await civilian?.clearPending();
     await _save(null);
   }
 

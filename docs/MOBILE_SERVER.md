@@ -84,6 +84,12 @@ docstring of `gateway/app.py` for every endpoint.
 * **Reports**: category, description (≤ 2000 characters), optional GPS
   position (must be in Lebanon), optional JPEG/PNG photo (≤ 5 MB). At most
   10 per person per day.
+  * `client_ref`: the app's own id for the report. Sending the same one again
+    (a retry after a lost connection) returns the report already received
+    instead of creating a second one.
+  * `observed_at`: when the person saw the object (up to 7 days back), since
+    the app may send a report later from its offline queue. Passed on to the
+    internal server.
 * **Once the internal server has collected a report**, the gateway wipes its
   description, position, photo and phone number, and keeps only its id and
   status, so the civilian can still follow it.
@@ -135,7 +141,9 @@ SIRENS_GW_URL=https://<gateway> SIRENS_GW_SYNC_KEY=<key> python sync_gateway.py
 
 * The Army's SMS provider, and their decision on push.
 * The approved safety text and hotline numbers (`gateway/safety.json` is a
-  marked placeholder; the Army number is left as `TO-BE-CONFIRMED`).
+  marked placeholder; the Army number is left as `TO-BE-CONFIRMED`). The app
+  carries a copy for use with no connection
+  (`mobile/assets/safety_fallback.json`); a test checks the two are identical.
 * HTTPS in front of both services (reverse proxy), and a production WSGI
   server instead of Flask's development server.
 * The existing web console pages (`/`, `/review`, …) have no sign-in yet; they

@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS civil_reports (
     id            TEXT PRIMARY KEY,          -- the gateway's report id
     received_at   TEXT NOT NULL,
     submitted_at  TEXT NOT NULL,
+    observed_at   TEXT,
     reporter_ref  TEXT NOT NULL,             -- gateway account id, not the phone
     reporter_phone TEXT,
     lat           REAL,
@@ -65,6 +66,11 @@ class CivilError(ValueError):
 def connect(db_path=None):
     conn = store.connect(db_path)
     conn.executescript(_SCHEMA)
+    # Databases created before observed_at existed get the column added.
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(civil_reports)")}
+    if "observed_at" not in cols:
+        conn.execute("ALTER TABLE civil_reports ADD COLUMN observed_at TEXT")
+        conn.commit()
     return conn
 
 
@@ -89,11 +95,12 @@ def receive(report: dict, db_path=None) -> bool:
             except ValueError:
                 mgrs = None
         conn.execute(
-            """INSERT INTO civil_reports (id, received_at, submitted_at, reporter_ref,
-                 reporter_phone, lat, lon, accuracy_m, caza, mgrs, category, description,
-                 photo, photo_type)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-            (report["id"], _now(), report["submitted_at"], str(report["reporter_ref"]),
+            """INSERT INTO civil_reports (id, received_at, submitted_at, observed_at,
+                 reporter_ref, reporter_phone, lat, lon, accuracy_m, caza, mgrs, category,
+                 description, photo, photo_type)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (report["id"], _now(), report["submitted_at"], report.get("observed_at"),
+             str(report["reporter_ref"]),
              report.get("reporter_phone"), lat, lon, report.get("accuracy_m"), caza, mgrs,
              report.get("category"), report.get("description") or "",
              report.get("photo"), report.get("photo_type")))

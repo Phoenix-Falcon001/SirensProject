@@ -2,6 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Take a photo of a suspicious object, from a safe distance, to add to your report.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Choose a photo to add to your report.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Add the position of a suspicious object to your report, so the Army can find it.</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>tel</string>
+	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

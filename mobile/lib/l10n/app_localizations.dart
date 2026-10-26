@@ -543,6 +543,372 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Signed in as {who}'**
   String signedInAs(String who);
+
+  /// No description provided for @catSuspiciousObject.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspicious object'**
+  String get catSuspiciousObject;
+
+  /// No description provided for @catUnexplodedOrdnance.
+  ///
+  /// In en, this message translates to:
+  /// **'Unexploded shell, rocket or bomb'**
+  String get catUnexplodedOrdnance;
+
+  /// No description provided for @catSuspiciousVehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspicious vehicle'**
+  String get catSuspiciousVehicle;
+
+  /// No description provided for @catSuspiciousActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspicious activity'**
+  String get catSuspiciousActivity;
+
+  /// No description provided for @catOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get catOther;
+
+  /// No description provided for @reportSafeDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'I am at a safe distance from the object'**
+  String get reportSafeDistance;
+
+  /// No description provided for @reportSafeDistanceRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Move away first. Only send the report from a safe distance.'**
+  String get reportSafeDistanceRequired;
+
+  /// No description provided for @reportWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'What did you see?'**
+  String get reportWhat;
+
+  /// No description provided for @reportDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get reportDescription;
+
+  /// No description provided for @reportDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What it looks like and exactly where it is (street, landmark)'**
+  String get reportDescriptionHint;
+
+  /// No description provided for @reportPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo (optional)'**
+  String get reportPhoto;
+
+  /// No description provided for @reportPhotoWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Never go closer to take a photo.'**
+  String get reportPhotoWarning;
+
+  /// No description provided for @reportTakePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get reportTakePhoto;
+
+  /// No description provided for @reportChoosePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'From gallery'**
+  String get reportChoosePhoto;
+
+  /// No description provided for @reportRemovePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove photo'**
+  String get reportRemovePhoto;
+
+  /// No description provided for @photoUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This photo format is not supported. Use JPEG or PNG.'**
+  String get photoUnsupported;
+
+  /// No description provided for @photoTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'This photo is too large (over 5 MB).'**
+  String get photoTooLarge;
+
+  /// No description provided for @reportLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get reportLocation;
+
+  /// No description provided for @reportUseLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Use my current location'**
+  String get reportUseLocation;
+
+  /// No description provided for @reportLocationFix.
+  ///
+  /// In en, this message translates to:
+  /// **'Location added (within about {meters} m)'**
+  String reportLocationFix(int meters);
+
+  /// No description provided for @reportLocationNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No location. Describe the place as precisely as you can.'**
+  String get reportLocationNone;
+
+  /// No description provided for @locationServiceOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Location is turned off on this phone.'**
+  String get locationServiceOff;
+
+  /// No description provided for @locationDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission was refused.'**
+  String get locationDenied;
+
+  /// No description provided for @locationTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not get a location. Try again in the open.'**
+  String get locationTimeout;
+
+  /// No description provided for @locationOutside.
+  ///
+  /// In en, this message translates to:
+  /// **'That position is outside Lebanon.'**
+  String get locationOutside;
+
+  /// No description provided for @reportNeedsContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a description or a photo.'**
+  String get reportNeedsContent;
+
+  /// No description provided for @reportSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send report'**
+  String get reportSend;
+
+  /// No description provided for @reportSentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Report received'**
+  String get reportSentTitle;
+
+  /// No description provided for @reportSentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference {id}. The Army will review it. Stay away from the object.'**
+  String reportSentBody(String id);
+
+  /// No description provided for @reportQueuedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved on this phone'**
+  String get reportQueuedTitle;
+
+  /// No description provided for @reportQueuedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no connection. The report will be sent automatically when you are back online. If there is immediate danger, call the hotline.'**
+  String get reportQueuedBody;
+
+  /// No description provided for @reportDailyLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'You have sent many reports today. Please call the hotline instead.'**
+  String get reportDailyLimit;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @myReportsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not sent any reports yet.'**
+  String get myReportsEmpty;
+
+  /// No description provided for @pendingSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting to send'**
+  String get pendingSection;
+
+  /// No description provided for @sentSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get sentSection;
+
+  /// No description provided for @sendNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Send now'**
+  String get sendNow;
+
+  /// No description provided for @discard.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discard;
+
+  /// No description provided for @notSentReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Not accepted: {reason}'**
+  String notSentReason(String reason);
+
+  /// No description provided for @statusReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Received'**
+  String get statusReceived;
+
+  /// No description provided for @statusUnderReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Under review'**
+  String get statusUnderReview;
+
+  /// No description provided for @statusClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get statusClosed;
+
+  /// No description provided for @statusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not followed up'**
+  String get statusRejected;
+
+  /// No description provided for @statusWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting to send'**
+  String get statusWaiting;
+
+  /// No description provided for @deliveredToArmy.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered to the Army'**
+  String get deliveredToArmy;
+
+  /// No description provided for @sentOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent {date}'**
+  String sentOn(String date);
+
+  /// No description provided for @savedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved {date}'**
+  String savedOn(String date);
+
+  /// No description provided for @showingSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline. Showing the copy from {date}.'**
+  String showingSaved(String date);
+
+  /// No description provided for @warningsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No active warnings.'**
+  String get warningsEmpty;
+
+  /// No description provided for @warningsAllAreas.
+  ///
+  /// In en, this message translates to:
+  /// **'All areas'**
+  String get warningsAllAreas;
+
+  /// No description provided for @warningsUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Until {date}'**
+  String warningsUntil(String date);
+
+  /// No description provided for @warningsPullHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull down to check for new warnings.'**
+  String get warningsPullHint;
+
+  /// No description provided for @severityInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Information'**
+  String get severityInfo;
+
+  /// No description provided for @severityCaution.
+  ///
+  /// In en, this message translates to:
+  /// **'Caution'**
+  String get severityCaution;
+
+  /// No description provided for @severityDanger.
+  ///
+  /// In en, this message translates to:
+  /// **'Danger'**
+  String get severityDanger;
+
+  /// No description provided for @safetyPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample text. The official instructions and numbers from the Lebanese Army will replace it.'**
+  String get safetyPlaceholder;
+
+  /// No description provided for @safetySteps.
+  ///
+  /// In en, this message translates to:
+  /// **'If you see a suspicious object'**
+  String get safetySteps;
+
+  /// No description provided for @safetyHotlines.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotlines'**
+  String get safetyHotlines;
+
+  /// No description provided for @call.
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get call;
+
+  /// No description provided for @numberToBeConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Number to be confirmed'**
+  String get numberToBeConfirmed;
+
+  /// No description provided for @callFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not start the call. Dial {number} yourself.'**
+  String callFailed(String number);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

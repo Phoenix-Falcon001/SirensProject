@@ -247,4 +247,209 @@ class AppLocalizationsFr extends AppLocalizations {
   String signedInAs(String who) {
     return 'Connecté en tant que $who';
   }
+
+  @override
+  String get catSuspiciousObject => 'Objet suspect';
+
+  @override
+  String get catUnexplodedOrdnance => 'Obus, roquette ou bombe non explosé';
+
+  @override
+  String get catSuspiciousVehicle => 'Véhicule suspect';
+
+  @override
+  String get catSuspiciousActivity => 'Activité suspecte';
+
+  @override
+  String get catOther => 'Autre';
+
+  @override
+  String get reportSafeDistance => 'Je suis à une distance sûre de l\'objet';
+
+  @override
+  String get reportSafeDistanceRequired =>
+      'Éloignez-vous d\'abord. N\'envoyez le signalement qu\'à distance de sécurité.';
+
+  @override
+  String get reportWhat => 'Qu\'avez-vous vu ?';
+
+  @override
+  String get reportDescription => 'Description';
+
+  @override
+  String get reportDescriptionHint => 'Son aspect et l\'endroit exact (rue, repère)';
+
+  @override
+  String get reportPhoto => 'Photo (facultatif)';
+
+  @override
+  String get reportPhotoWarning => 'Ne vous approchez jamais pour prendre une photo.';
+
+  @override
+  String get reportTakePhoto => 'Prendre une photo';
+
+  @override
+  String get reportChoosePhoto => 'Depuis la galerie';
+
+  @override
+  String get reportRemovePhoto => 'Retirer la photo';
+
+  @override
+  String get photoUnsupported =>
+      'Ce format de photo n\'est pas pris en charge. Utilisez JPEG ou PNG.';
+
+  @override
+  String get photoTooLarge => 'Cette photo est trop volumineuse (plus de 5 Mo).';
+
+  @override
+  String get reportLocation => 'Position';
+
+  @override
+  String get reportUseLocation => 'Utiliser ma position actuelle';
+
+  @override
+  String reportLocationFix(int meters) {
+    return 'Position ajoutée (à environ $meters m près)';
+  }
+
+  @override
+  String get reportLocationNone =>
+      'Pas de position. Décrivez le lieu aussi précisément que possible.';
+
+  @override
+  String get locationServiceOff => 'La localisation est désactivée sur ce téléphone.';
+
+  @override
+  String get locationDenied => 'L\'autorisation de localisation a été refusée.';
+
+  @override
+  String get locationTimeout => 'Position introuvable. Réessayez à découvert.';
+
+  @override
+  String get locationOutside => 'Cette position est hors du Liban.';
+
+  @override
+  String get reportNeedsContent => 'Ajoutez une description ou une photo.';
+
+  @override
+  String get reportSend => 'Envoyer le signalement';
+
+  @override
+  String get reportSentTitle => 'Signalement reçu';
+
+  @override
+  String reportSentBody(String id) {
+    return 'Référence $id. L\'Armée va l\'examiner. Restez loin de l\'objet.';
+  }
+
+  @override
+  String get reportQueuedTitle => 'Enregistré sur ce téléphone';
+
+  @override
+  String get reportQueuedBody =>
+      'Pas de connexion. Le signalement sera envoyé automatiquement dès le retour du réseau. En cas de danger immédiat, appelez la ligne d\'urgence.';
+
+  @override
+  String get reportDailyLimit =>
+      'Vous avez envoyé beaucoup de signalements aujourd\'hui. Appelez plutôt la ligne d\'urgence.';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get myReportsEmpty => 'Vous n\'avez encore envoyé aucun signalement.';
+
+  @override
+  String get pendingSection => 'En attente d\'envoi';
+
+  @override
+  String get sentSection => 'Envoyés';
+
+  @override
+  String get sendNow => 'Envoyer maintenant';
+
+  @override
+  String get discard => 'Abandonner';
+
+  @override
+  String notSentReason(String reason) {
+    return 'Non accepté : $reason';
+  }
+
+  @override
+  String get statusReceived => 'Reçu';
+
+  @override
+  String get statusUnderReview => 'En cours d\'examen';
+
+  @override
+  String get statusClosed => 'Clôturé';
+
+  @override
+  String get statusRejected => 'Sans suite';
+
+  @override
+  String get statusWaiting => 'En attente d\'envoi';
+
+  @override
+  String get deliveredToArmy => 'Transmis à l\'Armée';
+
+  @override
+  String sentOn(String date) {
+    return 'Envoyé le $date';
+  }
+
+  @override
+  String savedOn(String date) {
+    return 'Enregistré le $date';
+  }
+
+  @override
+  String showingSaved(String date) {
+    return 'Hors ligne. Copie du $date affichée.';
+  }
+
+  @override
+  String get warningsEmpty => 'Aucune alerte en cours.';
+
+  @override
+  String get warningsAllAreas => 'Toutes les zones';
+
+  @override
+  String warningsUntil(String date) {
+    return 'Jusqu\'au $date';
+  }
+
+  @override
+  String get warningsPullHint => 'Tirez vers le bas pour vérifier les nouvelles alertes.';
+
+  @override
+  String get severityInfo => 'Information';
+
+  @override
+  String get severityCaution => 'Prudence';
+
+  @override
+  String get severityDanger => 'Danger';
+
+  @override
+  String get safetyPlaceholder =>
+      'Texte provisoire. Les consignes et numéros officiels de l\'Armée libanaise le remplaceront.';
+
+  @override
+  String get safetySteps => 'Si vous voyez un objet suspect';
+
+  @override
+  String get safetyHotlines => 'Numéros d\'urgence';
+
+  @override
+  String get call => 'Appeler';
+
+  @override
+  String get numberToBeConfirmed => 'Numéro à confirmer';
+
+  @override
+  String callFailed(String number) {
+    return 'Impossible de lancer l\'appel. Composez le $number vous-même.';
+  }
 }

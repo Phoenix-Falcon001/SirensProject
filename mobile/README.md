@@ -21,10 +21,33 @@ which one; it can be changed later in Settings.
 |---|---|
 | 1. Server: accounts, roles + regions, `/api/v1`, public gateway, sync | done |
 | 2. App foundation: sign-in for all users, 3 languages + RTL, home per role, settings | done |
-| 3. Civilian features: report, my reports, warnings, safety + hotline | next (tiles show "coming in next version") |
-| 4. Military features: new report, brief, offline map + MGRS, review, dashboard | to do |
+| 3. Civilian features: report, my reports, warnings, safety + hotline | done |
+| 4. Military features: new report, brief, offline map + MGRS, review, dashboard | next (tiles show "coming in next version") |
 | 5. Admin features: accounts, civilian report triage, warnings | to do (server side already done) |
 | 6. Android APK pilot, then iPhone through TestFlight | to do |
+
+## Civilian features
+
+* **Report a suspicious object.** The person must first confirm they are at
+  a safe distance. They then choose what they saw (5 categories), add a
+  description, and optionally a photo (camera or gallery; "never go closer to
+  take a photo"). The phone's position is added automatically when location
+  is allowed; without it, the report can still be sent with a described place.
+* **Offline queue.** Every report is saved on the phone before sending. With
+  no connection (or a server error) it stays queued and is sent automatically
+  at the next start or from *My reports → Send now*. The time it was seen
+  travels with it, and the gateway recognises retries, so a report is never
+  lost or duplicated. Reports the gateway refuses (e.g. outside Lebanon) are
+  marked and can be discarded.
+* **My reports.** Waiting-to-send reports, then sent ones with their status:
+  received → under review → closed / not followed up, and "delivered to the
+  Army" once collected. No investigation details.
+* **Area warnings.** Active warnings, most serious first, in the user's
+  language (falls back to English), filterable by area. Checked when opened
+  and on pull-to-refresh; the last copy is shown offline.
+* **Safety and hotlines.** Steps and numbers with a *Call* button. Works with
+  no connection at all (copy bundled in the app). Shows a notice while the
+  text is still the placeholder; numbers not yet confirmed have no button.
 
 ## Layout
 
@@ -32,7 +55,9 @@ which one; it can be changed later in Settings.
 lib/
   config.dart          server addresses (set at build time)
   api/                 HTTP client, gateway calls, internal-server calls
-  state/               session model, secure token storage, app state
+  models/              data shown to civilians
+  services/device.dart camera, GPS, phone dialer (faked in tests)
+  state/               session, secure storage, app state, civilian service, offline outbox
   ui/                  screens; menu.dart decides tiles from permissions
   l10n/app_*.arb       all text, in ar / en / fr
 test/                  unit + widget tests against a fake server
@@ -72,7 +97,7 @@ this on a private test network: the web console pages have no sign-in yet.
 ```bash
 cd mobile
 flutter analyze     # expect: No issues found
-flutter test        # expect: 18 tests pass
+flutter test        # expect: 37 tests pass
 ```
 
 ## Build for direct install
@@ -91,11 +116,23 @@ flutter build apk --release \
 * iPhone: needs a Mac, Xcode and an Apple Developer account. Pilot through
   TestFlight; for lasting civilian use, unlisted App Store distribution.
 
+## Permissions asked on the phone
+
+* Location (only while the report screen is open), camera / photo library
+  (only when adding a photo). Both are optional: a report can be sent
+  without them.
+* To do: translate the iPhone permission prompts (Info.plist) into Arabic and
+  French in Xcode (`InfoPlist.strings`); they are English only for now.
+* Warnings are fetched when the app is open. Background checks on Android,
+  or push notifications, come once the Army decides on push.
+
 ## Security notes
 
 * Sign-in tokens are kept in the Android Keystore / iOS Keychain
   (`flutter_secure_storage`), never in plain preferences.
 * Android backups of app data are turned off (`allowBackup="false"`).
+* Queued reports (with photos) are kept in the app's private folder until
+  sent; deleting the account removes them.
 * A civilian's token is only ever sent to the gateway, and a military
   token only to the internal server.
 * When the server answers 401 (session ended, account disabled, password

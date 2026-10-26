@@ -51,6 +51,26 @@ class ApiClient {
   Future<Map<String, dynamic>> patch(String path, Map<String, dynamic> body) =>
       _send(() => _http.patch(_uri(path), headers: _headers, body: jsonEncode(body)));
 
+  /// Form upload with an optional file (used for report photos).
+  Future<Map<String, dynamic>> postMultipart(
+    String path,
+    Map<String, String> fields, {
+    String? fileField,
+    List<int>? fileBytes,
+    String? fileName,
+  }) => _send(() async {
+    final req = http.MultipartRequest('POST', _uri(path))
+      ..headers.addAll({
+        'Accept': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      })
+      ..fields.addAll(fields);
+    if (fileField != null && fileBytes != null) {
+      req.files.add(http.MultipartFile.fromBytes(fileField, fileBytes, filename: fileName));
+    }
+    return http.Response.fromStream(await _http.send(req));
+  });
+
   Future<Map<String, dynamic>> delete(String path) =>
       _send(() => _http.delete(_uri(path), headers: _headers));
 

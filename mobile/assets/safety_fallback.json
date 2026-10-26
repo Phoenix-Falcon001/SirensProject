@@ -1,0 +1,30 @@
+{
+  "status": "placeholder",
+  "status_note": "PLACEHOLDER: to be replaced with the text and hotline numbers approved by the Lebanese Army before any real use.",
+  "hotlines": [
+    {"label": {"ar": "الجيش اللبناني", "en": "Lebanese Army", "fr": "Armée libanaise"}, "number": "TO-BE-CONFIRMED"},
+    {"label": {"ar": "قوى الأمن الداخلي", "en": "Internal Security Forces", "fr": "Forces de sécurité intérieure"}, "number": "112"},
+    {"label": {"ar": "الدفاع المدني", "en": "Civil Defence", "fr": "Défense civile"}, "number": "125"},
+    {"label": {"ar": "الصليب الأحمر اللبناني", "en": "Lebanese Red Cross", "fr": "Croix-Rouge libanaise"}, "number": "140"}
+  ],
+  "steps": {
+    "en": [
+      "Do not touch, move or go near the object.",
+      "Move away and keep other people away.",
+      "Do not use your phone right next to the object; report once you are at a safe distance.",
+      "Call the hotline, then send a report with the app if it is safe to do so."
+    ],
+    "fr": [
+      "Ne touchez pas, ne déplacez pas et ne vous approchez pas de l'objet.",
+      "Éloignez-vous et tenez les autres personnes à distance.",
+      "N'utilisez pas votre téléphone près de l'objet ; signalez-le une fois à distance de sécurité.",
+      "Appelez la ligne d'urgence, puis envoyez un signalement avec l'application si vous pouvez le faire sans danger."
+    ],
+    "ar": [
+      "لا تلمس الجسم ولا تحرّكه ولا تقترب منه.",
+      "ابتعد وأبعد الآخرين عنه.",
+      "لا تستخدم هاتفك قرب الجسم؛ أبلغ عنه بعد أن تصبح على مسافة آمنة.",
+      "اتصل بالخط الساخن، ثم أرسل بلاغاً عبر التطبيق إذا كان ذلك آمناً."
+    ]
+  }
+}

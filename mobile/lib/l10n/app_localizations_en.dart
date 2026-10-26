@@ -243,4 +243,208 @@ class AppLocalizationsEn extends AppLocalizations {
   String signedInAs(String who) {
     return 'Signed in as $who';
   }
+
+  @override
+  String get catSuspiciousObject => 'Suspicious object';
+
+  @override
+  String get catUnexplodedOrdnance => 'Unexploded shell, rocket or bomb';
+
+  @override
+  String get catSuspiciousVehicle => 'Suspicious vehicle';
+
+  @override
+  String get catSuspiciousActivity => 'Suspicious activity';
+
+  @override
+  String get catOther => 'Other';
+
+  @override
+  String get reportSafeDistance => 'I am at a safe distance from the object';
+
+  @override
+  String get reportSafeDistanceRequired =>
+      'Move away first. Only send the report from a safe distance.';
+
+  @override
+  String get reportWhat => 'What did you see?';
+
+  @override
+  String get reportDescription => 'Description';
+
+  @override
+  String get reportDescriptionHint =>
+      'What it looks like and exactly where it is (street, landmark)';
+
+  @override
+  String get reportPhoto => 'Photo (optional)';
+
+  @override
+  String get reportPhotoWarning => 'Never go closer to take a photo.';
+
+  @override
+  String get reportTakePhoto => 'Take photo';
+
+  @override
+  String get reportChoosePhoto => 'From gallery';
+
+  @override
+  String get reportRemovePhoto => 'Remove photo';
+
+  @override
+  String get photoUnsupported => 'This photo format is not supported. Use JPEG or PNG.';
+
+  @override
+  String get photoTooLarge => 'This photo is too large (over 5 MB).';
+
+  @override
+  String get reportLocation => 'Location';
+
+  @override
+  String get reportUseLocation => 'Use my current location';
+
+  @override
+  String reportLocationFix(int meters) {
+    return 'Location added (within about $meters m)';
+  }
+
+  @override
+  String get reportLocationNone => 'No location. Describe the place as precisely as you can.';
+
+  @override
+  String get locationServiceOff => 'Location is turned off on this phone.';
+
+  @override
+  String get locationDenied => 'Location permission was refused.';
+
+  @override
+  String get locationTimeout => 'Could not get a location. Try again in the open.';
+
+  @override
+  String get locationOutside => 'That position is outside Lebanon.';
+
+  @override
+  String get reportNeedsContent => 'Add a description or a photo.';
+
+  @override
+  String get reportSend => 'Send report';
+
+  @override
+  String get reportSentTitle => 'Report received';
+
+  @override
+  String reportSentBody(String id) {
+    return 'Reference $id. The Army will review it. Stay away from the object.';
+  }
+
+  @override
+  String get reportQueuedTitle => 'Saved on this phone';
+
+  @override
+  String get reportQueuedBody =>
+      'There is no connection. The report will be sent automatically when you are back online. If there is immediate danger, call the hotline.';
+
+  @override
+  String get reportDailyLimit =>
+      'You have sent many reports today. Please call the hotline instead.';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get myReportsEmpty => 'You have not sent any reports yet.';
+
+  @override
+  String get pendingSection => 'Waiting to send';
+
+  @override
+  String get sentSection => 'Sent';
+
+  @override
+  String get sendNow => 'Send now';
+
+  @override
+  String get discard => 'Discard';
+
+  @override
+  String notSentReason(String reason) {
+    return 'Not accepted: $reason';
+  }
+
+  @override
+  String get statusReceived => 'Received';
+
+  @override
+  String get statusUnderReview => 'Under review';
+
+  @override
+  String get statusClosed => 'Closed';
+
+  @override
+  String get statusRejected => 'Not followed up';
+
+  @override
+  String get statusWaiting => 'Waiting to send';
+
+  @override
+  String get deliveredToArmy => 'Delivered to the Army';
+
+  @override
+  String sentOn(String date) {
+    return 'Sent $date';
+  }
+
+  @override
+  String savedOn(String date) {
+    return 'Saved $date';
+  }
+
+  @override
+  String showingSaved(String date) {
+    return 'Offline. Showing the copy from $date.';
+  }
+
+  @override
+  String get warningsEmpty => 'No active warnings.';
+
+  @override
+  String get warningsAllAreas => 'All areas';
+
+  @override
+  String warningsUntil(String date) {
+    return 'Until $date';
+  }
+
+  @override
+  String get warningsPullHint => 'Pull down to check for new warnings.';
+
+  @override
+  String get severityInfo => 'Information';
+
+  @override
+  String get severityCaution => 'Caution';
+
+  @override
+  String get severityDanger => 'Danger';
+
+  @override
+  String get safetyPlaceholder =>
+      'Sample text. The official instructions and numbers from the Lebanese Army will replace it.';
+
+  @override
+  String get safetySteps => 'If you see a suspicious object';
+
+  @override
+  String get safetyHotlines => 'Hotlines';
+
+  @override
+  String get call => 'Call';
+
+  @override
+  String get numberToBeConfirmed => 'Number to be confirmed';
+
+  @override
+  String callFailed(String number) {
+    return 'Could not start the call. Dial $number yourself.';
+  }
 }

@@ -102,5 +102,122 @@
         "type": "String"
       }
     }
+  },
+  "catSuspiciousObject": "Suspicious object",
+  "catUnexplodedOrdnance": "Unexploded shell, rocket or bomb",
+  "catSuspiciousVehicle": "Suspicious vehicle",
+  "catSuspiciousActivity": "Suspicious activity",
+  "catOther": "Other",
+  "reportSafeDistance": "I am at a safe distance from the object",
+  "reportSafeDistanceRequired": "Move away first. Only send the report from a safe distance.",
+  "reportWhat": "What did you see?",
+  "reportDescription": "Description",
+  "reportDescriptionHint": "What it looks like and exactly where it is (street, landmark)",
+  "reportPhoto": "Photo (optional)",
+  "reportPhotoWarning": "Never go closer to take a photo.",
+  "reportTakePhoto": "Take photo",
+  "reportChoosePhoto": "From gallery",
+  "reportRemovePhoto": "Remove photo",
+  "photoUnsupported": "This photo format is not supported. Use JPEG or PNG.",
+  "photoTooLarge": "This photo is too large (over 5 MB).",
+  "reportLocation": "Location",
+  "reportUseLocation": "Use my current location",
+  "reportLocationFix": "Location added (within about {meters} m)",
+  "@reportLocationFix": {
+    "placeholders": {
+      "meters": {
+        "type": "int"
+      }
+    }
+  },
+  "reportLocationNone": "No location. Describe the place as precisely as you can.",
+  "locationServiceOff": "Location is turned off on this phone.",
+  "locationDenied": "Location permission was refused.",
+  "locationTimeout": "Could not get a location. Try again in the open.",
+  "locationOutside": "That position is outside Lebanon.",
+  "reportNeedsContent": "Add a description or a photo.",
+  "reportSend": "Send report",
+  "reportSentTitle": "Report received",
+  "reportSentBody": "Reference {id}. The Army will review it. Stay away from the object.",
+  "@reportSentBody": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "reportQueuedTitle": "Saved on this phone",
+  "reportQueuedBody": "There is no connection. The report will be sent automatically when you are back online. If there is immediate danger, call the hotline.",
+  "reportDailyLimit": "You have sent many reports today. Please call the hotline instead.",
+  "ok": "OK",
+  "myReportsEmpty": "You have not sent any reports yet.",
+  "pendingSection": "Waiting to send",
+  "sentSection": "Sent",
+  "sendNow": "Send now",
+  "discard": "Discard",
+  "notSentReason": "Not accepted: {reason}",
+  "@notSentReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "statusReceived": "Received",
+  "statusUnderReview": "Under review",
+  "statusClosed": "Closed",
+  "statusRejected": "Not followed up",
+  "statusWaiting": "Waiting to send",
+  "deliveredToArmy": "Delivered to the Army",
+  "sentOn": "Sent {date}",
+  "@sentOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "savedOn": "Saved {date}",
+  "@savedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "showingSaved": "Offline. Showing the copy from {date}.",
+  "@showingSaved": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "warningsEmpty": "No active warnings.",
+  "warningsAllAreas": "All areas",
+  "warningsUntil": "Until {date}",
+  "@warningsUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "warningsPullHint": "Pull down to check for new warnings.",
+  "severityInfo": "Information",
+  "severityCaution": "Caution",
+  "severityDanger": "Danger",
+  "safetyPlaceholder": "Sample text. The official instructions and numbers from the Lebanese Army will replace it.",
+  "safetySteps": "If you see a suspicious object",
+  "safetyHotlines": "Hotlines",
+  "call": "Call",
+  "numberToBeConfirmed": "Number to be confirmed",
+  "callFailed": "Could not start the call. Dial {number} yourself.",
+  "@callFailed": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -102,7 +102,9 @@ CREATE TABLE IF NOT EXISTS reports (
     photo_type   TEXT,
     status       TEXT NOT NULL DEFAULT 'received',
     status_at    TEXT,
-    collected    INTEGER NOT NULL DEFAULT 0
+    collected    INTEGER NOT NULL DEFAULT 0,
+    client_ref   TEXT,
+    observed_at  TEXT
 );
 CREATE TABLE IF NOT EXISTS devices (
     citizen_id INTEGER NOT NULL,
@@ -178,6 +180,12 @@ def create_app(db_path=None, sync_key=None, sms_sender=None, push_sender=None,
     pathlib.Path(db_path).parent.mkdir(parents=True, exist_ok=True)
     with sqlite3.connect(db_path) as c:
         c.executescript(_SCHEMA)
+        cols = {r[1] for r in c.execute("PRAGMA table_info(reports)")}
+        for col in ("client_ref", "observed_at"):     # databases from before these existed
+            if col not in cols:
+                c.execute(f"ALTER TABLE reports ADD COLUMN {col} TEXT")
+        c.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_reports_client_ref "
+                  "ON reports (citizen_id, client_ref) WHERE client_ref IS NOT NULL")
 
     app.extensions["sirens_gw"] = {"sms": sms, "push": pusher, "db": db_path}
 
@@ -335,6 +343,20 @@ def create_app(db_path=None, sync_key=None, sms_sender=None, push_sender=None,
             return None
         return float(v)
 
+    def _observed_at(raw, now):
+        """When the civilian saw it (may be earlier than sending, if the phone
+        was offline). None if not given, False if invalid."""
+        if not raw:
+            return None
+        try:
+            t = datetime.fromisoformat(str(raw))
+        except ValueError:
+            return False
+        t = (t if t.tzinfo else t.replace(tzinfo=timezone.utc)).astimezone(timezone.utc)
+        if t > now + timedelta(minutes=5) or t < now - timedelta(days=7):
+            return False
+        return _iso(t)
+
     @app.post("/gw/v1/reports")
     @citizen_required
     def submit_report():
@@ -365,7 +387,20 @@ def create_app(db_path=None, sync_key=None, sms_sender=None, push_sender=None,
                 return err("photo must be a JPEG or PNG image", 400)
         if not description and not photo:
             return err("add a short description or a photo", 400)
+        # The app retries reports that failed to send; client_ref makes a retry
+        # return the report already received instead of creating a second one.
+        client_ref = (f.get("client_ref") or "").strip()[:64] or None
         conn, now = db(), _now()
+        if client_ref:
+            dup = conn.execute(
+                "SELECT id, status, submitted_at FROM reports WHERE citizen_id=? AND client_ref=?",
+                (g.citizen["id"], client_ref)).fetchone()
+            if dup:
+                return jsonify({"id": dup["id"], "status": dup["status"],
+                                "submitted_at": dup["submitted_at"]}), 200
+        observed = _observed_at(f.get("observed_at"), now)
+        if observed is False:
+            return err("observed_at must be a past date-time", 400)
         today = conn.execute(
             "SELECT COUNT(*) FROM reports WHERE citizen_id=? AND submitted_at > ?",
             (g.citizen["id"], _iso(now - timedelta(days=1)))).fetchone()[0]
@@ -374,10 +409,10 @@ def create_app(db_path=None, sync_key=None, sms_sender=None, push_sender=None,
         rid = "CR-" + secrets.token_hex(5).upper()
         conn.execute(
             """INSERT INTO reports (id, citizen_id, reporter_phone, submitted_at, category,
-                 description, lat, lon, accuracy_m, photo, photo_type)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
+                 description, lat, lon, accuracy_m, photo, photo_type, client_ref, observed_at)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (rid, g.citizen["id"], g.citizen["phone"], _iso(now), category, description,
-             lat, lon, acc, photo, ptype))
+             lat, lon, acc, photo, ptype, client_ref, observed))
         conn.commit()
         return jsonify({"id": rid, "status": "received", "submitted_at": _iso(now)}), 201
 
@@ -442,6 +477,7 @@ def create_app(db_path=None, sync_key=None, sms_sender=None, push_sender=None,
             "reporter_phone": r["reporter_phone"], "category": r["category"],
             "description": r["description"], "lat": r["lat"], "lon": r["lon"],
             "accuracy_m": r["accuracy_m"], "photo_type": r["photo_type"],
+            "observed_at": r["observed_at"],
             "photo": base64.b64encode(r["photo"]).decode() if r["photo"] else None,
         } for r in rows]})
 

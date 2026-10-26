@@ -175,6 +175,7 @@ def test_sync_round_trip(gw, client):
     held = civil.get_report(rid, with_photo=True)
     assert held["caza"] == "Sour" and held["photo"] == JPEG and held["mgrs"]
     assert held["reporter_phone"] == "+9613123456"
+    assert held["observed_at"] is None
     # The gateway no longer holds the text, position or photo.
     assert gw.get("/gw/v1/sync/reports", headers=SYNC).json["reports"] == []
     import sqlite3
@@ -199,3 +200,56 @@ def test_sync_round_trip(gw, client):
     # Nothing changed: no second push, nothing re-sent.
     assert sync_gateway.run_once(t)["statuses_sent"] == 0
     assert gw.push.calls == [["tok-1"]]
+
+
+def test_retry_with_client_ref_does_not_duplicate(gw):
+    h, _ = sign_in(gw)
+    body = {"description": "box", "client_ref": "c2f1-uuid"}
+    first = gw.post("/gw/v1/reports", headers=h, json=body)
+    again = gw.post("/gw/v1/reports", headers=h, json=body)
+    assert first.status_code == 201 and again.status_code == 200
+    assert first.json["id"] == again.json["id"]
+    assert len(gw.get("/gw/v1/reports", headers=h).json["reports"]) == 1
+    # Another citizen may happen to use the same reference.
+    other, _ = sign_in(gw, "71 999 888")
+    assert gw.post("/gw/v1/reports", headers=other, json=body).status_code == 201
+
+
+def test_observed_at_is_kept_and_checked(gw):
+    h, _ = sign_in(gw)
+    seen = (datetime.now(timezone.utc) - timedelta(hours=3)).isoformat()
+    assert gw.post("/gw/v1/reports", headers=h,
+                   json={"description": "x", "observed_at": seen}).status_code == 201
+    rep = gw.get("/gw/v1/sync/reports", headers=SYNC).json["reports"][0]
+    assert rep["observed_at"][:13] == seen[:13]
+    future = (datetime.now(timezone.utc) + timedelta(days=1)).isoformat()
+    for bad in (future, "2020-01-01T00:00:00", "yesterday"):
+        assert gw.post("/gw/v1/reports", headers=h,
+                       json={"description": "x", "observed_at": bad}).status_code == 400
+
+
+def test_old_gateway_database_is_upgraded(tmp_path):
+    import sqlite3
+    db = tmp_path / "old.db"
+    with sqlite3.connect(db) as c:
+        c.execute("""CREATE TABLE reports (id TEXT PRIMARY KEY, citizen_id INTEGER,
+            reporter_phone TEXT, submitted_at TEXT NOT NULL, category TEXT NOT NULL,
+            description TEXT NOT NULL DEFAULT '', lat REAL, lon REAL, accuracy_m REAL,
+            photo BLOB, photo_type TEXT, status TEXT NOT NULL DEFAULT 'received',
+            status_at TEXT, collected INTEGER NOT NULL DEFAULT 0)""")
+    create_app(db_path=db, sync_key=KEY, dev=True)
+    cols = {r[1] for r in sqlite3.connect(db).execute("PRAGMA table_info(reports)")}
+    assert {"client_ref", "observed_at"} <= cols
+
+
+def test_app_bundles_the_same_safety_text():
+    """mobile/assets/safety_fallback.json is what the app shows with no
+    connection at all; it must match what the gateway serves."""
+    import json
+    import pathlib
+    root = pathlib.Path(__file__).resolve().parents[1]
+    served = json.loads((root / "gateway" / "safety.json").read_text(encoding="utf-8"))
+    bundled = json.loads((root / "mobile" / "assets" / "safety_fallback.json")
+                         .read_text(encoding="utf-8"))
+    assert bundled == served, ("copy gateway/safety.json to "
+                               "mobile/assets/safety_fallback.json")
