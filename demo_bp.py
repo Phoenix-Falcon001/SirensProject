@@ -26,13 +26,12 @@ _TEMPLATE = r"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sirens — Demo data</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='sirens.css') }}">
 <style>
   :root{
     --ink:#16202b; --ink-soft:#3a4652; --line:#e2e6e3; --line-2:#eef0ee;
     --surface:#f4f6f3; --panel:#ffffff; --sig:#a8703a; --sig-soft:#f0e6d4;
     --weak:#7a8791; --link:#2d5b8e;
-    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Roboto Mono",monospace;
-    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--surface);color:var(--ink);font-family:var(--sans);
@@ -46,12 +45,10 @@ _TEMPLATE = r"""<!doctype html>
                font-weight:400;margin-top:2px}
   .wrap{max-width:820px;margin:0 auto;padding:48px 48px 90px}
   @media(max-width:1000px){.wrap{padding:28px 20px 60px}}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:9px;
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;
         box-shadow:0 1px 2px rgba(22,32,43,.04),0 4px 16px rgba(22,32,43,.05)}
-  .card h2{margin:0;padding:14px 18px;border-bottom:1px solid var(--line-2);
-           font-size:12px;letter-spacing:.14em;text-transform:uppercase;
-           color:var(--ink-soft);font-family:var(--mono);font-weight:600}
-  .card .body{padding:26px 28px}
+  .card h2{margin:0;padding:18px 22px 0;font-size:17px;font-weight:600;color:var(--ink)}
+  .card .body{padding:14px 22px 22px}
   p{margin:0 0 14px}
   .warn{background:var(--sig-soft);border:1px solid #e6d3b0;color:#6b4410;
         border-radius:4px;padding:11px 14px;font-size:14px;margin-bottom:18px}
@@ -60,7 +57,7 @@ _TEMPLATE = r"""<!doctype html>
        border-radius:4px;border:1px solid var(--ink);background:var(--ink);
        color:#fff;cursor:pointer}
   .btn:hover{background:#22303d}
-  .danger{margin-top:26px;border:1px solid #efc9c5;border-radius:9px;background:#fff;padding:22px 26px}
+  .danger{margin-top:26px;border:1px solid #efc9c5;border-radius:12px;background:#fff;padding:22px 26px}
   .danger h2{margin:0;font-size:17px;color:#a3312a}
   .danger p{margin:8px 0 14px;color:var(--ink-soft)}
   .danger label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
@@ -73,7 +70,7 @@ _TEMPLATE = r"""<!doctype html>
 </head>
 <body>
 <div class="bar">
-  <div class="brand">Sirens<small>demo mode</small></div>
+  <a class="brand" href="{{ url_for('home.home_page') }}">Sirens<small>C-IED Incident Link Console</small></a>
   {{ sirens_menu('demo') }}
 </div>
 <div class="wrap">
