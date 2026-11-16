@@ -17,7 +17,7 @@ from itertools import combinations
 
 from linker.ingest import load_incidents
 from linker.extract import FeatureExtractor
-from linker.match import Matcher
+from linker.match import LINK_THRESHOLD, Matcher
 from linker.cluster import Clusterer
 
 TAX = pathlib.Path(__file__).parent / "data" / "taxonomy" / "cied_lexicon.json"
@@ -75,7 +75,7 @@ def evaluate(data_dir, threshold, taxonomy, use_ner=True):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", default="data/generated")
-    ap.add_argument("--threshold", type=float, default=0.25)
+    ap.add_argument("--threshold", type=float, default=LINK_THRESHOLD)
     ap.add_argument("--sweep", action="store_true")
     ap.add_argument("--no-ner", action="store_true")
     ap.add_argument("--taxonomy", default=str(TAX))

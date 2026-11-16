@@ -20,10 +20,11 @@ from flask import Blueprint, abort, render_template_string, request
 from linker import decisions, store
 from linker.ai import _score_band
 from linker.match import Matcher
+import report_view
 
 review_bp = Blueprint("review", __name__)
 
-THRESHOLD = 0.25        # same as /tree, so both pages show the same links
+from linker.match import LINK_THRESHOLD as THRESHOLD   # same as /tree, so both pages show the same links
 FILTERS = ("all", "open", "confirm", "reject", "unsure")
 
 
@@ -42,7 +43,12 @@ def _row(link, by_id, decided, notes) -> dict:
         "a": a, "b": b, "inc_a": by_id[a], "inc_b": by_id[b],
         "dom_id": _dom_id(a, b),
         "score": link.score, "band": _score_band(link.score),
-        "reasons": link.reasons,
+        "reasons": [report_view.reason_label(x) for x in link.reasons],
+        "text_a": report_view.highlight(by_id[a].narrative or "",
+                                        report_view.shared_terms(by_id[a], set(link.shared_features))),
+        "text_b": report_view.highlight(by_id[b].narrative or "",
+                                        report_view.shared_terms(by_id[b], set(link.shared_features))),
+        "search": " ".join([a, b, by_id[a].location or "", by_id[b].location or ""]).lower(),
         "below": not _on_tree(link),
         "decision": decided.get((a, b)),
         "notes": notes.get((a, b), []),
@@ -78,10 +84,15 @@ def _one_row(a: str, b: str) -> dict:
                 {(a, b): decisions.notes_for(a, b)})
 
 
-def _tally() -> dict:
+def _tally(rows=None) -> dict:
+    """Decisions made, plus how many links are listed and still open."""
     counts = {d: 0 for d in decisions.DECISIONS}
     for d in decisions.current_decisions().values():
         counts[d] = counts.get(d, 0) + 1
+    rows = build_rows() if rows is None else rows
+    counts["all"] = len(rows)
+    counts["open"] = sum(1 for r in rows if not r["decision"])
+    counts["done_pct"] = round(100 * (len(rows) - counts["open"]) / len(rows)) if rows else 0
     return counts
 
 
@@ -98,7 +109,7 @@ def review_page():
     else:
         shown = rows
     return render_template_string(_CARD + _PAGE, rows=shown, total=len(rows),
-                                  show=show, filters=FILTERS, tally=_tally(),
+                                  show=show, filters=FILTERS, tally=_tally(rows), threshold=THRESHOLD,
                                   db_count=store.count())
 
 
@@ -106,7 +117,7 @@ def review_page():
 def decide():
     a, b = request.form.get("a", ""), request.form.get("b", "")
     decision = request.form.get("decision", "")
-    analyst = request.form.get("analyst", "")[:40]
+    analyst = _analyst()
     if decision == "undo":
         _one_row(a, b)                         # 404 on unknown ids
         decisions.clear_decision(a, b, analyst=analyst)
@@ -124,11 +135,17 @@ def note():
     a, b = request.form.get("a", ""), request.form.get("b", "")
     try:
         _one_row(a, b)
-        decisions.add_note(a, b, request.form.get("note", "")[:2000],
-                           analyst=request.form.get("analyst", "")[:40])
+        decisions.add_note(a, b, request.form.get("note", "")[:2000], analyst=_analyst())
     except ValueError as e:
         return str(e), 400
     return _fragment(a, b)
+
+
+def _analyst() -> str:
+    """The signed-in account, or the typed initials when sign-in is off."""
+    from flask import g
+    user = g.get("web_user")
+    return user["username"] if user else request.form.get("analyst", "")[:40]
 
 
 def _fragment(a, b):
@@ -138,43 +155,45 @@ def _fragment(a, b):
 
 
 _CARD = r"""{% import "forms_ui.html" as f %}{% macro card(r) %}
-<article class="link{% if r.decision %} is-{{ r.decision }}{% endif %}" id="{{ r.dom_id }}">
+<article class="link{% if r.decision %} is-{{ r.decision }}{% endif %}" id="{{ r.dom_id }}" tabindex="-1" data-search="{{ r.search }}">
   <div class="top">
-    <span class="pair mono">{{ r.a }} &harr; {{ r.b }}</span>
+    <span class="band {{ r.band }}">{{ r.band|capitalize }}</span>
     <span class="score">{{ '%.2f'|format(r.score) }}</span>
-    <span class="band band-{{ r.band }}">{{ r.band }}</span>
-    {% if r.below %}<span class="below">below link threshold now</span>{% endif %}
-    <span class="verdict">
-      {% if r.decision %}Analyst: <strong>{{ {'confirm':'Confirmed','reject':'Rejected','unsure':'Unsure'}[r.decision] }}</strong>
-      {% else %}No analyst decision yet{% endif %}
-    </span>
-  </div>
-  <div class="incs">
-    <div><span class="mono">{{ r.a }}</span> &middot; {{ r.inc_a.location or 'no location' }} &middot; {{ r.inc_a.date or 'no date' }}</div>
-    <div><span class="mono">{{ r.b }}</span> &middot; {{ r.inc_b.location or 'no location' }} &middot; {{ r.inc_b.date or 'no date' }}</div>
+    <span class="pair"><span class="mono">{{ r.a }}</span> and <span class="mono">{{ r.b }}</span></span>
+    {% if r.below %}<span class="below">below the link threshold now</span>{% endif %}
+    <span class="verdict v-{{ r.decision or 'open' }}">{{ {'confirm':'Confirmed','reject':'Rejected','unsure':'Unsure'}.get(r.decision, 'Not reviewed') }}</span>
   </div>
   <div class="why">
-    <div class="subhead">Why the machine linked them</div>
     {% if r.reasons %}<ul>{% for x in r.reasons %}<li>{{ x }}</li>{% endfor %}</ul>
     {% else %}<p class="weak">No shared evidence at the current score.</p>{% endif %}
   </div>
+  <details class="cmp">
+    <summary>Compare the two reports</summary>
+    <div class="cmp-cols">
+      {% for id, inc, text in [(r.a, r.inc_a, r.text_a), (r.b, r.inc_b, r.text_b)] %}
+      <div><h3><span class="mono">{{ id }}</span> {{ inc.location or 'No location' }}{% if inc.date %}, {{ inc.date }}{% endif %}</h3>
+        <p dir="auto">{{ text }}</p>
+        {% set hp = photo_url(inc) %}{% if hp %}<a href="{{ hp }}" target="_blank" rel="noopener"><img src="{{ hp }}" alt="Photo on file for {{ id }}"></a>{% endif %}</div>
+      {% endfor %}
+    </div>
+  </details>
   <div class="actions">
-    {% for d, label in [('confirm','Confirm'),('reject','Reject'),('unsure','Unsure')] %}
-    <button type="button" class="dbtn d-{{ d }}{% if r.decision == d %} on{% endif %}"
+    {% for d, label, key in [('confirm','Confirm','C'),('reject','Reject','R'),('unsure','Unsure','U')] %}
+    <button type="button" class="dbtn d-{{ d }}{% if r.decision == d %} on{% endif %}" data-key="{{ key }}"
       hx-post="{{ url_for('review.decide') }}" hx-include="#analyst"
       hx-vals='{{ {"a": r.a, "b": r.b, "decision": d}|tojson }}'
-      hx-target="#{{ r.dom_id }}" hx-swap="outerHTML">{{ label }}</button>
+      hx-target="#{{ r.dom_id }}" hx-swap="outerHTML"><kbd>{{ key }}</kbd>{{ label }}</button>
     {% endfor %}
     {% if r.decision %}
-    <button type="button" class="dbtn undo"
+    <button type="button" class="dbtn undo" data-key="Z"
       hx-post="{{ url_for('review.decide') }}" hx-include="#analyst"
       hx-vals='{{ {"a": r.a, "b": r.b, "decision": "undo"}|tojson }}'
-      hx-target="#{{ r.dom_id }}" hx-swap="outerHTML">Undo</button>
+      hx-target="#{{ r.dom_id }}" hx-swap="outerHTML"><kbd>Z</kbd>Undo</button>
     {% endif %}
   </div>
   <div class="notes">
     {% for n in r.notes %}
-    <div class="note"><span class="meta">{{ n.created_at.replace('T', ' ')[:16] }}{% if n.analyst %} &middot; {{ n.analyst }}{% endif %}</span> {{ n.note }}</div>
+    <div class="note"><span class="meta">{{ n.created_at.replace('T', ' ')[:16] }}{% if n.analyst %}, {{ n.analyst }}{% endif %}</span> <span dir="auto">{{ n.note }}</span></div>
     {% endfor %}
     <form class="f-form f-inline" novalidate hx-post="{{ url_for('review.note') }}" hx-include="#analyst"
           hx-target="#{{ r.dom_id }}" hx-swap="outerHTML">
@@ -188,132 +207,65 @@ _CARD = r"""{% import "forms_ui.html" as f %}{% macro card(r) %}
 {% endmacro %}"""
 
 _TALLY_OOB = r"""
-<span id="tally" hx-swap-oob="true">Confirmed {{ tally.confirm }} &middot; Rejected {{ tally.reject }} &middot; Unsure {{ tally.unsure }}</span>"""
+<span id="tally" hx-swap-oob="true">{{ tally.all - tally.open }} of {{ tally.all }} reviewed<i style="--p:{{ tally.done_pct }}%"></i></span>
+{% for key in ['open','all','confirm','reject','unsure'] %}<span class="n" id="n-{{ key }}" hx-swap-oob="true">{{ tally[key] }}</span>{% endfor %}"""
 
 _PAGE = r"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sirens — Link review</title>
-<style>
-  :root{
-    --ink:#16202b; --ink-soft:#3a4652; --line:#e2e6e3; --line-2:#eef0ee;
-    --surface:#f4f6f3; --panel:#ffffff; --sig:#a8703a; --sig-soft:#f0e6d4;
-    --weak:#7a8791; --link:#2d5b8e;
-    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Roboto Mono",monospace;
-    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--surface);color:var(--ink);font-family:var(--sans);
-       line-height:1.5;-webkit-font-smoothing:antialiased}
-  a{color:var(--link)}
-  .bar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;
-       padding:18px 32px;background:var(--ink);color:#eef2f5;
-       border-bottom:3px solid var(--sig)}
-  .brand{font-family:var(--mono);font-weight:600;letter-spacing:.16em;
-         text-transform:uppercase;font-size:15px}
-  .brand small{display:block;letter-spacing:.06em;font-size:10px;color:#9fb0bd;
-               font-weight:400;margin-top:2px}
-  .wrap{max-width:1180px;margin:0 auto;padding:36px 48px 90px}
-  @media(max-width:1000px){.wrap{padding:24px 18px 60px}}
-  .mono{font-family:var(--mono)}
-  .weak{color:var(--weak)}
-  .head{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;margin-bottom:10px}
-  .head h1{font-size:20px;margin:0;font-weight:600}
-  .stat{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft)}
-  .lead{font-size:13.5px;color:var(--ink-soft);background:var(--line-2);border-radius:4px;
-        padding:10px 14px;margin:0 0 18px}
-  .link{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--line);
-        border-radius:7px;padding:16px 20px;margin-bottom:14px;
-        box-shadow:0 1px 2px rgba(22,32,43,.04),0 4px 14px rgba(22,32,43,.04)}
-  .link.is-confirm{border-left-color:#5b8a63}
-  .link.is-reject{border-left-color:#b0605a}
-  .link.is-unsure{border-left-color:var(--sig)}
-  .top{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
-  .pair{font-weight:600;font-size:14px}
-  .score{font-family:var(--mono);font-weight:700;font-size:12.5px;padding:2px 8px;
-         border-radius:3px;background:var(--sig-soft);color:#7a4e12}
-  .band{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:3px;border:1px solid var(--line)}
-  .band-strong{background:#e7efe5;color:#3d6b45}
-  .band-medium{background:#f3ecdf;color:#7a4e12}
-  .band-weak{background:#eef0ee;color:var(--weak)}
-  .below{font-size:11.5px;color:var(--weak);font-style:italic}
-  .verdict{margin-left:auto;font-size:13px;color:var(--ink-soft)}
-  .incs{display:flex;flex-wrap:wrap;gap:4px 28px;font-size:13px;color:var(--ink-soft);margin:8px 0 4px}
-  .subhead{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--weak);
-           font-family:var(--mono);margin:10px 0 4px}
-  .why ul{margin:0;padding-left:18px;font-size:13.5px}
-  .actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
-  .dbtn{font-family:var(--sans);font-size:13px;font-weight:600;padding:6px 13px;border-radius:4px;
-        border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
-  .dbtn:hover{border-color:var(--ink-soft)}
-  .d-confirm.on{background:#5b8a63;border-color:#5b8a63;color:#fff}
-  .d-reject.on{background:#b0605a;border-color:#b0605a;color:#fff}
-  .d-unsure.on{background:var(--sig);border-color:var(--sig);color:#fff}
-  .undo{color:var(--weak);font-weight:500}
-  .notes{border-top:1px solid var(--line-2);margin-top:10px;padding-top:10px}
-  .note{font-size:13px;margin-bottom:6px}
-  .note .meta{font-family:var(--mono);font-size:11px;color:var(--weak);margin-right:6px}
-  .notes form{margin-top:6px}
-  .htmx-request{opacity:.6}
-  #flash{display:none;background:#fbeceb;border:1px solid #e7b7b2;color:#a4332b;
-         padding:9px 13px;border-radius:4px;font-size:13px;margin-bottom:14px}
-  .empty{color:var(--weak);padding:20px 2px}
-</style>
+<title>Sirens — Review links</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='sirens.css') }}">
 {{ f.assets() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='review.css') }}">
 </head>
-<body>
+<body class="rv">
 <div class="bar">
-  <div class="brand">Sirens<small>link review · analyst decisions</small></div>
+  <a class="brand" href="{{ url_for('home.home_page') }}">Sirens<small>C-IED Incident Link Console</small></a>
   {{ sirens_menu('review') }}
 </div>
-<div class="wrap">
-  <div class="head">
-    <h1>Link review</h1>
-    <span class="stat">{{ total }} links &middot; <span id="tally">Confirmed {{ tally.confirm }} &middot; Rejected {{ tally.reject }} &middot; Unsure {{ tally.unsure }}</span></span>
-  </div>
-  <p class="lead">Every link is a lead for a human analyst, never a conclusion. Your decisions and
-    notes are stored separately from the machine's scores, which are never changed, and every
-    decision can be undone. Links shown: score {{ '%.2f'|format(0.25) }} or more with shared evidence
-    (the same set as the link tree).</p>
-  <div id="flash"></div>
-  {% set names = {'all':'all','open':'no decision','confirm':'confirmed','reject':'rejected','unsure':'unsure'} %}
-  <form class="f-form f-filterbar" onsubmit="return false" aria-label="Review filters">
-    <div class="f-field">
-      <div class="f-labelrow"><span class="f-label">Show links</span></div>
-      <nav class="f-seg filters" aria-label="Filter by decision">
-        {% for flt in filters %}<a href="{{ url_for('review.review_page', show=flt) }}" class="{{ 'on' if flt == show else '' }}"{% if flt == show %} aria-current="true"{% endif %}>{{ names[flt] }}</a>{% endfor %}
-      </nav>
+<main class="wrap">
+  <div class="rhead">
+    <div>
+      <h1>Review links</h1>
+      <p class="lead">Sirens suggests; you decide. Each link is a lead to check, never a conclusion. Your decisions
+        and notes are kept apart from the scores, and every decision can be undone.</p>
     </div>
-    {{ f.input("analyst", "Analyst initials", "analyst", placeholder="e.g. BE", optional=True, extra='maxlength="40"') }}
-  </form>
+    <div class="progress"><span id="tally">{{ tally.all - tally.open }} of {{ tally.all }} reviewed<i style="--p:{{ tally.done_pct }}%"></i></span></div>
+  </div>
+
+  {% set names = {'all':'all','open':'no decision','confirm':'confirmed','reject':'rejected','unsure':'unsure'} %}
+  <div class="tools">
+    <nav class="tabs" aria-label="Filter by decision">
+      {% for key, label in [('open','Not reviewed'),('all','All'),('confirm','Confirmed'),('reject','Rejected'),('unsure','Unsure')] %}
+      <a href="{{ url_for('review.review_page', show=key) }}" class="{{ 'on' if key == show else '' }}"{% if key == show %} aria-current="true"{% endif %}>{{ label }} <span class="n" id="n-{{ key }}">{{ tally[key] }}</span></a>
+      {% endfor %}
+    </nav>
+    <input type="search" id="find" placeholder="Find by ID or place" aria-label="Find links by incident ID or place">
+    {% if web_user() %}<input type="hidden" id="analyst" name="analyst" value="">
+    {% else %}<form class="f-form who" onsubmit="return false" aria-label="Analyst">
+      {{ f.input("analyst", "Your initials", "analyst", placeholder="e.g. BE", optional=True, extra='maxlength="40"') }}
+    </form>{% endif %}
+  </div>
   {{ f.chips([] if show == 'all' else [("Decision: " ~ names[show], url_for('review.review_page'))], url_for('review.review_page')) }}
+  <p class="keys" aria-label="Keyboard shortcuts"><kbd>J</kbd><kbd>K</kbd> next and previous
+    <kbd>C</kbd> confirm <kbd>R</kbd> reject <kbd>U</kbd> unsure <kbd>Z</kbd> undo
+    <kbd>Enter</kbd> compare <kbd>N</kbd> note</p>
+  <div id="flash" role="alert"></div>
 
   {% if db_count == 0 %}
     <p class="empty">No incidents on record yet. <a href="{{ url_for('demo.demo_page') }}">Load the demo data</a> first.</p>
   {% elif not rows %}
-    <p class="empty">No links match this filter.</p>
+    <p class="empty">{{ 'Nothing left to review. Every link has a decision.' if show == 'open' else 'No links match this filter.' }}</p>
   {% endif %}
-  {% for r in rows %}{{ card(r) }}{% endfor %}
-</div>
+  <div id="links">{% for r in rows %}{{ card(r) }}{% endfor %}</div>
+  <p class="empty" id="nofind" hidden>No link matches that search.</p>
+</main>
+<footer>Links shown: score {{ "%.2f"|format(threshold) }} or more with shared evidence, the same set as the link tree. Bands: weak under 0.40, medium under 0.66, strong above.</footer>
 
 <script src="{{ url_for('static', filename='vendor/htmx.min.js') }}"></script>
-<script>
-  // Remember the analyst's initials on this machine only.
-  var an = document.getElementById('analyst');
-  an.value = localStorage.getItem('sirens-analyst') || '';
-  an.addEventListener('change', function(){ localStorage.setItem('sirens-analyst', an.value); });
-  // Show server-side refusals (e.g. an empty note) instead of failing silently.
-  document.body.addEventListener('htmx:responseError', function(e){
-    var f = document.getElementById('flash');
-    f.textContent = 'Not saved: ' + (e.detail.xhr.responseText || e.detail.xhr.status);
-    f.style.display = 'block';
-  });
-  document.body.addEventListener('htmx:afterSwap', function(){
-    document.getElementById('flash').style.display = 'none';
-  });
-</script>
+<script src="{{ url_for('static', filename='review.js') }}"></script>
 </body>
 </html>
 """

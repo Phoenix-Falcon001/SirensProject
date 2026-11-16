@@ -6,11 +6,11 @@ from linker.match import Matcher
 from linker import store
 
 # Fabricated, descriptive wording only (analyst-level vocabulary).
-REPORT = ("Fabricated test report. A remote-controlled IED was found concealed in a culvert "
-          "near Srifa, targeting a patrol.")
+REPORT = ("Fabricated test report. A victim-operated IED with a pressure plate targeted a convoy "
+          "on the logistics route near Marjayoun. Main charge homemade explosive, buried at the road verge.")
 
 
-def _save(client, incident_id, narrative, street="Srifa"):
+def _save(client, incident_id, narrative, street="Marjayoun"):
     return client.post("/analyse", data={"incident_id": incident_id, "street": street,
                                          "narrative": narrative, "action": "save"})
 
@@ -32,7 +32,7 @@ def test_panel_matches_the_link_tree_clustering(client):
     client.post("/seed")
     _save(client, "INC-041", REPORT)
     incs = store.all_incidents()
-    links = Matcher().fit(incs).all_pairs(incs, threshold=0.25)
+    links = Matcher().fit(incs).all_pairs(incs)
     cluster = next(c for c in Clusterer(incs, links).clusters() if "INC-041" in c.members)
 
     r = client.get("/network/INC-041/panel")

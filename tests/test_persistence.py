@@ -18,6 +18,7 @@ _PRELUDE = textwrap.dedent(f"""
     import app as A
     A.PHOTOS_DIR = store.DEFAULT_DB.parent / "photos"
     A.META_FILE = store.DEFAULT_DB.parent / "meta.json"
+    A.app.config["LOGIN_DISABLED"] = True      # this test is about storage, not sign-in
     c = A.app.test_client()
 """)
 

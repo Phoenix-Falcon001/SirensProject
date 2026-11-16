@@ -174,3 +174,6 @@ mark.hl{border-radius:3px;padding:1px 2px;color:inherit}
 .net-panel .reasons{margin:6px 0 0;padding-left:18px;font-size:14px;color:var(--ink-soft)}
 .net-panel .note{font-size:13.5px;color:var(--muted);margin:14px 0 0}
 .net-panel .empty{color:var(--muted)}
+.drop-f{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.drop-f input{width:15px;height:15px;accent-color:var(--danger)}
+.small{font-size:13px}

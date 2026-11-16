@@ -15,7 +15,7 @@ def test_every_tree_link_has_decision_buttons(client):
     from linker.match import Matcher
     html, _, _ = _seed_and_first_pair(client)
     incs = store.all_incidents()
-    n_links = len(Matcher().fit(incs).all_pairs(incs, threshold=0.25))
+    n_links = len(Matcher().fit(incs).all_pairs(incs))
     assert n_links > 0
     assert html.count('<article class="link') == n_links
     for d in ("confirm", "reject", "unsure"):

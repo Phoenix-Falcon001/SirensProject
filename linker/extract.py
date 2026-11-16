@@ -41,7 +41,10 @@ def _norm_ws(s: str) -> str:
 
 
 class FeatureExtractor:
-    def __init__(self, taxonomy_path: str | pathlib.Path, use_ner: bool = True):
+    def __init__(self, taxonomy_path: str | pathlib.Path, use_ner: bool = True,
+                 known_places=()):
+        # Place names the caller already knows (towns, cazas): never people.
+        self.known_places = {p for p in known_places if p}
         raw = json.loads(pathlib.Path(taxonomy_path).read_text(encoding="utf-8"))
         # Build (compiled alias regex, facet, canonical) triples, longest alias
         # first so "command wire" wins over "wire".
@@ -110,6 +113,31 @@ class FeatureExtractor:
             return False
         return True
 
+    @staticmethod
+    def _words(s: str) -> list[str]:
+        return re.findall(r"[^\W_]+", s.lower())
+
+    @classmethod
+    def _names_a_place(cls, name: str, places) -> bool:
+        """True if the name is a place, or a run of whole words inside one."""
+        n = cls._words(name)
+        if not n:
+            return False
+        for place in places:
+            w = cls._words(place)
+            if any(w[i:i + len(n)] == n for i in range(len(w) - len(n) + 1)):
+                return True
+        return False
+
+    # "near Meiss", "outside Tibnin", "village of Khiam": the word after it is a
+    # place. Bare "in" and "at" are left out on purpose ("in Ali's car").
+    _PLACE_WORDS = r"(?:near|outside|towards?|north of|south of|east of|west of|village of|town of)"
+
+    @classmethod
+    def _follows_place_word(cls, name: str, text: str) -> bool:
+        return re.search(cls._PLACE_WORDS + r"\s+(?:the\s+)?" + re.escape(name) + r"\b", text,
+                         flags=re.IGNORECASE) is not None
+
     # -- entity extraction ---------------------------------------------------
     def _entities(self, text: str, inc: Incident) -> None:
         for m in _PHONE.finditer(text):
@@ -138,9 +166,18 @@ class FeatureExtractor:
                     if not (t.isupper() and len(t) <= 4) and self._valid_group(t):
                         inc.groups.add(t)
 
-        # Final cross-check: anything also seen as a place is not a person/group.
-        inc.persons -= inc.places
-        inc.groups -= inc.places
+        # Final cross-check: a name that is a place, or part of one, is not a
+        # person or group. NER often tags the first word of a village name as a
+        # person ("Meiss" from "Meiss ej-Jabal"), which made two reports from the
+        # same village look like they shared an individual.
+        places = set(inc.places) | self.known_places
+        if inc.location:
+            places |= {p.strip() for p in inc.location.split(",") if p.strip()}
+        for kind in (inc.persons, inc.groups):
+            for name in list(kind):
+                if self._names_a_place(name, places) or self._follows_place_word(name, text):
+                    kind.discard(name)
+                    inc.places.add(name)
 
     def extract(self, inc: Incident) -> Incident:
         text = inc.narrative or ""

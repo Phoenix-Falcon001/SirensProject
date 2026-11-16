@@ -98,8 +98,16 @@ _TEMPLATE = r"""{% import "forms_ui.html" as f %}<!doctype html>
     <div class="fd-list">
       {% for g in view.groups %}
         <h3>{{ g.title }}</h3>
-        <dl>{% for it in g['items'] %}<div><dt>{{ it.label }}</dt><dd>{{ it.value }}</dd></div>{% endfor %}</dl>
+        <dl>{% for it in g['items'] %}<div><dt>{{ it.label }}</dt><dd>{{ it.value }}</dd>
+          {% if g.group == 'people' and mode != 'saved' %}<label class="drop-f"><input type="checkbox" name="drop" value="{{ it.value }}"> not correct</label>{% endif %}</div>{% endfor %}</dl>
+        {% if g.group == 'people' and mode != 'saved' %}<p class="muted small">Tick anything that is not really a person, group or phone, then press Analyse first or Save report. It is left out of the links.</p>{% endif %}
       {% else %}<p class="muted">Sirens found no descriptive features in this text. Links can still come from similar wording.</p>{% endfor %}
+      {% if form and form.drop %}
+        <h3>Removed by you</h3>
+        <dl>{% for d in form.drop %}<div><dt>Removed</dt><dd>{{ d }}</dd>
+          <label class="drop-f"><input type="checkbox" name="drop" value="{{ d }}" checked> not correct</label></div>{% endfor %}</dl>
+        <p class="muted small">Untick to put it back, then press Analyse first.</p>
+      {% endif %}
     </div>
   </div>
   {% for c in view.cards %}

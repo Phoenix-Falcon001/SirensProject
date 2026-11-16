@@ -146,7 +146,7 @@ def meta():
 
 
 # -- incidents ---------------------------------------------------------------
-LINK_THRESHOLD = 0.25    # same as the link tree, review page and dashboard
+from linker.match import LINK_THRESHOLD    # noqa: E402  same as the link tree, review page and dashboard
 
 
 def _visible(incidents=None) -> list[tuple[Incident, str | None]]:

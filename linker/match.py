@@ -47,6 +47,14 @@ SIGNATURE_FACETS = {
 MIN_SHARED_SIGNATURE_FACETS = 2
 
 
+# The score at which two reports count as linked, everywhere (link tree, review,
+# networks, dashboard, home page, mobile API). Chosen on four synthetic data
+# sets (seeds 7, 11, 23, 42): with place names no longer read as people, 0.35
+# gives mean precision 0.71 / recall 0.90 / F1 0.79, against 0.58 / 0.91 / 0.70
+# for the earlier 0.25. tests/test_accuracy.py fails if this regresses.
+LINK_THRESHOLD = 0.35
+
+
 class Matcher:
     def __init__(
         self,
@@ -164,7 +172,7 @@ class Matcher:
             reasons=reasons,
         )
 
-    def all_pairs(self, incidents: list[Incident], threshold: float = 0.25) -> list[Link]:
+    def all_pairs(self, incidents: list[Incident], threshold: float = LINK_THRESHOLD) -> list[Link]:
         links = []
         for a, b in combinations(incidents, 2):
             link = self.score(a, b)

@@ -22,7 +22,7 @@ from linker.match import Matcher
 
 dashboard_bp = Blueprint("dashboard", __name__)
 
-THRESHOLD = 0.25          # same link threshold as /tree and /review
+from linker.match import LINK_THRESHOLD as THRESHOLD    # same link threshold as /tree and /review
 TOP_AREAS = 10            # more areas than this fold into "Other"
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 _MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
@@ -155,7 +155,7 @@ def dashboard_page():
     strength = stats.link_strength(view_links, current)
     sig = stats.signatures(shown)
     return render_template_string(
-        _TEMPLATE, f=f, active=active, total=len(incidents), shown=shown,
+        _TEMPLATE, f=f, active=active, total=len(incidents), shown=shown, threshold=THRESHOLD,
         n_areas=len({i.location for i in shown if i.location}),
         stats=link_stats(view_links, current), nets=nets, strength=strength,
         sig=sig, qual=stats.quality(shown), active_chips=active_chips(f),
@@ -172,85 +172,13 @@ _TEMPLATE = r"""{% import "forms_ui.html" as fm %}<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sirens — Dashboard</title>
-<style>
-  :root{
-    --ink:#16202b; --ink-soft:#3a4652; --line:#e2e6e3; --line-2:#eef0ee;
-    --surface:#f4f6f3; --panel:#ffffff; --sig:#a8703a; --sig-soft:#f0e6d4;
-    --weak:#7a8791; --link:#2d5b8e;
-    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Roboto Mono",monospace;
-    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--surface);color:var(--ink);font-family:var(--sans);
-       line-height:1.5;-webkit-font-smoothing:antialiased}
-  a{color:var(--link)}
-  .bar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;
-       padding:18px 32px;background:var(--ink);color:#eef2f5;
-       border-bottom:3px solid var(--sig)}
-  .brand{font-family:var(--mono);font-weight:600;letter-spacing:.16em;
-         text-transform:uppercase;font-size:15px}
-  .brand small{display:block;letter-spacing:.06em;font-size:10px;color:#9fb0bd;
-               font-weight:400;margin-top:2px}
-  .wrap{max-width:1400px;margin:0 auto;padding:32px 48px 90px}
-  @media(max-width:1000px){.wrap{padding:22px 18px 60px}}
-  h1{font-size:20px;font-weight:600;margin:0 0 14px}
-  .scope{font-size:13px;color:var(--ink-soft);margin:4px 0 20px}
-  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:22px}
-  .tile{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:16px 20px;
-        box-shadow:0 1px 2px rgba(22,32,43,.04),0 4px 16px rgba(22,32,43,.05)}
-  .tile .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--weak);font-family:var(--mono)}
-  .tile .v{font-size:30px;font-weight:600;margin-top:4px}
-  .tile .s{font-size:12px;color:var(--weak)}
-  .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px}
-  @media(max-width:1000px){.grid{grid-template-columns:minmax(0,1fr)}}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:9px;
-        box-shadow:0 1px 2px rgba(22,32,43,.04),0 4px 16px rgba(22,32,43,.05)}
-  .card.wide{grid-column:1/-1}
-  .card h2{margin:0;padding:14px 20px;border-bottom:1px solid var(--line-2);
-           font-size:12px;letter-spacing:.14em;text-transform:uppercase;
-           color:var(--ink-soft);font-family:var(--mono);font-weight:600}
-  .card .body{padding:18px 20px 16px;overflow-x:auto}   /* wide tables scroll inside their card on phones */
-  .plot{position:relative;height:260px}
-  .plot.tall{height:320px}
-  .hint{font-size:12px;color:var(--weak);margin-top:8px}
-  details{margin-top:10px;font-size:13px}
-  summary{cursor:pointer;color:var(--link)}
-  table{border-collapse:collapse;margin-top:8px;font-variant-numeric:tabular-nums;font-size:13.5px}
-  th,td{text-align:left;padding:4px 18px 4px 0;border-bottom:1px solid var(--line-2)}
-  th{font-size:12px;font-weight:600;color:var(--ink-soft)}
-  .nowrap{white-space:nowrap}
-  td.n{text-align:right}
-  .empty{color:var(--weak);padding:20px 2px}
-  .jump{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}
-  .jump a{font-family:var(--mono);font-size:12px;text-decoration:none;color:var(--ink-soft);background:#fff;
-        border:1px solid var(--line);border-radius:3px;padding:5px 11px}
-  .jump a:hover{border-color:var(--ink-soft)}
-  h2.sec{font-size:15px;font-weight:600;margin:34px 0 4px}
-  p.lede{font-size:13px;color:var(--weak);margin:0 0 14px}
-  .cardtools{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-  .cardtools select{padding:6px 9px;border:1px solid var(--line);border-radius:4px;font-family:var(--sans);
-        font-size:13.5px;background:#fcfdfc;color:var(--ink)}
-  .chips{display:flex;flex-wrap:wrap;gap:4px}
-  .chip{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:3px;background:var(--sig-soft);
-        color:#7a4e12;border:1px solid #e6d3b0;white-space:nowrap}
-  .band{font-family:var(--mono);font-size:11px;padding:1px 6px;border-radius:3px;border:1px solid var(--line)}
-  .band-strong{background:#e7efe5;color:#3d6b45}.band-medium{background:#f3ecdf;color:#7a4e12}.band-weak{background:#eef0ee;color:var(--weak)}
-  table.wide{width:100%}
-  table.wide td{vertical-align:top;padding-top:7px;padding-bottom:7px}
-  .meters{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px 34px}
-  .mrow .top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
-  .mrow .top b{font-weight:600}
-  .mrow .top span{color:var(--weak);font-variant-numeric:tabular-nums}
-  .meter{height:8px;background:var(--line-2);border-radius:4px;overflow:hidden}
-  .meter span{display:block;height:100%;background:var(--sig);border-radius:4px}
-  .missing{font-size:12px;color:var(--ink-soft)}
-  .mono{font-family:var(--mono)}
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='sirens.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 {{ fm.assets() }}
 </head>
-<body>
+<body class="db">
 <div class="bar">
-  <div class="brand">Sirens<small>dashboard · incidents on record</small></div>
+  <a class="brand" href="{{ url_for('home.home_page') }}">Sirens<small>C-IED Incident Link Console</small></a>
   {{ sirens_menu('dashboard') }}
 </div>
 <div class="wrap">
@@ -286,7 +214,7 @@ _TEMPLATE = r"""{% import "forms_ui.html" as fm %}<!doctype html>
   <div class="tiles" id="overview">
     <div class="tile"><div class="k">Incidents</div><div class="v">{{ shown|length }}</div><div class="s">in view</div></div>
     <div class="tile"><div class="k">Areas</div><div class="v">{{ n_areas }}</div><div class="s">with at least one incident</div></div>
-    <div class="tile"><div class="k">Links</div><div class="v">{{ stats.links }}</div><div class="s">between incidents in view (score &ge; 0.25)</div></div>
+    <div class="tile"><div class="k">Links</div><div class="v">{{ stats.links }}</div><div class="s">between incidents in view (score &ge; {{ "%.2f"|format(threshold) }})</div></div>
     <div class="tile"><div class="k">Confirmed</div><div class="v">{{ stats.confirmed }}</div><div class="s">of those links, by an analyst (<a href="{{ url_for('review.review_page') }}">review</a>)</div></div>
   </div>
 
@@ -359,7 +287,7 @@ _TEMPLATE = r"""{% import "forms_ui.html" as fm %}<!doctype html>
     <section class="card wide"><h2>What each network has in common</h2><div class="body">
       <table class="wide"><tr><th>Network</th><th>Common signature (shared by most members)</th><th>Members in view</th></tr>
         {% for r in nets.rows %}<tr><td class="mono"><strong>{{ r.id }}</strong></td>
-          <td><div class="chips">{% for x in r.signature %}<span class="chip">{{ x }}</span>{% else %}<span class="missing">none shared by most members</span>{% endfor %}</div></td>
+          <td><div class="chips">{% for x in r.signature %}<span class="chip">{{ x|feature_label }}</span>{% else %}<span class="missing">none shared by most members</span>{% endfor %}</div></td>
           <td class="missing">{{ r.members|join(', ') }}</td></tr>{% endfor %}
       </table>
     </div></section>
@@ -370,7 +298,7 @@ _TEMPLATE = r"""{% import "forms_ui.html" as fm %}<!doctype html>
   <p class="lede">How strong the {{ strength.total }} link(s) between incidents in view are, and how many an analyst has reviewed.</p>
   <div class="tiles">
     {% for b in strength.bands %}<div class="tile"><div class="k">{{ b.band }} links</div><div class="v">{{ b.n }}</div>
-      <div class="s">{{ {'strong':'score 0.66 or more','medium':'score 0.40 to 0.66','weak':'score 0.25 to 0.40'}[b.band] }}</div></div>{% endfor %}
+      <div class="s">{{ {'strong':'score 0.66 or more','medium':'score 0.40 to 0.66','weak':'score ' ~ '%.2f'|format(threshold) ~ ' to 0.40'}[b.band] }}</div></div>{% endfor %}
     <div class="tile"><div class="k">Reviewed</div><div class="v">{{ strength.reviewed_pct }}%</div>
       <div class="s">of links in view (<a href="{{ url_for('review.review_page', show='open') }}">review the rest</a>)</div></div>
   </div>
@@ -418,7 +346,7 @@ _TEMPLATE = r"""{% import "forms_ui.html" as fm %}<!doctype html>
 (function(){
   if (!window.Chart || !document.getElementById('c-timeline')) return;
   var D = JSON.parse(document.getElementById('dash-data').textContent);
-  var ACCENT = '#a8703a', MUTED = '#c4cbc6', GRID = '#eef0ee', TICK = '#7a8791';
+  var ACCENT = '#b5761f', MUTED = '#c4cbc6', GRID = '#eef0ee', TICK = '#66737d';
   Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
   Chart.defaults.color = TICK;
   function axes(horizontal){

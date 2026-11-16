@@ -108,6 +108,8 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <style>
+  @font-face {{ font-family:"Noto Sans"; font-weight:400; src:url("/static/map/fonts/noto-sans-latin-400-normal.woff2") format("woff2"); }}
+  @font-face {{ font-family:"Noto Sans"; font-weight:600; src:url("/static/map/fonts/noto-sans-latin-600-normal.woff2") format("woff2"); }}
   :root {{
     --bg:#f4f6f3; --panel:#ffffff; --panel-2:#fbfcfb; --line:#e2e6e3;
     --ink:#16202b; --muted:#7a8791; --accent:#a8703a; --accent-2:#2d5b8e;
@@ -115,22 +117,22 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
   }}
   * {{ box-sizing:border-box; }}
   html,body {{ margin:0; height:100%; background:var(--bg); color:var(--ink);
-    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif; }}
+    font-family:"Noto Sans",ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif; }}
   .wrap {{ display:grid; grid-template-columns: 1fr 340px; grid-template-rows:auto 1fr;
     height:100vh; min-height:0; }}
   header {{ grid-column:1 / -1; display:flex; align-items:center; gap:20px; flex-wrap:wrap;
     padding:16px 28px; background:var(--bar); color:#eef2f5; border-bottom:3px solid var(--accent); }}
-  header h1 {{ font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:15px;
-    letter-spacing:.16em; text-transform:uppercase; margin:0; font-weight:600; }}
-  header .stats {{ font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:11.5px;
-    color:#9fb0bd; letter-spacing:.05em; font-variant-numeric:tabular-nums; margin-left:auto; }}
+  header .brand {{ font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:15px;
+    letter-spacing:.16em; text-transform:uppercase; font-weight:600; color:#eef2f5; text-decoration:none; }}
+  header .brand small {{ display:block; letter-spacing:.06em; font-size:10px; color:#9fb0bd; font-weight:400; margin-top:2px; }}
+  header h1 {{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }}
+  header .stats {{ font-size:13px; color:#9fb0bd; font-variant-numeric:tabular-nums; margin-left:auto; }}
   header .stats b {{ color:#eef2f5; font-weight:600; }}
   #stage {{ position:relative; overflow:hidden; min-height:520px; min-width:0; }}
   canvas {{ display:block; width:100%; height:100%; }}
   aside {{ background:var(--panel); border-left:1px solid var(--line);
     overflow-y:auto; padding:0; }}
-  .side-h {{ font-size:11px; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--muted); padding:14px 16px 8px; }}
+  .side-h {{ font-size:17px; font-weight:600; color:var(--ink); padding:18px 16px 10px; }}
   .cluster {{ margin:0 12px 10px; background:var(--panel-2); border:1px solid var(--line);
     border-radius:8px; padding:10px 12px; cursor:pointer;
     box-shadow:0 1px 2px rgba(22,32,43,.04),0 4px 12px rgba(22,32,43,.04); }}
@@ -140,8 +142,7 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
   .cluster .sz {{ color:var(--muted); font-size:11px; float:right; }}
   .cluster .sig {{ font-size:11.5px; color:var(--ink); margin-top:6px; line-height:1.5; }}
   .cluster .sig span {{ display:inline-block; background:#f0e6d4; border:1px solid #e6d3b0;
-    border-radius:3px; padding:1px 6px; margin:2px 3px 0 0;
-    font-family:ui-monospace,Menlo,Consolas,monospace; font-size:10.5px; color:#7a4e12; }}
+    border-radius:20px; padding:2px 8px; margin:3px 3px 0 0; font-size:11.5px; color:#7a4e12; }}
   .cluster .mem {{ font-size:10.5px; color:var(--muted); margin-top:7px;
     font-family:ui-monospace,Menlo,Consolas,monospace; }}
   #tip {{ position:absolute; pointer-events:none; z-index:9; max-width:280px;
@@ -160,10 +161,10 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
 <body>
 <div class="wrap">
   <header>
+    <a class="brand" href="/">Sirens<small>C-IED Incident Link Console</small></a>
     <h1>{title}</h1>
     {nav}
-    <div class="stats">INCIDENTS <b>{n_inc}</b> &nbsp;·&nbsp; LINKS <b>{n_link}</b>
-      &nbsp;·&nbsp; CLUSTERS <b>{n_clu}</b></div>
+    <div class="stats"><b>{n_inc}</b> incidents &nbsp; <b>{n_link}</b> links &nbsp; <b>{n_clu}</b> networks</div>
   </header>
   <div id="stage">
     <canvas id="c"></canvas>
@@ -175,11 +176,15 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
     <div class="hint">force-directed · offline</div>
   </div>
   <aside>
-    <div class="side-h">Candidate networks / signatures</div>
+    <div class="side-h">Candidate networks</div>
     <div id="clusters"></div>
   </aside>
 </div>
 <script>
+// "trigger=pressure_plate" -> "Trigger: pressure plate"
+const plain = s => {{ const i = s.indexOf('='); if (i < 0) return s;
+  const f = s.slice(0, i).replace(/_/g, ' '), v = s.slice(i + 1).replace(/_/g, ' ');
+  return f.charAt(0).toUpperCase() + f.slice(1) + ': ' + v; }};
 const GRAPH = {data_json};
 const CLUSTERS = {clusters_json};
 const INC = {inc_json};
@@ -329,7 +334,7 @@ CLUSTERS.forEach(c=>{{
   const el=document.createElement('div');el.className='cluster';
   el.style.borderLeft='4px solid '+(cidColor[c.cluster_id]||UNLINKED);
   el.innerHTML=`<div><span class="cid">${{c.cluster_id}}</span><span class="sz">${{c.size}} incidents</span></div>`+
-    `<div class="sig">${{(c.signature.length?c.signature:['(no dominant shared features)']).map(s=>'<span>'+s+'</span>').join('')}}</div>`+
+    `<div class="sig">${{(c.signature.length?c.signature:['(no dominant shared features)']).map(s=>'<span>'+plain(s)+'</span>').join('')}}</div>`+
     `<div class="mem">${{c.members.join(' · ')}}</div>`;
   el.onclick=()=>{{
     if(selectedCluster===c.cluster_id){{ selectedCluster=null; el.style.outline='none'; }}

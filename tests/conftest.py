@@ -20,4 +20,6 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setattr(sirens_app, "PHOTOS_DIR", tmp_path / "photos")
     monkeypatch.setattr(sirens_app, "META_FILE", tmp_path / "report_meta.json")
     sirens_app.app.config["TESTING"] = True
+    # Page tests run without sign-in; tests/test_web_auth.py switches it on.
+    monkeypatch.setitem(sirens_app.app.config, "LOGIN_DISABLED", True)
     return sirens_app.app.test_client()

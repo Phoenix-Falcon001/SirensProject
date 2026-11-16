@@ -3,7 +3,7 @@
 A standalone Flask Blueprint (wired into app.py with one line). The console's
 result card loads /network/<id>/panel with htmx right after a report is saved.
 The panel runs the same matcher and clustering as the link tree (threshold
-0.25, Louvain with a fixed seed) over every stored incident, finds the
+the shared link threshold, Louvain with a fixed seed) over every stored incident, finds the
 network the report falls into, and lists the report's links into it with
 score, band (computed in code) and the machine's reasons.
 
@@ -22,7 +22,7 @@ import report_view
 
 network_bp = Blueprint("network", __name__)
 
-THRESHOLD = 0.25          # same as /tree and /review
+from linker.match import LINK_THRESHOLD as THRESHOLD    # same as /tree and /review
 
 
 def likely_network(incident_id: str) -> dict | None:
@@ -59,14 +59,14 @@ def panel(incident_id):
             '<h2>Likely network</h2><div class="body"><div class="empty">'
             '{{ i }} is not on record, so it has no network.</div></div>', i=incident_id), 404
     return render_template_string(_PANEL, n=net, feature_label=report_view.feature_label,
-                                  reason_label=report_view.reason_label)
+                                  reason_label=report_view.reason_label, threshold=THRESHOLD)
 
 
 _PANEL = r"""<h2>Likely network</h2>
 <div class="body net-panel">
 {% if not n.cluster %}
   <p class="empty">No likely network yet: no stored incident links to {{ n.incident_id }} with a
-    score of 0.25 or more and shared evidence. It will be re-checked every time the record changes.</p>
+    score of {{ "%.2f"|format(threshold) }} or more and shared evidence. It will be re-checked every time the record changes.</p>
 {% else %}
   {% set c = n.cluster %}
   <p class="net-lead">Clustering places it in candidate network <strong class="mono">{{ c.cluster_id }}</strong>

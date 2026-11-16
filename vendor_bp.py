@@ -38,13 +38,12 @@ _TEMPLATE = r"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sirens — Vendor check</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='sirens.css') }}">
 <style>
   :root{
     --ink:#16202b; --ink-soft:#3a4652; --line:#e2e6e3; --line-2:#eef0ee;
     --surface:#f4f6f3; --panel:#ffffff; --sig:#a8703a; --sig-soft:#f0e6d4;
     --weak:#7a8791; --link:#2d5b8e;
-    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Roboto Mono",monospace;
-    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--surface);color:var(--ink);font-family:var(--sans);
@@ -59,12 +58,10 @@ _TEMPLATE = r"""<!doctype html>
                font-weight:400;margin-top:2px}
   .wrap{max-width:1100px;margin:0 auto;padding:40px 48px 90px}
   @media(max-width:1000px){.wrap{padding:28px 20px 60px}}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:9px;margin-bottom:24px;
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:24px;
         box-shadow:0 1px 2px rgba(22,32,43,.04),0 4px 16px rgba(22,32,43,.05)}
-  .card h2{margin:0;padding:14px 18px;border-bottom:1px solid var(--line-2);
-           font-size:12px;letter-spacing:.14em;text-transform:uppercase;
-           color:var(--ink-soft);font-family:var(--mono);font-weight:600}
-  .card .body{padding:24px 26px}
+  .card h2{margin:0;padding:18px 22px 0;font-size:17px;font-weight:600;color:var(--ink)}
+  .card .body{padding:14px 22px 22px}
   table{border-collapse:collapse;font-size:14px}
   th,td{text-align:left;padding:6px 18px 6px 0;border-bottom:1px solid var(--line-2)}
   th{color:var(--ink-soft);font-weight:600}
@@ -83,7 +80,7 @@ _TEMPLATE = r"""<!doctype html>
 </head>
 <body>
 <div class="bar">
-  <div class="brand">Sirens<small>vendor check · offline front-end libraries</small></div>
+  <a class="brand" href="{{ url_for('home.home_page') }}">Sirens<small>C-IED Incident Link Console</small></a>
   {{ sirens_menu('vendor') }}
 </div>
 <div class="wrap">

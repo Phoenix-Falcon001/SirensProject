@@ -178,3 +178,31 @@ Target: P 0.90 / R 0.80 / F1 0.85.
   89 tests pass; accuracy unchanged. Needs laptop: real map file (build,
   size, checksum, release asset), Wi-Fi-off run, map speed on Elie's laptop,
   Ollama check, timed fresh install. PR for this branch not opened yet (review first).
+
+## Accuracy update (16 Nov 2026)
+
+Two changes, measured together on synthetic data only:
+
+1. **Place names are no longer read as people or groups.** "Meiss" from
+   *Meiss ej-Jabal* used to be stored as a person, so two reports from the same
+   village looked as if they shared an individual. A name is now dropped when it
+   is a place the report or Sirens already knows, or part of one, or follows a
+   place word ("near", "outside", "village of").
+2. **The link threshold moved from 0.25 to 0.35**, defined once in
+   `linker/match.py` (`LINK_THRESHOLD`) and used by every page and the mobile API.
+
+| Four synthetic sets (seeds 7, 11, 23, 42), mean | Precision | Recall | F1 |
+|---|---|---|---|
+| Before (threshold 0.25) | 0.58 | 0.91 | 0.70 |
+| Place-name fix only (0.25) | 0.55 | 0.83 | 0.65 |
+| **Place-name fix + threshold 0.35** | **0.71** | **0.90** | **0.79** |
+
+On the bundled set (`data/generated`, seed 7): precision 0.754, recall 0.878,
+F1 0.811 (was 0.628 / 0.888 / 0.736).
+
+- [x] A test that fails if F1 drops: `tests/test_accuracy.py` (F1 >= 0.78,
+  precision >= 0.72, recall >= 0.84 on the bundled set).
+- [x] Analysts can remove a wrong person, group or phone before saving.
+- Reports stored before this change keep their old findings until
+  `python reextract.py --apply` is run once.
+- Still not tested on real reports. Precision remains below the 0.90 target.

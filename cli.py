@@ -128,7 +128,7 @@ def main(argv=None) -> int:
 
     a = sub.add_parser("analyze", help="link incidents into networks/signatures")
     a.add_argument("target")
-    a.add_argument("--threshold", type=float, default=0.25)
+    a.add_argument("--threshold", type=float, default=0.35)
     a.add_argument("--persist", action="store_true",
                    help="also save these reports into the shared database")
     a.add_argument("--html"); a.add_argument("--png"); a.add_argument("--json")
@@ -139,7 +139,7 @@ def main(argv=None) -> int:
     imp.set_defaults(func=cmd_import)
 
     d = sub.add_parser("db", help="analyse everything saved in the database")
-    d.add_argument("--threshold", type=float, default=0.25)
+    d.add_argument("--threshold", type=float, default=0.35)
     d.add_argument("--html"); d.add_argument("--json")
     d.set_defaults(func=cmd_db)
 

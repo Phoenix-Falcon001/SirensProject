@@ -8,17 +8,21 @@ responder, never gives handling/render-safe guidance — see linker/query.py.
 from __future__ import annotations
 
 import pathlib
+from datetime import date
 
 from flask import Blueprint, render_template_string, request
 
 from linker import store, ai
 from linker.extract import FeatureExtractor
 from linker.query import area_brief
+import report_view
+import ui_icons
 
 ROOT = pathlib.Path(__file__).resolve().parent
 TAXONOMY = ROOT / "data" / "taxonomy" / "cied_lexicon.json"
 
 brief_bp = Blueprint("brief", __name__)
+brief_bp.add_app_template_filter(lambda k: report_view.feature_label(k), "feature_label")
 _EXTRACTOR = FeatureExtractor(TAXONOMY, use_ner=True)
 
 
@@ -43,9 +47,17 @@ def brief_page():
                 assessment = ai.assess_area(result)
     all_locations = sorted({i.location for i in store.all_incidents() if i.location})
     ai_ok, ai_reason = ai.available()
+    span = ""
+    if result and result.area_incidents:
+        dates = sorted(i.date for i in result.area_incidents if i.date)
+        if dates:
+            span = dates[0] if dates[0] == dates[-1] else f"{dates[0]} to {dates[-1]}"
     return render_template_string(_TEMPLATE, brief=result, form=form, error=error,
                                    db_count=store.count(), locations=all_locations,
-                                   assessment=assessment, ai_ok=ai_ok, ai_reason=ai_reason)
+                                   assessment=assessment, ai_ok=ai_ok, ai_reason=ai_reason,
+                                   span=span, today=date.today().isoformat(), icon=ui_icons.icon,
+                                   feature_label=report_view.feature_label,
+                                   value_label=report_view.value_label)
 
 
 _TEMPLATE = r"""{% import "forms_ui.html" as f %}<!doctype html>
@@ -53,221 +65,130 @@ _TEMPLATE = r"""{% import "forms_ui.html" as f %}<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sirens — Pre-arrival Brief</title>
-<style>
-  :root{
-    --ink:#16202b; --ink-soft:#3a4652; --line:#e2e6e3; --line-2:#eef0ee;
-    --surface:#f4f6f3; --panel:#ffffff; --sig:#a8703a; --sig-soft:#f0e6d4;
-    --weak:#7a8791; --link:#2d5b8e;
-    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Roboto Mono",monospace;
-    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--surface);color:var(--ink);font-family:var(--sans);
-       line-height:1.5;-webkit-font-smoothing:antialiased;position:relative}
-  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-       background:url('/static/siren-mark.jpeg') no-repeat center center;
-       background-size:min(70vw,1100px);opacity:.06;filter:grayscale(1)}
-  .bar,.wrap{position:relative;z-index:1}
-  a{color:var(--link)}
-  .bar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;
-       padding:18px 32px;background:var(--ink);color:#eef2f5;
-       border-bottom:3px solid var(--sig)}
-  .brand{font-family:var(--mono);font-weight:600;letter-spacing:.16em;
-         text-transform:uppercase;font-size:15px}
-  .brand small{display:block;letter-spacing:.06em;font-size:10px;color:#9fb0bd;
-               font-weight:400;margin-top:2px}
-  .bar a{margin-left:auto;color:#cdd8e0;font-family:var(--mono);font-size:11px;
-    text-decoration:none;border:1px solid #2c3c4a;padding:5px 10px;border-radius:2px}
-  .wrap{max-width:1600px;margin:0 auto;padding:40px 48px 90px}
-  .grid{display:grid;grid-template-columns:minmax(0,500px) minmax(0,1fr);gap:40px;align-items:start}
-  @media(max-width:1000px){.wrap{padding:28px 20px 60px}.grid{grid-template-columns:1fr}}
-  @media(max-width:840px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:9px;
-        box-shadow:0 1px 2px rgba(22,32,43,.04),0 4px 16px rgba(22,32,43,.05)}
-  .card h2{margin:0;padding:14px 18px;border-bottom:1px solid var(--line-2);
-           font-size:12px;letter-spacing:.14em;text-transform:uppercase;
-           color:var(--ink-soft);font-family:var(--mono);font-weight:600}
-  .card .body{padding:24px 26px}
-  label{display:block;font-size:12px;letter-spacing:.03em;color:var(--ink-soft);
-        margin:0 0 5px;font-weight:600}
-  input[type=text],textarea,select{width:100%;padding:9px 11px;border:1px solid var(--line);
-        border-radius:4px;font-family:var(--sans);font-size:14px;color:var(--ink);
-        background:#fcfdfc}
-  textarea{min-height:150px;resize:vertical;line-height:1.6}
-  .field{margin-bottom:14px}
-  .hint{font-size:12px;color:var(--weak);margin-top:5px}
-  .btn{font-family:var(--sans);font-size:14px;font-weight:600;padding:10px 16px;
-       border-radius:4px;border:1px solid var(--ink);background:var(--ink);
-       color:#fff;cursor:pointer}
-  .btn:hover{background:#22303d}
-  .err{background:#fbeceb;border:1px solid #e7b7b2;color:#a4332b;padding:10px 14px;
-       border-radius:4px;font-size:13px;margin-bottom:14px}
-  .note{font-size:12.5px;color:var(--ink-soft);background:var(--line-2);
-        border-radius:4px;padding:9px 12px;margin-bottom:14px}
-  .empty{color:var(--weak);font-size:14px;padding:8px 2px}
-  .stat{font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
-  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-  .chip{font-family:var(--mono);font-size:11.5px;padding:3px 8px;border-radius:3px;
-        background:var(--sig-soft);color:#7a4e12;border:1px solid #e6d3b0}
-  table.profile{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
-  table.profile th{text-align:left;font-weight:600;color:var(--ink-soft);
-        padding:4px 10px 4px 0;border-bottom:1px solid var(--line-2)}
-  table.profile td{padding:5px 10px 5px 0;border-bottom:1px solid var(--line-2)}
-  .match{border:1px solid var(--line);border-left:4px solid var(--sig);border-radius:5px;
-        padding:12px 14px;margin-bottom:10px;background:#fff}
-  .match .top{display:flex;align-items:center;gap:10px}
-  .score{font-family:var(--mono);font-weight:700;font-size:13px;padding:3px 8px;
-         border-radius:3px;background:var(--sig-soft);color:#7a4e12}
-  .mid{font-family:var(--mono);font-weight:600;font-size:13px}
-  .loc{color:var(--weak);font-size:12.5px;margin-left:auto;text-align:right}
-  .subhead{font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-           color:var(--weak);font-family:var(--mono);margin:16px 0 8px}
-  .subhead:first-child{margin-top:0}
-</style>
+<title>Sirens — Pre-arrival brief{% if brief %}: {{ brief.location_query }}{% endif %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='sirens.css') }}">
 {{ f.assets() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='brief.css') }}">
 </head>
-<body>
+<body class="bf">
 <div class="bar">
-  <div class="brand">Sirens<small>Pre-arrival Brief</small></div>
+  <a class="brand" href="{{ url_for('home.home_page') }}">Sirens<small>C-IED Incident Link Console</small></a>
   {{ sirens_menu('brief') }}
 </div>
-<div class="wrap">
-  <div class="grid">
-    <section class="card">
-      <h2>Query</h2>
-      <div class="body">
-        <form class="f-form" method="post" action="/brief" novalidate>
-          {{ f.form_error(error, lead='Brief not run.') }}
-          {% call f.section("Place", sub="Sirens retrieves and ranks past reporting recorded at or near this place.") %}
-            {{ f.input("location", "Location", "brief_location", id="location", value=form.location, list="recordplaces",
-                       placeholder="e.g. Yaroun", rules="required place:recordplaces", wide=True,
-                       required_msg="Enter a place to brief on.",
-                       place_msg="This place is not in the record yet; the brief may find no past reporting.") }}
-            <datalist id="recordplaces">{% for loc in locations %}<option value="{{ loc }}">{% endfor %}</datalist>
-          {% endcall %}
-          {% call f.more("More details", open=(form.describe or false), sub="compare with a description") %}
-            {{ f.textarea("describe", "Description to compare with", "brief_describe", value=form.describe, optional=True, rows=4,
-                          placeholder="e.g. small green fin-stabilised rocket, intact, about 1 m") }}
-          {% endcall %}
-          <div class="f-actions">
-            <button class="f-btn" type="submit" data-busy-text="Retrieving…">Get brief</button>
-            {{ f.toggle("use_ai", "AI area summary", "brief_use_ai", checked=form.use_ai, disabled=not ai_ok,
-                        note=('' if ai_ok else 'Off: ' ~ ai_reason)) }}
-          </div>
-        </form>
-        <div class="stat" style="margin-top:16px">{{ db_count }} incidents on record.</div>
-      </div>
-    </section>
-
-    <section>
-      {% if not brief %}
-        <div class="card"><div class="body">
-          <p class="empty">Enter a location on the left to see what the record says about that
-            area — object types reported there, the device signature that tends to
-            co-occur, and (optionally) the closest past records to a description.</p>
-        </div></div>
-      {% else %}
-        <div class="card">
-          <h2>Record for &ldquo;{{ brief.location_query }}&rdquo;
-            <a href="/map" style="float:right;font-family:var(--mono);font-size:10.5px;color:var(--link);text-decoration:none">view full map &#8599;</a></h2>
-          <div class="body">
-            <div class="note">{{ brief.note }}</div>
-            <div class="stat">{{ brief.n_in_area }} incident{{ '' if brief.n_in_area == 1 else 's' }} on record in this area.</div>
-
-            <div class="subhead">Object types seen here</div>
-            {% if brief.object_profile %}
-              <table class="profile">
-                <tr><th>Type</th><th>Count</th><th>Most recent</th></tr>
-                {% for t, c, recent in brief.object_profile %}
-                <tr><td>{{ t }}</td><td>{{ c }}</td><td>{{ recent or '—' }}</td></tr>
-                {% endfor %}
-              </table>
-            {% else %}<div class="empty">No object-type reporting on record for this area.</div>{% endif %}
-
-            <div class="subhead">Co-occurring device signature</div>
-            {% if brief.area_signature %}
-              <div class="chips">{% for s in brief.area_signature %}<span class="chip">{{ s }}</span>{% endfor %}</div>
-            {% else %}<div class="empty">No dominant shared signature for this area.</div>{% endif %}
-          </div>
-        </div>
-
-        {% if brief.area_incidents %}
-        <div class="card" style="margin-top:16px">
-          <h2>Incidents on record here ({{ brief.area_incidents|length }})</h2>
-          <div class="body">
-            {% for inc in brief.area_incidents %}
-            <div class="match">
-              <div class="top">
-                <span class="mid">{{ inc.incident_id }}</span>
-                <span class="loc">{{ inc.location or '—' }}{% if inc.date %} &middot; {{ inc.date }}{% endif %}</span>
-              </div>
-              <div style="font-size:13px;color:var(--ink-soft);margin-top:6px;line-height:1.5">
-                {{ inc.narrative[:220] }}{% if inc.narrative|length > 220 %}&hellip;{% endif %}
-              </div>
-              {% if inc.features %}
-              <div class="chips" style="margin-top:8px">
-                {% for f in inc.features[:6] %}<span class="chip">{{ f.facet }}={{ f.value }}</span>{% endfor %}
-              </div>
-              {% endif %}
-              {% if inc.persons or inc.groups or inc.phones %}
-              <div class="chips" style="margin-top:5px">
-                {% for p in inc.persons %}<span class="chip" style="background:#e9eef4;color:#274a6e;border-color:#cdd9e6">person: {{ p }}</span>{% endfor %}
-                {% for g in inc.groups %}<span class="chip" style="background:#e9eef4;color:#274a6e;border-color:#cdd9e6">group: {{ g }}</span>{% endfor %}
-                {% for ph in inc.phones %}<span class="chip" style="background:#e9eef4;color:#274a6e;border-color:#cdd9e6">phone: {{ ph }}</span>{% endfor %}
-              </div>
-              {% endif %}
-              {% set purl = photo_url(inc) %}
-              {% if purl %}
-              <a href="{{ purl }}" target="_blank" rel="noopener" style="display:block;margin-top:8px">
-                <img src="{{ purl }}" alt="Photo for {{ inc.incident_id }}" style="max-height:140px;border:1px solid var(--line);border-radius:5px">
-              </a>
-              {% endif %}
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-        {% endif %}
-
-        {% if assessment %}
-        <div class="card" style="margin-top:16px">
-          <h2>AI area summary
-            {% if assessment.ok %}<span style="font-family:var(--mono);font-size:10px;background:#2d5b8e;color:#fff;padding:2px 7px;border-radius:2px;margin-left:8px">{{ assessment.model }}</span>{% endif %}</h2>
-          <div class="body">
-            {% if assessment.ok %}
-              <div style="font-size:14px;line-height:1.6">{{ assessment.text }}</div>
-              <div class="hint" style="border-top:1px solid var(--line-2);padding-top:9px;margin-top:10px">
-                Generated by a small local model — verify against the tables above before acting on it.
-              </div>
-            {% else %}
-              <div class="empty">Assessment unavailable — {{ assessment.reason }}</div>
-            {% endif %}
-          </div>
-        </div>
-        {% endif %}
-
-        {% if brief.describe_query %}
-        <div class="card" style="margin-top:16px">
-          <h2>Closest past records to the description</h2>
-          <div class="body">
-            {% if brief.matches %}
-              {% for m in brief.matches %}
-              <div class="match">
-                <div class="top">
-                  <span class="score">{{ '%.2f'|format(m.score) }}</span>
-                  <span class="mid">{{ m.incident_id }}</span>
-                  <span class="loc">{{ m.location or '—' }}{% if m.date %} &middot; {{ m.date }}{% endif %}</span>
-                </div>
-                <div class="chips">{% for s in m.shared %}<span class="chip">{{ s }}</span>{% endfor %}</div>
-                {% if m.photo %}<div class="hint" style="margin-top:6px">reference photo on file: {{ m.photo }}</div>{% endif %}
-              </div>
-              {% endfor %}
-            {% else %}<div class="empty">No records in this area matched the description closely enough.</div>{% endif %}
-          </div>
-        </div>
-        {% endif %}
-      {% endif %}
-    </section>
+<main class="wrap">
+  <div class="bhead">
+    <h1>Pre-arrival brief</h1>
+    <p class="lead">What past reports say about a place, before you get there. {{ db_count }} report{{ '' if db_count == 1 else 's' }} on record.</p>
   </div>
-</div>
+
+  <form class="f-form ask" method="post" action="/brief" novalidate>
+    {{ f.form_error(error, lead='Brief not run.') }}
+    <div class="ask-grid">
+      {{ f.input("location", "Place", "brief_location", id="location", value=form.location, list="recordplaces",
+                 placeholder="e.g. Yaroun", rules="required place:recordplaces",
+                 required_msg="Enter a place to brief on.",
+                 place_msg="This place is not in the record yet; the brief may find no past reporting.") }}
+      <datalist id="recordplaces">{% for loc in locations %}<option value="{{ loc }}">{% endfor %}</datalist>
+      {{ f.textarea("describe", "Description to compare with", "brief_describe", value=form.describe, optional=True, rows=2,
+                    placeholder="e.g. small green fin-stabilised rocket, intact, about 1 m") }}
+    </div>
+    <div class="f-actions">
+      <button class="f-btn" type="submit" data-busy-text="Retrieving…">Get brief</button>
+      {{ f.toggle("use_ai", "AI area summary", "brief_use_ai", checked=form.use_ai, disabled=not ai_ok,
+                  note=('' if ai_ok else 'Off: the local AI model is not running.')) }}
+    </div>
+  </form>
+
+  {% if not brief %}
+    <p class="hint0">Enter a town, village or street used in your reports. The brief lists the object types reported
+      there, the features that tend to appear together, and every report on record for the place.</p>
+  {% else %}
+  <article class="sheet" aria-labelledby="sheet-t">
+    <header class="sheet-head">
+      <div>
+        <h2 id="sheet-t">{{ brief.location_query }}</h2>
+        <p class="when">Brief prepared {{ today }} from {{ brief.n_in_area }} report{{ '' if brief.n_in_area == 1 else 's' }} on record for this place{% if span %}, dated {{ span }}{% endif %}.</p>
+      </div>
+      <div class="sheet-actions">
+        <button type="button" class="btn ghost" onclick="window.print()">Print</button>
+        <a class="btn ghost" href="{{ url_for('incident_map') }}">Open the map</a>
+      </div>
+    </header>
+    <div class="caution" role="note">{{ icon('warning') }}<div><strong>Record-based only.</strong> This is what was reported here
+      before. It does not identify the object in front of you and gives no handling guidance. A qualified specialist
+      confirms every identification.</div></div>
+
+    {% if brief.n_in_area == 0 %}
+      <p class="none">No report on record matches this place. Check the spelling, or try the caza or a nearby town.</p>
+    {% endif %}
+
+    <div class="cols">
+      <section>
+        <h3>Object types reported here</h3>
+        {% if brief.object_profile %}
+          <table class="tbl">
+            <thead><tr><th>Type</th><th class="r">Reports</th><th>Most recent</th></tr></thead>
+            <tbody>{% for t, c, recent in brief.object_profile %}
+            <tr><td><a href="{{ url_for('munitions.munitions_page') }}#ref-{{ t }}">{{ value_label('object_type', t) }}</a></td><td class="r num">{{ c }}</td><td>{{ recent or 'no date' }}</td></tr>
+            {% endfor %}</tbody>
+          </table>
+        {% else %}<p class="muted">No object type is named in the reports for this place.</p>{% endif %}
+      </section>
+      <section>
+        <h3>Features that recur here</h3>
+        {% if brief.area_signature %}
+          <ul class="feat">{% for s in brief.area_signature %}<li>{{ feature_label(s) }}</li>{% endfor %}</ul>
+          <p class="muted small">Present in at least half of the reports for this place.</p>
+        {% else %}<p class="muted">No feature appears in most reports for this place.</p>{% endif %}
+      </section>
+    </div>
+
+    {% if assessment %}
+    <section class="ai">
+      <h3>AI area summary{% if assessment.ok %} <span class="model">{{ assessment.model }}</span>{% endif %}</h3>
+      {% if assessment.ok %}<p>{{ assessment.text }}</p>
+        <p class="muted small">Written by a small local model. Check it against the tables above before relying on it.</p>
+      {% else %}<p class="muted">Summary unavailable: {{ assessment.reason }}</p>{% endif %}
+    </section>
+    {% endif %}
+
+    {% if brief.describe_query %}
+    <section>
+      <h3>Closest past records to the description</h3>
+      <p class="muted small">Compared with: “{{ brief.describe_query }}”. Ranking only; it does not say what the object is.</p>
+      {% if brief.matches %}
+        <ol class="rows">{% for m in brief.matches %}
+          <li><span class="score num">{{ '%.2f'|format(m.score) }}</span>
+            <span><strong class="mono">{{ m.incident_id }}</strong> {{ m.location or 'No location' }}{% if m.date %}, {{ m.date }}{% endif %}
+              <span class="why">Shares {{ m.shared|map('feature_label')|join(', ') }}</span>
+              {% if m.photo %}<span class="why">Reference photo on file: {{ m.photo }}</span>{% endif %}</span></li>
+        {% endfor %}</ol>
+      {% else %}<p class="muted">No record for this place matched the description closely enough.</p>{% endif %}
+    </section>
+    {% endif %}
+
+    {% if brief.area_incidents %}
+    <section>
+      <h3>Incidents on record here ({{ brief.area_incidents|length }})</h3>
+      <ol class="incs">
+        {% for inc in brief.area_incidents %}
+        <li>
+          <div class="inc-top"><strong class="mono">{{ inc.incident_id }}</strong>
+            <span>{{ inc.location or 'No location' }}</span><span class="date">{{ inc.date or 'no date' }}</span></div>
+          <p class="text" dir="auto">{{ inc.narrative }}</p>
+          {% if inc.features %}<p class="tags">{% for ft in inc.features[:8] %}<span>{{ feature_label(ft.facet ~ '=' ~ ft.value) }}</span>{% endfor %}</p>{% endif %}
+          {% if inc.persons or inc.groups or inc.phones %}
+          <p class="tags ent">{% for p in inc.persons %}<span>Person: {{ p }}</span>{% endfor %}{% for g in inc.groups %}<span>Group: {{ g }}</span>{% endfor %}{% for ph in inc.phones %}<span>Phone: {{ ph }}</span>{% endfor %}</p>
+          {% endif %}
+          {% set purl = photo_url(inc) %}
+          {% if purl %}<a href="{{ purl }}" target="_blank" rel="noopener"><img src="{{ purl }}" alt="Photo for {{ inc.incident_id }}"></a>{% endif %}
+        </li>
+        {% endfor %}
+      </ol>
+    </section>
+    {% endif %}
+  </article>
+  {% endif %}
+</main>
+<footer>Retrieval from past reporting only. Sirens never identifies an object and never gives handling guidance.</footer>
 </body></html>"""

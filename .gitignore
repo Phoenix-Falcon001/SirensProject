@@ -20,3 +20,5 @@ data/map/*.part
 .tools/
 # public gateway database (civilian accounts and reports in transit)
 data/gateway.db*
+# web console session key (generated on first run)
+data/secret.key

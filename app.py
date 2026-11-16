@@ -28,7 +28,7 @@ from linker.cluster import Clusterer
 from linker import store, semantic, ai, reference, report
 from linker.models import Incident
 from linker.grid_ref import from_mgrs, to_mgrs
-from linker import regions
+from linker import accounts, regions
 import report_page
 
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -215,6 +215,21 @@ def analyse():
     street = (f.get("street") or "").strip()
     location = ", ".join(p for p in (street, caza) if p) or (f.get("location") or None)
 
+    # A military user files only in their own cazas, and can never overwrite a
+    # report they are not allowed to see.
+    user = web_auth.current_user()
+    if user and user["role"] != "admin":
+        mine = ", ".join(user["regions"])
+        if not caza:
+            return _page(form=f, photo_name=f.get("photo") or None,
+                         error=f"Choose the caza or place a pin. Your account files reports for: {mine}.")
+        if caza not in user["regions"]:
+            return _page(form=f, photo_name=f.get("photo") or None,
+                         error=f"{caza} is outside your regions ({mine}).")
+    if store.exists(incident_id) and store.get_incident(incident_id) is None:
+        return _page(form=f, photo_name=f.get("photo") or None,
+                     error=f"The incident ID {incident_id} is already in use. Choose another.")
+
     existing = store.get_incident(incident_id)
     prev_photo = existing.photo if existing else None
     stored_photo = _save_photo(request.files.get("photo_file"), location,
@@ -230,6 +245,11 @@ def analyse():
         photo=stored_photo,
     )
     _EXTRACTOR.extract(inc)
+    # Findings the analyst marked as wrong (a village read as a person, say) are
+    # left out of the links and of what is saved.
+    dropped = [d for d in f.getlist("drop") if d]
+    for name in dropped:
+        inc.persons.discard(name); inc.groups.discard(name); inc.phones.discard(name)
     save = f.get("action") == "save"
 
     munition = (f.get("munition") or "").strip()
@@ -247,6 +267,8 @@ def analyse():
             "condition": conditions,
             "lat": lat, "lon": lon, "grid": grid,
         })
+        if user:
+            accounts.audit(user["username"], "incident.create", {"id": incident_id, "caza": caza})
 
     result = _analyse(inc, run_llm=(f.get("use_ai") == "on"))
     result["incident"] = inc
@@ -265,6 +287,7 @@ def analyse():
     form = f.to_dict()
     form["caza"] = caza
     form["condition"] = conditions
+    form["drop"] = dropped
     return _page(form=form, result=result, photo_name=stored_photo)
 
 
@@ -600,6 +623,9 @@ _REGIONS = _load_regions()
 
 _CAZA_NAMES = sorted({f["properties"]["name"] for f in _REGIONS["features"]}) if _REGIONS else []
 
+# Towns and cazas Sirens already knows are places, never people or groups.
+_EXTRACTOR.known_places = set(_LOCATION_ALIASES) | set(_CAZA_NAMES)
+
 
 def _district(location):
     """Real caza for a free-text location: first comma-part -> alias -> caza."""
@@ -621,7 +647,7 @@ def link_tree():
             "database yet. <a href='/'>Go back</a> and load or save some first.</p>")
 
     matcher = Matcher().fit(incidents)
-    links = matcher.all_pairs(incidents, threshold=0.25)
+    links = matcher.all_pairs(incidents)
     clusterer = Clusterer(incidents, links)
     clusters = clusterer.clusters(singletons=False)
     payload = clusterer.graph_payload()
@@ -705,6 +731,10 @@ def _marker_of(inc):
     mun = _infer_munition(inc, _load_meta().get(inc.incident_id, {}).get("munition"))
     return _MUNITION_LABEL.get(mun, mun), _MUNITION_COLOR.get(mun, "#8a929a")
 
+
+# Sign-in for the web console (web_auth.py): accounts, levels and regions.
+import web_auth
+web_auth.register(app, regions_of=_regions_of)
 
 import home_bp
 home_bp.register(app, status=_status, marker_of=_marker_of)
