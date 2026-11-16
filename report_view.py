@@ -62,7 +62,11 @@ def reason_label(reason: str) -> str:
     """'shared signature: trigger=pressure_plate, ttp=target_convoy' ->
     'Shares: Trigger: pressure plate, Target: convoy'."""
     r = re.sub(r"\b([a-z_]+)=([a-z0-9_]+)", lambda m: feature_label(m.group(0)), reason)
-    return r.replace("shared signature:", "Shares").replace("same/near location", "Same or nearby place")
+    for old, new in (("shared signature:", "Shares"), ("same/near location", "Same or nearby place"),
+                     ("same individual", "Same person"), ("same group", "Same group"),
+                     ("same phone number", "Same phone number")):
+        r = r.replace(old, new)
+    return r
 
 
 def entity_label(key: str) -> str:
