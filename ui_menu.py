@@ -31,6 +31,7 @@ MENU = [
     ("Data", [
         ("demo", "Load demo data", "demo.demo_page", "40 fabricated sample incidents"),
         ("vendor", "Offline check", "vendor.vendor_check", "Proves the page libraries load without internet"),
+        ("accounts", "Accounts", "auth.accounts_page", "Who can sign in, their level and regions"),
     ]),
 ]
 
@@ -57,6 +58,12 @@ _STYLE = """<style>
 .sm .sm-panel a.sm-item strong{display:block;font-weight:600}
 .sm .sm-panel a.sm-item span{display:block;font-size:12px;color:#7a8791;margin-top:2px}
 .sm .sm-panel a.sm-item.on span{color:#7a4e12}
+.sm-user{margin-left:auto;display:flex;align-items:center;gap:10px;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:13px;color:#cdd8e0}
+.sm-user a{color:#cdd8e0}
+.sm-user b{color:#fff;font-weight:600}
+.sm-user form{margin:0}
+.sm-user button{font:inherit;color:#cdd8e0;background:transparent;border:1px solid #2c3c4a;border-radius:3px;padding:5px 10px;cursor:pointer}
+.sm-user button:hover{border-color:#5b6b78;color:#fff}
 .sm-host{transition:box-shadow .2s ease}
 .sm-host.sm-scrolled{box-shadow:0 2px 10px rgba(22,32,43,.18)}
 </style>"""
@@ -99,8 +106,14 @@ _SCRIPT = """<script>
 
 def menu(active: str = "") -> Markup:
     """The grouped menu as HTML, with `active` (a key from MENU) highlighted."""
+    from flask import g
+    user = g.get("web_user")
+    allowed = _allowed()
     parts = [_STYLE, '<nav class="sm" aria-label="Sirens pages">']
-    for gi, (group, items) in enumerate(MENU):
+    for gi, (group, all_items) in enumerate(MENU):
+        items = [it for it in all_items if allowed(it[2])]
+        if not items:
+            continue
         on = any(key == active for key, *_ in items)
         parts.append(
             f'<div class="sm-group"><button type="button" class="sm-head{" on" if on else ""}" '
@@ -113,8 +126,26 @@ def menu(active: str = "") -> Markup:
                          f'<strong>{escape(label)}</strong><span>{escape(desc)}</span></a>')
         parts.append("</div></div></div>")
     parts.append("</nav>")
+    if user:
+        who = user["display_name"] or user["username"]
+        role = "Administrator" if user["role"] == "admin" else (user["level"] or "").capitalize()
+        parts.append(
+            f'<div class="sm-user"><span><b>{escape(who)}</b> {escape(role)}</span>'
+            f'<a href="{escape(url_for("auth.password_page"))}">Password</a>'
+            f'<form method="post" action="{escape(url_for("auth.logout"))}">'
+            f'<button type="submit">Sign out</button></form></div>')
     parts.append(_SCRIPT)
     return Markup("".join(parts))
+
+
+def _allowed():
+    """A test for 'may the signed-in user open this endpoint' (always True
+    when sign-in is not installed or is switched off)."""
+    try:
+        import web_auth
+        return web_auth.can_open
+    except ImportError:
+        return lambda endpoint: True
 
 
 def register(app) -> None:

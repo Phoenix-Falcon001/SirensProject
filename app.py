@@ -28,7 +28,7 @@ from linker.cluster import Clusterer
 from linker import store, semantic, ai, reference, report
 from linker.models import Incident
 from linker.grid_ref import from_mgrs, to_mgrs
-from linker import regions
+from linker import accounts, regions
 import report_page
 
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -215,6 +215,21 @@ def analyse():
     street = (f.get("street") or "").strip()
     location = ", ".join(p for p in (street, caza) if p) or (f.get("location") or None)
 
+    # A military user files only in their own cazas, and can never overwrite a
+    # report they are not allowed to see.
+    user = web_auth.current_user()
+    if user and user["role"] != "admin":
+        mine = ", ".join(user["regions"])
+        if not caza:
+            return _page(form=f, photo_name=f.get("photo") or None,
+                         error=f"Choose the caza or place a pin. Your account files reports for: {mine}.")
+        if caza not in user["regions"]:
+            return _page(form=f, photo_name=f.get("photo") or None,
+                         error=f"{caza} is outside your regions ({mine}).")
+    if store.exists(incident_id) and store.get_incident(incident_id) is None:
+        return _page(form=f, photo_name=f.get("photo") or None,
+                     error=f"The incident ID {incident_id} is already in use. Choose another.")
+
     existing = store.get_incident(incident_id)
     prev_photo = existing.photo if existing else None
     stored_photo = _save_photo(request.files.get("photo_file"), location,
@@ -252,6 +267,8 @@ def analyse():
             "condition": conditions,
             "lat": lat, "lon": lon, "grid": grid,
         })
+        if user:
+            accounts.audit(user["username"], "incident.create", {"id": incident_id, "caza": caza})
 
     result = _analyse(inc, run_llm=(f.get("use_ai") == "on"))
     result["incident"] = inc
@@ -691,6 +708,21 @@ def _marker_of(inc):
     mun = _infer_munition(inc, _load_meta().get(inc.incident_id, {}).get("munition"))
     return _MUNITION_LABEL.get(mun, mun), _MUNITION_COLOR.get(mun, "#8a929a")
 
+
+def _regions_of(incidents):
+    """{incident id: caza (canonical name) or None}, as the map places them."""
+    meta = _load_meta()
+    canon = {_norm(n): n for n in _CAZA_NAMES}
+    out = {}
+    for inc in incidents:
+        d = meta.get(inc.incident_id, {}).get("caza") or _district(inc.location)
+        out[inc.incident_id] = canon.get(_norm(d)) if d else None
+    return out
+
+
+# Sign-in for the web console (web_auth.py): accounts, levels and regions.
+import web_auth
+web_auth.register(app, regions_of=_regions_of)
 
 import home_bp
 home_bp.register(app, status=_status, marker_of=_marker_of)

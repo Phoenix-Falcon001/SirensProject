@@ -118,21 +118,35 @@ def add_incidents(incidents: list[Incident], db_path=None) -> int:
 
 
 # -- read --------------------------------------------------------------------
-def all_incidents(db_path=None) -> list[Incident]:
+# Optional reader scope: a callable(list[Incident]) -> list[Incident] that limits
+# what the current reader may see (the web console sets it to the signed-in
+# user's regions; see web_auth.py). None means everything. Reads pass
+# unscoped=True only for housekeeping that must see the whole record.
+scope = None
+
+
+def _scoped(incidents: list[Incident], unscoped: bool) -> list[Incident]:
+    return incidents if unscoped or scope is None else scope(incidents)
+
+
+def all_incidents(db_path=None, unscoped: bool = False) -> list[Incident]:
     conn = connect(db_path)
     rows = conn.execute("SELECT * FROM incidents ORDER BY created_at").fetchall()
     conn.close()
-    return [_row_to_incident(r) for r in rows]
+    return _scoped([_row_to_incident(r) for r in rows], unscoped)
 
 
-def get_incident(incident_id: str, db_path=None) -> Incident | None:
+def get_incident(incident_id: str, db_path=None, unscoped: bool = False) -> Incident | None:
     conn = connect(db_path)
     row = conn.execute("SELECT * FROM incidents WHERE incident_id=?", (incident_id,)).fetchone()
     conn.close()
-    return _row_to_incident(row) if row else None
+    found = _scoped([_row_to_incident(row)], unscoped) if row else []
+    return found[0] if found else None
 
 
-def count(db_path=None) -> int:
+def count(db_path=None, unscoped: bool = False) -> int:
+    if scope is not None and not unscoped:
+        return len(all_incidents(db_path))
     conn = connect(db_path)
     n = conn.execute("SELECT COUNT(*) FROM incidents").fetchone()[0]
     conn.close()

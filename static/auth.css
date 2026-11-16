@@ -1,0 +1,32 @@
+/* Sign-in and account pages. Builds on sirens.css. */
+.au .wrap{max-width:1000px}
+.box{max-width:440px;margin:6vh auto 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:28px 30px}
+.box.wide{max-width:720px;margin-top:0}
+.box h1,.ahead h1{font-size:26px;letter-spacing:-.01em}
+.box .lead{color:var(--ink-soft);margin:8px 0 16px}
+.au label{display:block;font-size:14px;font-weight:600;margin:14px 0 6px}
+.au input:not([type=radio]):not([type=checkbox]){width:100%;font:15px var(--sans);padding:10px 12px;border:1px solid #cfd6d3;border-radius:8px;background:#fff;color:var(--ink)}
+.au form .btn{margin-top:20px}
+.au fieldset{border:1px solid var(--line);border-radius:10px;margin:16px 0 0;padding:10px 14px 12px}
+.au legend{font-size:14px;font-weight:600;padding:0 6px}
+.au label.pick{display:flex;align-items:center;gap:8px;font-weight:400;margin:8px 0 0}
+.au label.pick input{width:16px;height:16px;accent-color:var(--ink)}
+.au label.pick span{color:var(--muted);font-size:13px}
+.cz{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0 12px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:20px}
+.row .btn{margin-top:0!important}
+.err{background:var(--danger-bg);border:1px solid #efc9c5;color:#6e221d;padding:10px 14px;border-radius:8px;margin:12px 0 0}
+.ok{background:var(--strong-bg);border:1px solid #c9dcc6;color:#2c5a3c;padding:10px 14px;border-radius:8px;margin:12px 0}
+.ahead{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px}
+.au h2{font-size:18px;margin:30px 0 12px}
+.tablewrap{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow-x:auto}
+table.users{width:100%;border-collapse:collapse;font-size:14.5px}
+.users th{text-align:left;font-size:13px;color:var(--muted);font-weight:600;padding:12px 16px;border-bottom:1px solid var(--line)}
+.users td{padding:11px 16px;border-bottom:1px solid var(--line-2);vertical-align:top}
+.users tr:last-child td{border-bottom:0}
+.users .off{color:var(--danger);font-weight:600}
+.audit td{font-size:13.5px}
+.nowrap{white-space:nowrap}
+.newpw{display:grid;gap:6px;background:var(--sig-soft);border:1px solid #e6d3b0;border-radius:10px;padding:14px 18px;margin-bottom:18px}
+.newpw code{font:600 22px var(--mono);letter-spacing:.04em;user-select:all}
+.newpw span{font-size:13.5px;color:var(--sig-deep)}

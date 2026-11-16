@@ -18,3 +18,5 @@ data/report_meta.json
 data/map/*.pmtiles
 data/map/*.part
 .tools/
+# web console session key (generated on first run)
+data/secret.key

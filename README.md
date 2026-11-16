@@ -253,6 +253,28 @@ hit this ceiling as hard. Not yet verified against real data.
 - **Structure** — swap connected-components for community detection to split
   large loose clusters.
 
+## Sign-in
+
+The web console needs an account. The first time you open it, on the computer
+it runs on, it asks you to create the first administrator. After that:
+
+- **Administrator**: everything, all regions; creates the other accounts under
+  *Data → Accounts* (a temporary password is shown once).
+- **Military, field**: home, new report, pre-arrival brief, map, munitions reference.
+- **Military, analyst**: also review links, link tree and dashboard.
+- **Military, commander**: same pages as analyst here (civilian reports and
+  warnings are in the mobile app).
+
+A military account sees and files reports only in its assigned cazas; links
+are worked out within those reports. Sessions end after 12 hours, five wrong
+passwords lock an account for 15 minutes, and sign-ins and changes are listed
+under *Accounts → Recent activity*. Set `SIRENS_HTTPS=1` when serving over
+HTTPS so the session cookie is sent only on HTTPS. From the command line an
+admin can also be created with `python -m linker.accounts create-admin <name>`.
+
+After updating from an older version, run `python reextract.py --apply` once
+so stored reports are re-read with the current rules.
+
 ## Known limitations
 
 - Extraction is only as good as the taxonomy + base NER model — every link is

@@ -117,7 +117,7 @@ def review_page():
 def decide():
     a, b = request.form.get("a", ""), request.form.get("b", "")
     decision = request.form.get("decision", "")
-    analyst = request.form.get("analyst", "")[:40]
+    analyst = _analyst()
     if decision == "undo":
         _one_row(a, b)                         # 404 on unknown ids
         decisions.clear_decision(a, b, analyst=analyst)
@@ -135,11 +135,17 @@ def note():
     a, b = request.form.get("a", ""), request.form.get("b", "")
     try:
         _one_row(a, b)
-        decisions.add_note(a, b, request.form.get("note", "")[:2000],
-                           analyst=request.form.get("analyst", "")[:40])
+        decisions.add_note(a, b, request.form.get("note", "")[:2000], analyst=_analyst())
     except ValueError as e:
         return str(e), 400
     return _fragment(a, b)
+
+
+def _analyst() -> str:
+    """The signed-in account, or the typed initials when sign-in is off."""
+    from flask import g
+    user = g.get("web_user")
+    return user["username"] if user else request.form.get("analyst", "")[:40]
 
 
 def _fragment(a, b):
@@ -237,9 +243,10 @@ _PAGE = r"""<!doctype html>
       {% endfor %}
     </nav>
     <input type="search" id="find" placeholder="Find by ID or place" aria-label="Find links by incident ID or place">
-    <form class="f-form who" onsubmit="return false" aria-label="Analyst">
+    {% if web_user() %}<input type="hidden" id="analyst" name="analyst" value="">
+    {% else %}<form class="f-form who" onsubmit="return false" aria-label="Analyst">
       {{ f.input("analyst", "Your initials", "analyst", placeholder="e.g. BE", optional=True, extra='maxlength="40"') }}
-    </form>
+    </form>{% endif %}
   </div>
   {{ f.chips([] if show == 'all' else [("Decision: " ~ names[show], url_for('review.review_page'))], url_for('review.review_page')) }}
   <p class="keys" aria-label="Keyboard shortcuts"><kbd>J</kbd><kbd>K</kbd> next and previous
