@@ -1,0 +1,52 @@
+/* Dashboard. Same structure as before, in the new look (builds on sirens.css). */
+.db .wrap{max-width:1240px}
+.db h1{font-size:clamp(26px,3vw,34px);letter-spacing:-.01em;margin:0 0 18px}
+.db .f-filterbar{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px 6px}
+.scope{color:var(--ink-soft);margin:12px 0 20px;max-width:80ch}
+.jump{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 20px}
+.jump a{padding:7px 13px;border-radius:30px;border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+  text-decoration:none;font-size:14px}
+.jump a:hover{border-color:#b8c1c6;color:var(--ink)}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:8px}
+@media(max-width:900px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.tile .k{font-size:14px;font-weight:600;color:var(--ink-soft);text-transform:capitalize}
+.tile .v{font-size:34px;font-weight:600;line-height:1.15;font-variant-numeric:tabular-nums;margin:4px 0 2px}
+.tile .s{font-size:13px;color:var(--muted)}
+h2.sec{font-size:22px;margin:40px 0 4px;scroll-margin-top:100px}
+p.lede{color:var(--ink-soft);margin:0 0 16px;max-width:80ch}
+.db .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media(max-width:900px){.db .grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;min-width:0}
+.card.wide{grid-column:1/-1}
+.card h2{font-size:16px;padding:16px 20px 0;margin:0}
+.card .body{padding:12px 20px 18px}
+.plot{position:relative;height:240px}
+.plot.tall{height:300px}
+.hint{font-size:13px;color:var(--muted);margin:10px 0 0}
+details{margin-top:10px}
+summary{font-size:13.5px;color:var(--link);cursor:pointer;width:max-content}
+.db table{border-collapse:collapse;font-size:14px;margin-top:8px}
+.db th,.db td{text-align:left;padding:6px 16px 6px 0;border-bottom:1px solid var(--line-2);vertical-align:top}
+.db th{font-weight:600;color:var(--muted);font-size:13px}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+table.wide{width:100%}
+.nowrap{white-space:nowrap}
+.empty{color:var(--muted);padding:20px 2px}
+.cardtools{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.cardtools .f-labelrow{margin:0}
+.cardtools select{font:14px var(--sans);padding:7px 10px;border:1px solid #cfd6d3;border-radius:8px;background:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12.5px;padding:3px 9px;border-radius:20px;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft)}
+.db .band{font:600 12px/1 var(--sans);padding:4px 8px;border-radius:20px;min-width:0;text-transform:capitalize}
+.band-strong{background:var(--strong-bg);color:var(--strong)}
+.band-medium{background:var(--medium-bg);color:var(--medium)}
+.band-weak{background:var(--weak-bg);color:var(--weak)}
+.meters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 28px}
+@media(max-width:700px){.meters{grid-template-columns:1fr}}
+.mrow .top{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.mrow .top b{font-weight:600}
+.mrow .top span{color:var(--muted);font-variant-numeric:tabular-nums}
+.meter{height:8px;border-radius:8px;background:var(--line-2);margin-top:5px;overflow:hidden}
+.meter span{display:block;height:100%;background:var(--sig);border-radius:8px}
+.missing{color:var(--muted);font-size:13.5px}
