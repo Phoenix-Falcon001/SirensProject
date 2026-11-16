@@ -145,6 +145,11 @@ def _guard():
         resp.headers["HX-Redirect"] = url_for("auth.login")
         return resp
     g.web_user = user
+    # A password chosen by somebody else must be replaced before anything else.
+    if user.get("must_change") and request.endpoint != "auth.password_page":
+        if request.method == "GET" and not request.headers.get("HX-Request"):
+            return redirect(url_for("auth.password_page"))
+        abort(403)
     _known, perm = needed(request.endpoint)
     if perm and not accounts.can(user, perm):
         return _show("Not available for your account", _DENIED, "denied"), 403
@@ -234,10 +239,12 @@ def password_page():
         else:
             try:
                 accounts.change_password(u["id"], f.get("current", ""), f.get("new", ""))
+                if u.get("must_change"):
+                    return redirect(url_for("home.home_page"))
                 done = "Password changed."
             except accounts.AccountError as e:
                 error = str(e).capitalize() + "."
-    return _show("Change my password", _PASSWORD, "password",
+    return _show("Change my password", _PASSWORD, "password", must=bool(u and u.get("must_change")),
                                   error=error, done=done, min_pw=accounts.MIN_PASSWORD), (400 if error else 200)
 
 
@@ -262,7 +269,7 @@ def account_new():
         pw = secrets.token_urlsafe(10)
         role = "admin" if f.get("role") == "admin" else "military"
         try:
-            u = accounts.create_user(f.get("username", ""), pw, role, actor=_actor(),
+            u = accounts.create_user(f.get("username", ""), pw, role, actor=_actor(), must_change=True,
                                      known_regions=set(regions.names()), **_form_user(f))
         except accounts.AccountError as e:
             error = str(e).capitalize() + "."
@@ -369,7 +376,8 @@ _LOGIN = r"""
 
 _PASSWORD = r"""
 <div class="box">
-  <h1>Change my password</h1>
+  <h1>{{ 'Choose your own password' if must else 'Change my password' }}</h1>
+  {% if must %}<p class="lead">Your password was set by an administrator. Choose your own before you continue.</p>{% endif %}
   {% if done %}<p class="ok" role="status">{{ done }}</p>{% endif %}
   {% if error %}<p class="err" role="alert">{{ error }}</p>{% endif %}
   <form method="post" autocomplete="off">
@@ -385,7 +393,7 @@ _ACCOUNTS = r"""
 {% if made and pw %}
 <div class="newpw" role="status"><strong>Temporary password for {{ made }}</strong>
   <code>{{ pw }}</code>
-  <span>Shown once. Hand it over in person; they change it under “Change my password”.</span></div>
+  <span>Shown once. Hand it over in person. They must choose their own password the first time they sign in.</span></div>
 {% elif made %}<p class="ok" role="status">Saved {{ made }}.</p>{% endif %}
 <div class="tablewrap"><table class="users">
   <thead><tr><th>Username</th><th>Name</th><th>Role</th><th>Regions</th><th>Status</th><th></th></tr></thead>

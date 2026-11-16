@@ -87,6 +87,10 @@ class AccountError(ValueError):
 def connect(db_path=None):
     conn = store.connect(db_path)
     conn.executescript(_SCHEMA)
+    # Databases from before must_change existed get the column added.
+    if "must_change" not in {r[1] for r in conn.execute("PRAGMA table_info(users)")}:
+        conn.execute("ALTER TABLE users ADD COLUMN must_change INTEGER NOT NULL DEFAULT 0")
+        conn.commit()
     return conn
 
 
@@ -154,12 +158,16 @@ def _row(r) -> dict:
         "id": r["id"], "username": r["username"], "display_name": r["display_name"],
         "role": r["role"], "level": r["level"], "regions": json.loads(r["regions"]),
         "active": bool(r["active"]),
+        # True while the password is one somebody else chose (set by an admin
+        # or reset): the person must choose their own before doing anything else.
+        "must_change": bool(r["must_change"]),
     }
 
 
 def create_user(username: str, password: str, role: str, level: str | None = None,
                 regions: list[str] | None = None, display_name: str = "",
-                actor: str = "system", known_regions=None, db_path=None) -> dict:
+                actor: str = "system", known_regions=None, db_path=None,
+                must_change: bool = False) -> dict:
     username = (username or "").strip()
     if not username:
         raise AccountError("username is required")
@@ -175,10 +183,10 @@ def create_user(username: str, password: str, role: str, level: str | None = Non
         now = _iso(_now())
         cur = conn.execute(
             """INSERT INTO users (username, display_name, password_hash, role, level,
-                                  regions, created_at, updated_at)
-               VALUES (?,?,?,?,?,?,?,?)""",
+                                  regions, created_at, updated_at, must_change)
+               VALUES (?,?,?,?,?,?,?,?,?)""",
             (username, display_name.strip(), generate_password_hash(password),
-             role, level, json.dumps(regions), now, now))
+             role, level, json.dumps(regions), now, now, int(must_change)))
         conn.commit()
         user = get_user(cur.lastrowid, conn=conn)
         audit(actor, "user.create", {"user": username, "role": role, "level": level,
@@ -226,6 +234,7 @@ def update_user(user_id: int, actor: str, known_regions=None, db_path=None, **ch
             _check_password(changes["password"])
             sets["password_hash"] = generate_password_hash(changes["password"])
             sets["failed_logins"], sets["locked_until"] = 0, None
+            sets["must_change"] = 1          # an admin chose it: the person must replace it
         conn.execute(
             f"UPDATE users SET {', '.join(f'{k}=?' for k in sets)} WHERE id=?",
             (*sets.values(), user_id))
@@ -319,7 +328,9 @@ def change_password(user_id: int, old: str, new: str, db_path=None) -> None:
         if not r or not check_password_hash(r["password_hash"], old or ""):
             raise AccountError("current password is wrong")
         _check_password(new)
-        conn.execute("UPDATE users SET password_hash=?, updated_at=? WHERE id=?",
+        if check_password_hash(r["password_hash"], new):
+            raise AccountError("the new password must be different from the current one")
+        conn.execute("UPDATE users SET password_hash=?, updated_at=?, must_change=0 WHERE id=?",
                      (generate_password_hash(new), _iso(_now()), user_id))
         conn.commit()
         audit(r["username"], "password.change", {}, conn=conn)
