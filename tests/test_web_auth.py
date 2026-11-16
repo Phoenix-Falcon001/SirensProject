@@ -145,6 +145,18 @@ def test_admin_manages_accounts(web):
     assert r.status_code == 400 and accounts.get_user(me)["active"]
     web.post("/logout")
     assert login(web, "lt_nader", pw).status_code == 302            # the temporary password works
+    # ...but only to choose their own password.
+    r = web.get("/")
+    assert r.status_code == 302 and r.headers["Location"].endswith("/password")
+    assert web.post("/analyse", data={"narrative": "x"}).status_code == 403
+    assert b"Choose your own password" in web.get("/password").data
+    same = web.post("/password", data={"current": pw, "new": pw, "new2": pw})
+    assert same.status_code == 400 and b"must be different" in same.data
+    r = web.post("/password", data={"current": pw, "new": "my-own-password-1", "new2": "my-own-password-1"})
+    assert r.status_code == 302 and web.get("/").status_code == 200
+    # A reset by an admin asks for it again.
+    accounts.update_user(uid, actor="boss", password="reset-by-admin-1")
+    assert accounts.get_user(uid)["must_change"] is True
 
 
 def test_disabling_an_account_ends_its_session(web):
