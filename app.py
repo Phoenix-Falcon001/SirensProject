@@ -230,6 +230,11 @@ def analyse():
         photo=stored_photo,
     )
     _EXTRACTOR.extract(inc)
+    # Findings the analyst marked as wrong (a village read as a person, say) are
+    # left out of the links and of what is saved.
+    dropped = [d for d in f.getlist("drop") if d]
+    for name in dropped:
+        inc.persons.discard(name); inc.groups.discard(name); inc.phones.discard(name)
     save = f.get("action") == "save"
 
     munition = (f.get("munition") or "").strip()
@@ -265,6 +270,7 @@ def analyse():
     form = f.to_dict()
     form["caza"] = caza
     form["condition"] = conditions
+    form["drop"] = dropped
     return _page(form=form, result=result, photo_name=stored_photo)
 
 
@@ -600,6 +606,9 @@ _REGIONS = _load_regions()
 
 _CAZA_NAMES = sorted({f["properties"]["name"] for f in _REGIONS["features"]}) if _REGIONS else []
 
+# Towns and cazas Sirens already knows are places, never people or groups.
+_EXTRACTOR.known_places = set(_LOCATION_ALIASES) | set(_CAZA_NAMES)
+
 
 def _district(location):
     """Real caza for a free-text location: first comma-part -> alias -> caza."""
@@ -621,7 +630,7 @@ def link_tree():
             "database yet. <a href='/'>Go back</a> and load or save some first.</p>")
 
     matcher = Matcher().fit(incidents)
-    links = matcher.all_pairs(incidents, threshold=0.25)
+    links = matcher.all_pairs(incidents)
     clusterer = Clusterer(incidents, links)
     clusters = clusterer.clusters(singletons=False)
     payload = clusterer.graph_payload()

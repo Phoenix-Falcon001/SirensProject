@@ -22,7 +22,7 @@ from linker.match import Matcher
 
 dashboard_bp = Blueprint("dashboard", __name__)
 
-THRESHOLD = 0.25          # same link threshold as /tree and /review
+from linker.match import LINK_THRESHOLD as THRESHOLD    # same link threshold as /tree and /review
 TOP_AREAS = 10            # more areas than this fold into "Other"
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 _MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
@@ -155,7 +155,7 @@ def dashboard_page():
     strength = stats.link_strength(view_links, current)
     sig = stats.signatures(shown)
     return render_template_string(
-        _TEMPLATE, f=f, active=active, total=len(incidents), shown=shown,
+        _TEMPLATE, f=f, active=active, total=len(incidents), shown=shown, threshold=THRESHOLD,
         n_areas=len({i.location for i in shown if i.location}),
         stats=link_stats(view_links, current), nets=nets, strength=strength,
         sig=sig, qual=stats.quality(shown), active_chips=active_chips(f),
@@ -214,7 +214,7 @@ _TEMPLATE = r"""{% import "forms_ui.html" as fm %}<!doctype html>
   <div class="tiles" id="overview">
     <div class="tile"><div class="k">Incidents</div><div class="v">{{ shown|length }}</div><div class="s">in view</div></div>
     <div class="tile"><div class="k">Areas</div><div class="v">{{ n_areas }}</div><div class="s">with at least one incident</div></div>
-    <div class="tile"><div class="k">Links</div><div class="v">{{ stats.links }}</div><div class="s">between incidents in view (score &ge; 0.25)</div></div>
+    <div class="tile"><div class="k">Links</div><div class="v">{{ stats.links }}</div><div class="s">between incidents in view (score &ge; {{ "%.2f"|format(threshold) }})</div></div>
     <div class="tile"><div class="k">Confirmed</div><div class="v">{{ stats.confirmed }}</div><div class="s">of those links, by an analyst (<a href="{{ url_for('review.review_page') }}">review</a>)</div></div>
   </div>
 
@@ -298,7 +298,7 @@ _TEMPLATE = r"""{% import "forms_ui.html" as fm %}<!doctype html>
   <p class="lede">How strong the {{ strength.total }} link(s) between incidents in view are, and how many an analyst has reviewed.</p>
   <div class="tiles">
     {% for b in strength.bands %}<div class="tile"><div class="k">{{ b.band }} links</div><div class="v">{{ b.n }}</div>
-      <div class="s">{{ {'strong':'score 0.66 or more','medium':'score 0.40 to 0.66','weak':'score 0.25 to 0.40'}[b.band] }}</div></div>{% endfor %}
+      <div class="s">{{ {'strong':'score 0.66 or more','medium':'score 0.40 to 0.66','weak':'score ' ~ '%.2f'|format(threshold) ~ ' to 0.40'}[b.band] }}</div></div>{% endfor %}
     <div class="tile"><div class="k">Reviewed</div><div class="v">{{ strength.reviewed_pct }}%</div>
       <div class="s">of links in view (<a href="{{ url_for('review.review_page', show='open') }}">review the rest</a>)</div></div>
   </div>

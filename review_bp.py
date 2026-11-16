@@ -24,7 +24,7 @@ import report_view
 
 review_bp = Blueprint("review", __name__)
 
-THRESHOLD = 0.25        # same as /tree, so both pages show the same links
+from linker.match import LINK_THRESHOLD as THRESHOLD   # same as /tree, so both pages show the same links
 FILTERS = ("all", "open", "confirm", "reject", "unsure")
 
 
@@ -109,7 +109,7 @@ def review_page():
     else:
         shown = rows
     return render_template_string(_CARD + _PAGE, rows=shown, total=len(rows),
-                                  show=show, filters=FILTERS, tally=_tally(rows),
+                                  show=show, filters=FILTERS, tally=_tally(rows), threshold=THRESHOLD,
                                   db_count=store.count())
 
 
@@ -255,7 +255,7 @@ _PAGE = r"""<!doctype html>
   <div id="links">{% for r in rows %}{{ card(r) }}{% endfor %}</div>
   <p class="empty" id="nofind" hidden>No link matches that search.</p>
 </main>
-<footer>Links shown: score 0.25 or more with shared evidence, the same set as the link tree. Bands: weak under 0.40, medium under 0.66, strong above.</footer>
+<footer>Links shown: score {{ "%.2f"|format(threshold) }} or more with shared evidence, the same set as the link tree. Bands: weak under 0.40, medium under 0.66, strong above.</footer>
 
 <script src="{{ url_for('static', filename='vendor/htmx.min.js') }}"></script>
 <script src="{{ url_for('static', filename='review.js') }}"></script>

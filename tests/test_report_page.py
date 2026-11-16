@@ -94,3 +94,32 @@ def test_form_has_map_picker_type_tiles_and_drop_zone(client):
     assert html.count('<label class="sw">') == 11                    # Not stated + 10 colours
     assert 'class="drop"' in html and 'id="photo_file"' in html
     assert client.get("/map/cazas.geojson").json["features"]
+
+
+def test_analyst_can_remove_a_wrong_finding(client):
+    client.post("/seed")
+    text = "Fabricated test. Reported by Hassan Darwish near Khiam. Pressure plate, convoy targeted."
+    html = client.post("/analyse", data={"action": "analyse", "narrative": text}).data.decode()
+    assert '<input type="checkbox" name="drop" value="Hassan Darwish">' in html
+    again = client.post("/analyse", data={"action": "analyse", "narrative": text,
+                                          "drop": "Hassan Darwish"}).data.decode()
+    assert '<input type="checkbox" name="drop" value="Hassan Darwish" checked>' in again   # can be restored
+    assert "<dt>Person</dt><dd>Hassan Darwish</dd>" not in again
+    client.post("/analyse", data={"action": "save", "incident_id": "INC-060", "narrative": text,
+                                  "drop": "Hassan Darwish"})
+    assert store.get_incident("INC-060").persons == set()
+
+
+def test_reextract_updates_stored_findings(client):
+    from linker.models import Incident
+    import app as sirens_app
+    import reextract
+    old = Incident(incident_id="INC-080", location="Meiss ej-Jabal",
+                   narrative="On 13 an IED targeted a patrol near Meiss ej-Jabal. A pressure plate.")
+    old.persons = {"Meiss"}                               # as stored by the earlier rules
+    store.add_incident(old)
+    assert [c[0] for c in reextract.reextract(sirens_app._EXTRACTOR)] == ["INC-080"]
+    assert store.get_incident("INC-080").persons == {"Meiss"}          # dry run changes nothing
+    reextract.reextract(sirens_app._EXTRACTOR, apply=True)
+    fixed = store.get_incident("INC-080")
+    assert fixed.persons == set() and fixed.feature_keys()

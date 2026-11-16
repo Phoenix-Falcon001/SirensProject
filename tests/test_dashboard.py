@@ -94,7 +94,7 @@ def test_networks_section_matches_link_tree(client):
     from linker import store
     client.post("/seed")
     incs = store.all_incidents()
-    links = Matcher().fit(incs).all_pairs(incs, threshold=0.25)
+    links = Matcher().fit(incs).all_pairs(incs)
     clusters = Clusterer(incs, links).clusters()
     _, d, _ = _page(client)
     assert sorted(d["networks"]["labels"]) == sorted(c.cluster_id for c in clusters)
