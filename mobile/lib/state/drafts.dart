@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
@@ -10,6 +11,7 @@ class StaffDraft {
     required this.username,
     required this.savedAt,
     required this.body,
+    this.photo,
     this.lastError,
   });
 
@@ -17,6 +19,7 @@ class StaffDraft {
   final String username; // only this account sends it
   final DateTime savedAt;
   final Map<String, dynamic> body; // the POST /api/v1/incidents body
+  final Uint8List? photo; // optional photo, sent with the report
   String? lastError;
 
   Map<String, dynamic> toJson() => {
@@ -24,6 +27,7 @@ class StaffDraft {
     'username': username,
     'saved_at': savedAt.toUtc().toIso8601String(),
     'body': body,
+    'photo': photo == null ? null : base64Encode(photo!),
     'last_error': lastError,
   };
 
@@ -32,6 +36,7 @@ class StaffDraft {
     username: j['username'] as String,
     savedAt: DateTime.parse(j['saved_at'] as String),
     body: Map<String, dynamic>.from(j['body'] as Map),
+    photo: j['photo'] == null ? null : base64Decode(j['photo'] as String),
     lastError: j['last_error'] as String?,
   );
 }

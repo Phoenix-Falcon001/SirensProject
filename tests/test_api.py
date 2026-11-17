@@ -203,3 +203,24 @@ def test_admin_set_password_must_be_replaced_first(api):
                     json={"current": "temporary-pass-1", "new": "my-own-password-1"}).status_code == 200
     assert api.get("/api/v1/me", headers=nh).json["must_change"] is False
     assert api.get("/api/v1/incidents", headers=nh).status_code == 200
+
+
+def test_report_with_photo(api):
+    import io
+    h = auth(api, "field_sour")
+    jpeg = b"\xff\xd8\xff\xe0" + b"0" * 200
+    r = api.post("/api/v1/incidents", headers=h, content_type="multipart/form-data", data={
+        "narrative": "IED with a pressure plate by the road.", "caza": "Sour", "date": "2026-11-10",
+        "lat": "33.27", "lon": "35.20", "client_ref": "ph-1", "photo": (io.BytesIO(jpeg), "scene.jpg")})
+    assert r.status_code == 201 and r.json["has_photo"] and r.json["mgrs"].startswith("36S")
+    iid = r.json["incident_id"]
+    assert api.get(f"/api/v1/incidents/{iid}", headers=h).json["has_photo"] is True
+    got = api.get(f"/api/v1/incidents/{iid}/photo", headers=h)
+    assert got.status_code == 200 and got.data == jpeg
+    # Another region cannot fetch it; a report without a photo answers 404.
+    assert api.get(f"/api/v1/incidents/{iid}/photo", headers=auth(api, "cmd_beirut")).status_code == 404
+    plain = file(api, h).json["incident_id"]
+    assert api.get(f"/api/v1/incidents/{plain}/photo", headers=h).status_code == 404
+    bad = api.post("/api/v1/incidents", headers=h, content_type="multipart/form-data", data={
+        "narrative": "x", "caza": "Sour", "photo": (io.BytesIO(b"GIF89a..."), "a.gif")})
+    assert bad.status_code == 400 and "JPEG or PNG" in bad.json["error"]

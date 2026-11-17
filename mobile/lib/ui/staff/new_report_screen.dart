@@ -49,6 +49,7 @@ class _NewReportScreenState extends State<NewReportScreen> {
   String? _munition;
   DateTime _date = DateTime.now();
   GeoFix? _fix;
+  PickedPhoto? _photo;
   bool _locating = false;
   bool _busy = false;
   FileResult? _result;
@@ -83,6 +84,15 @@ class _NewReportScreenState extends State<NewReportScreen> {
     }
   }
 
+  Future<void> _pickPhoto(bool camera) async {
+    final l = AppLocalizations.of(context);
+    final p = await widget.device.pickPhoto(camera: camera);
+    if (p == null || !mounted) return;
+    if (p.mimeType == null) return showMessage(context, l.photoUnsupported);
+    if (p.bytes.length > 5 * 1024 * 1024) return showMessage(context, l.photoTooLarge);
+    setState(() => _photo = p);
+  }
+
   Future<void> _pickDate() async {
     final d = await showDatePicker(
       context: context,
@@ -110,6 +120,7 @@ class _NewReportScreenState extends State<NewReportScreen> {
         if (_fix != null) 'lat': _fix!.lat,
         if (_fix != null) 'lon': _fix!.lon,
       },
+      photo: _photo?.bytes,
     );
     try {
       final r = await widget.service.file(draft);
@@ -286,6 +297,51 @@ class _NewReportScreenState extends State<NewReportScreen> {
                       onTap: _locating ? null : _locate,
                     ),
                   ),
+                  const SizedBox(height: 12),
+                  Text(l.addPhoto, style: Theme.of(context).textTheme.titleSmall),
+                  const SizedBox(height: 6),
+                  if (_photo != null) ...[
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.memory(
+                        _photo!.bytes,
+                        height: 160,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, _, _) =>
+                            const SizedBox(height: 80, child: Icon(Icons.image_outlined, size: 48)),
+                      ),
+                    ),
+                    Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: TextButton.icon(
+                        key: const Key('staff-remove-photo'),
+                        onPressed: () => setState(() => _photo = null),
+                        icon: const Icon(Icons.delete_outline),
+                        label: Text(l.reportRemovePhoto),
+                      ),
+                    ),
+                  ] else
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            key: const Key('staff-take-photo'),
+                            onPressed: () => _pickPhoto(true),
+                            icon: const Icon(Icons.photo_camera_outlined),
+                            label: Text(l.reportTakePhoto),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            key: const Key('staff-choose-photo'),
+                            onPressed: () => _pickPhoto(false),
+                            icon: const Icon(Icons.photo_library_outlined),
+                            label: Text(l.reportChoosePhoto),
+                          ),
+                        ),
+                      ],
+                    ),
                   const SizedBox(height: 20),
                   FilledButton.icon(
                     key: const Key('file-report'),

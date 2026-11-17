@@ -33,8 +33,23 @@ class StaffApi {
   );
 
   /// Files a report. The answer includes the new incident id and its network.
-  Future<Map<String, dynamic>> fileIncident(Map<String, dynamic> body) =>
-      client.post('/api/v1/incidents', body);
+  /// With a photo the report goes as a form upload; without, as JSON.
+  Future<Map<String, dynamic>> fileIncident(Map<String, dynamic> body, {List<int>? photo}) =>
+      photo == null
+      ? client.post('/api/v1/incidents', body)
+      : client.postMultipart(
+          '/api/v1/incidents',
+          {
+            for (final e in body.entries)
+              if (e.value != null) e.key: e.value.toString(),
+          },
+          fileField: 'photo',
+          fileBytes: photo,
+          fileName: 'photo.jpg',
+        );
+
+  Future<List<int>> incidentPhoto(String id) =>
+      client.getBytes('/api/v1/incidents/${Uri.encodeComponent(id)}/photo');
 
   Future<BriefResult> brief(String location, String? describe) async {
     final q = Uri(

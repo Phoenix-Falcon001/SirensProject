@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -114,10 +116,21 @@ class IncidentDetailScreen extends StatelessWidget {
     final t = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(title: Text(id)),
-      body: Loader<(IncidentDetail, NetworkInfo)>(
-        load: () async => (await service.api.incident(id), await service.api.network(id)),
+      body: Loader<(IncidentDetail, NetworkInfo, List<int>?)>(
+        load: () async {
+          final inc = await service.api.incident(id);
+          List<int>? photo;
+          if (inc.hasPhoto) {
+            try {
+              photo = await service.api.incidentPhoto(id);
+            } on Object {
+              photo = null; // the report still opens without its photo
+            }
+          }
+          return (inc, await service.api.network(id), photo);
+        },
         builder: (context, data, _) {
-          final (inc, net) = data;
+          final (inc, net, photo) = data;
           Widget section(String title, List<String> items) => items.isEmpty
               ? const SizedBox.shrink()
               : Padding(
@@ -154,6 +167,20 @@ class IncidentDetailScreen extends StatelessWidget {
               section(l.people, inc.persons),
               section(l.groups, inc.groups),
               section(l.phones, inc.phones),
+              if (photo != null) ...[
+                const SizedBox(height: 12),
+                Text(l.photoOnFile, style: t.labelLarge),
+                const SizedBox(height: 6),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.memory(
+                    Uint8List.fromList(photo),
+                    key: const Key('incident-photo'),
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, _, _) => const Icon(Icons.image_outlined, size: 48),
+                  ),
+                ),
+              ],
               const SizedBox(height: 16),
               NetworkCard(
                 network: net,

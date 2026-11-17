@@ -723,7 +723,8 @@ def _regions_of(incidents):
 # Mobile app interface (/api/v1): accounts, roles, regions. See api_bp.py.
 import api_bp
 api_bp.register(app, regions_of=_regions_of, extractor=_EXTRACTOR, put_meta=_put_meta,
-                fmt_grid=_fmt_grid, munitions=_MUNITIONS, map_markers=map_markers)
+                fmt_grid=_fmt_grid, munitions=_MUNITIONS, map_markers=map_markers,
+                save_photo=_save_photo, photos_dir=lambda: PHOTOS_DIR)
 
 
 def _marker_of(inc):

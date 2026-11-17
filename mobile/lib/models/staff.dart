@@ -38,12 +38,14 @@ class IncidentDetail {
     required this.persons,
     required this.groups,
     required this.phones,
+    this.hasPhoto = false,
   });
 
   final String id;
   final String? date;
   final String? location;
   final String? caza;
+  final bool hasPhoto;
   final String narrative;
   final List<String> features; // "facet=value"
   final List<String> persons;
@@ -60,6 +62,7 @@ class IncidentDetail {
     persons: _strings(j['persons']),
     groups: _strings(j['groups']),
     phones: _strings(j['phones']),
+    hasPhoto: j['has_photo'] == true,
   );
 }
 

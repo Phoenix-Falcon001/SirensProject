@@ -263,6 +263,7 @@ class FakeServers {
           'location': 'Qana',
           'caza': 'Sour',
           'narrative': 'On 20 an IED with a tripwire was found near Qana.',
+          'has_photo': id == 'INC-001',
           'features': ['trigger=tripwire'],
           'persons': [],
           'groups': [],
@@ -271,7 +272,17 @@ class FakeServers {
       case 'GET /api/v1/incidents/INC-001/network':
       case 'GET /api/v1/incidents/INC-002/network':
         return _json(network);
+      case 'GET /api/v1/incidents/INC-001/photo':
+        return http.Response.bytes([0xFF, 0xD8, 0xFF, 0xE0, 9, 9, 9], 200);
       case 'POST /api/v1/incidents':
+        if (body.isEmpty && req.bodyBytes.isNotEmpty) {
+          // multipart upload: read the plain fields and note the photo
+          final text = latin1.decode(req.bodyBytes, allowInvalid: true);
+          for (final m in RegExp(r'name="(\w+)"\r\n\r\n([^\r]*)').allMatches(text)) {
+            body[m.group(1)!] = m.group(2);
+          }
+          body['_photo'] = text.contains('name="photo"');
+        }
         if (fileStatus != null) {
           return _json({'error': 'that caza is outside your assigned regions'}, fileStatus!);
         }

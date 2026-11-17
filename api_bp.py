@@ -41,13 +41,15 @@ API_VERSION = 1
 _HELPERS: dict = {}
 
 
-def register(app, *, regions_of, extractor, put_meta, fmt_grid, munitions, map_markers):
+def register(app, *, regions_of, extractor, put_meta, fmt_grid, munitions, map_markers,
+             save_photo, photos_dir):
     """regions_of(incidents) -> {incident id: caza or None}; extractor.extract(incident);
     put_meta(incident_id, dict); fmt_grid(lat, lon) -> display label;
     munitions: [(key, label, colour)];
     map_markers(incidents) -> (markers, legend, unplaced)."""
     _HELPERS.update(regions_of=regions_of, extractor=extractor, put_meta=put_meta,
-                    fmt_grid=fmt_grid, munitions=munitions, map_markers=map_markers)
+                    fmt_grid=fmt_grid, munitions=munitions, map_markers=map_markers,
+                    save_photo=save_photo, photos_dir=photos_dir)
     app.register_blueprint(api_bp)
 
 
@@ -193,7 +195,21 @@ def incident(incident_id):
         return _err("not found", 404)
     d = inc.to_dict()
     d["caza"] = caza
+    d["has_photo"] = bool(inc.photo)
     return jsonify(d)
+
+
+@api_bp.get("/incidents/<incident_id>/photo")
+@login_required("incidents:read")
+def incident_photo(incident_id):
+    """The photo filed with a report (kept for comparison; never analysed)."""
+    inc, _caza = _one_visible(incident_id)
+    f = (_HELPERS["photos_dir"]() / inc.photo) if inc and inc.photo else None
+    if not f or not f.is_file():
+        return _err("not found", 404)
+    resp = send_file(f, conditional=False)
+    resp.headers["Cache-Control"] = "no-store"
+    return resp
 
 
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -203,8 +219,9 @@ _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 @login_required("incidents:create")
 def file_incident():
     """File a new report. Same rules as the web form: a narrative is required;
-    the caza must be one of the user's regions."""
-    b = _body()
+    the caza must be one of the user's regions. Send JSON, or a multipart
+    form with the same fields plus an optional "photo" file."""
+    b = request.form.to_dict() if (request.form or request.files) else _body()
     narrative = (b.get("narrative") or "").strip()
     caza = (b.get("caza") or "").strip()
     street = (b.get("street") or "").strip()
@@ -239,9 +256,19 @@ def file_incident():
             d = store.get_incident(done).to_dict()
             d["caza"], d["duplicate"] = caza, True
             return jsonify(d), 200
+    location = ", ".join(p for p in (street, caza) if p)
+    upload = request.files.get("photo")
+    photo = None
+    if upload and upload.filename:
+        head = upload.stream.read(12)
+        upload.stream.seek(0)
+        if not (head.startswith(b"\xff\xd8\xff") or head.startswith(b"\x89PNG\r\n\x1a\n")):
+            return _err("photo must be a JPEG or PNG image", 400)
+        photo = _HELPERS["save_photo"](upload, location)
+        if photo is None:
+            return _err("the photo could not be saved", 400)
     inc = Incident(incident_id=store.next_incident_id(), date=when,
-                   location=", ".join(p for p in (street, caza) if p),
-                   narrative=narrative)
+                   location=location, narrative=narrative, photo=photo)
     _HELPERS["extractor"].extract(inc)
     store.add_incident(inc)
     _HELPERS["put_meta"](inc.incident_id, {
@@ -254,6 +281,7 @@ def file_incident():
     d = inc.to_dict()
     d["caza"] = caza
     d["mgrs"] = to_mgrs(lat, lon) if lat is not None else None
+    d["has_photo"] = bool(photo)
     d["network"] = _network(inc.incident_id)
     return jsonify(d), 201
 

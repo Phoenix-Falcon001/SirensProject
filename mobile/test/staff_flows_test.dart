@@ -59,6 +59,32 @@ void main() {
     expect(body['lat'], 33.27);
   });
 
+  testWidgets('report with a photo; the photo waits with the report when offline', (tester) async {
+    final server = FakeServers();
+    final state = await staffHome(tester, server, user: 'field1');
+    await tapKey(tester, 'tile-new_report');
+    await tester.enterText(find.byKey(const Key('narrative')), 'Shell by the wall');
+    await tapKey(tester, 'staff-take-photo');
+    expect(find.byKey(const Key('staff-remove-photo')), findsOneWidget);
+    server.offline = true;
+    await tapKey(tester, 'file-report');
+    await tapKey(tester, 'queued-ok');
+    expect(state.staffService!.pending.single.photo, isNotNull);
+    server.offline = false;
+    expect(await state.staffService!.flush(), 1);
+    expect(server.filed.single['_photo'], isTrue);
+    expect(server.filed.single['narrative'], 'Shell by the wall');
+    expect(server.filed.single['caza'], 'Sour');
+  });
+
+  testWidgets('a report page shows its photo', (tester) async {
+    await staffHome(tester, FakeServers());
+    await tapKey(tester, 'tile-incidents');
+    await tapKey(tester, 'incident-INC-001');
+    expect(find.text('Photo on file'), findsOneWidget);
+    expect(find.byKey(const Key('incident-photo')), findsOneWidget);
+  });
+
   testWidgets('report without the VPN is kept and sent later', (tester) async {
     final server = FakeServers();
     final state = await staffHome(tester, server, user: 'field1');

@@ -68,7 +68,7 @@ class StaffService extends ChangeNotifier {
   Future<FileResult> file(StaffDraft d) async {
     await drafts.save(d);
     try {
-      final r = await api.fileIncident({...d.body, 'client_ref': d.localId});
+      final r = await api.fileIncident({...d.body, 'client_ref': d.localId}, photo: d.photo);
       await drafts.remove(d.localId);
       await loadPending();
       return FileResult(
@@ -97,7 +97,7 @@ class StaffService extends ChangeNotifier {
       for (final d in (await drafts.all()).where((d) => d.username == username)) {
         if (d.lastError != null) continue;
         try {
-          await api.fileIncident({...d.body, 'client_ref': d.localId});
+          await api.fileIncident({...d.body, 'client_ref': d.localId}, photo: d.photo);
           await drafts.remove(d.localId);
           sent++;
         } on ApiException catch (e) {
