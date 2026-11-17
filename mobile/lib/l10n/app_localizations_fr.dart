@@ -932,4 +932,29 @@ class AppLocalizationsFr extends AppLocalizations {
   String serverSaid(String reason) {
     return 'Refusé : $reason';
   }
+
+  @override
+  String get choosePasswordTitle => 'Choisissez votre mot de passe';
+
+  @override
+  String get choosePasswordBody =>
+      'Votre mot de passe a été défini par un administrateur. Choisissez le vôtre avant de continuer.';
+
+  @override
+  String get temporaryPassword => 'Mot de passe provisoire';
+
+  @override
+  String get repeatPassword => 'Répétez le nouveau mot de passe';
+
+  @override
+  String get passwordsDiffer => 'Les deux mots de passe sont différents.';
+
+  @override
+  String get passwordMustDiffer => 'Le nouveau mot de passe doit être différent du provisoire.';
+
+  @override
+  String get addPhoto => 'Photo (facultatif)';
+
+  @override
+  String get photoOnFile => 'Photo au dossier';
 }

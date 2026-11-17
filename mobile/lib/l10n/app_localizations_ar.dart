@@ -919,4 +919,29 @@ class AppLocalizationsAr extends AppLocalizations {
   String serverSaid(String reason) {
     return 'لم يُقبل: $reason';
   }
+
+  @override
+  String get choosePasswordTitle => 'اختر كلمة مرورك الخاصة';
+
+  @override
+  String get choosePasswordBody =>
+      'تم تعيين كلمة مرورك من قبل مسؤول. اختر كلمة مرورك الخاصة قبل المتابعة.';
+
+  @override
+  String get temporaryPassword => 'كلمة المرور المؤقتة';
+
+  @override
+  String get repeatPassword => 'أعد إدخال كلمة المرور الجديدة';
+
+  @override
+  String get passwordsDiffer => 'كلمتا المرور غير متطابقتين.';
+
+  @override
+  String get passwordMustDiffer => 'يجب أن تختلف كلمة المرور الجديدة عن المؤقتة.';
+
+  @override
+  String get addPhoto => 'صورة (اختياري)';
+
+  @override
+  String get photoOnFile => 'صورة محفوظة';
 }

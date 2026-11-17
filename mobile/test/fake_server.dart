@@ -466,6 +466,17 @@ class FakeServers {
           return _json({'error': 'wrong username or password'}, 401);
         }
         return _json({'token': 'tok-${u['username']}', 'expires_at': exp, 'user': u});
+      case 'POST /api/v1/me/password':
+        if (!authed) return _json({'error': 'not signed in'}, 401);
+        final who = req.headers['Authorization']!.substring('Bearer tok-'.length);
+        if (body['current'] != 'correct-horse-1') {
+          return _json({'error': 'current password is wrong'}, 400);
+        }
+        if (body['new'] == body['current']) {
+          return _json({'error': 'the new password must be different from the current one'}, 400);
+        }
+        users[who]!['must_change'] = false;
+        return _json({'ok': true});
       case 'GET /api/v1/me':
         if (expireSessions || !authed) return _json({'error': 'not signed in'}, 401);
         final name = req.headers['Authorization']!.substring('Bearer tok-'.length);

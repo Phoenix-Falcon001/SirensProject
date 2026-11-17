@@ -205,8 +205,11 @@ class AppState extends ChangeNotifier {
     }
   }
 
-  Future<void> changePassword(String current, String newPassword) =>
-      staff.changePassword(current, newPassword);
+  Future<void> changePassword(String current, String newPassword) async {
+    await staff.changePassword(current, newPassword);
+    await refreshStaff(); // clears "must choose your own password"
+    await _startStaff();
+  }
 
   // -- both -------------------------------------------------------------------
   Future<void> signOut() async {

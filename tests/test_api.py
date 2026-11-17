@@ -186,3 +186,20 @@ def test_meta_and_no_caching(api):
     r = api.get("/api/v1/meta", headers=auth(api, "field_sour"))
     assert "Sour" in r.json["regions"] and r.json["levels"] == ["field", "analyst", "commander"]
     assert r.headers["Cache-Control"] == "no-store"
+
+
+def test_admin_set_password_must_be_replaced_first(api):
+    h = auth(api, "admin")
+    api.post("/api/v1/admin/users", headers=h, json={
+        "username": "newbie", "password": "temporary-pass-1", "role": "military",
+        "level": "field", "regions": ["Sour"]})
+    r = api.post("/api/v1/auth/login", json={"username": "newbie", "password": "temporary-pass-1"})
+    assert r.json["user"]["must_change"] is True
+    nh = {"Authorization": "Bearer " + r.json["token"]}
+    blocked = api.get("/api/v1/incidents", headers=nh)
+    assert blocked.status_code == 403 and blocked.json["must_change"] is True
+    assert api.get("/api/v1/me", headers=nh).status_code == 200
+    assert api.post("/api/v1/me/password", headers=nh,
+                    json={"current": "temporary-pass-1", "new": "my-own-password-1"}).status_code == 200
+    assert api.get("/api/v1/me", headers=nh).json["must_change"] is False
+    assert api.get("/api/v1/incidents", headers=nh).status_code == 200

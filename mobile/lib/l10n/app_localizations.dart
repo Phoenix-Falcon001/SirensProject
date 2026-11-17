@@ -1737,6 +1737,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not accepted: {reason}'**
   String serverSaid(String reason);
+
+  /// No description provided for @choosePasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your own password'**
+  String get choosePasswordTitle;
+
+  /// No description provided for @choosePasswordBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your password was set by an administrator. Choose your own before you continue.'**
+  String get choosePasswordBody;
+
+  /// No description provided for @temporaryPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary password'**
+  String get temporaryPassword;
+
+  /// No description provided for @repeatPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat the new password'**
+  String get repeatPassword;
+
+  /// No description provided for @passwordsDiffer.
+  ///
+  /// In en, this message translates to:
+  /// **'The two passwords are different.'**
+  String get passwordsDiffer;
+
+  /// No description provided for @passwordMustDiffer.
+  ///
+  /// In en, this message translates to:
+  /// **'The new password must be different from the temporary one.'**
+  String get passwordMustDiffer;
+
+  /// No description provided for @addPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo (optional)'**
+  String get addPhoto;
+
+  /// No description provided for @photoOnFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo on file'**
+  String get photoOnFile;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

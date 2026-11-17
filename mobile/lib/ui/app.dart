@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../state/app_state.dart';
 import '../state/session.dart';
+import 'force_password_screen.dart';
 import 'home_screens.dart';
 import 'language_screen.dart';
 import 'welcome_screen.dart';
@@ -47,7 +48,8 @@ class _Root extends StatelessWidget {
     return switch (state.session?.kind) {
       null => const WelcomeScreen(),
       AccountKind.civilian => const CivilianHome(),
-      AccountKind.staff => const StaffHome(),
+      AccountKind.staff =>
+        state.session!.mustChange ? const ForcePasswordScreen() : const StaffHome(),
     };
   }
 }

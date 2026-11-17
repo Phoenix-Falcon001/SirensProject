@@ -15,6 +15,7 @@ class Session {
     this.regions = const [],
     this.permissions = const {},
     this.allRegions = false,
+    this.mustChange = false,
   });
 
   final AccountKind kind;
@@ -32,6 +33,9 @@ class Session {
   final List<String> regions;
   final Set<String> permissions;
   final bool allRegions;
+
+  /// True while the password is one an admin chose: it must be replaced first.
+  final bool mustChange;
 
   bool get isExpired => DateTime.now().isAfter(expiresAt);
   bool get isAdmin => role == 'admin';
@@ -55,6 +59,7 @@ class Session {
     regions: List<String>.from(user['regions'] as List? ?? const []),
     permissions: Set<String>.from(user['permissions'] as List? ?? const []),
     allRegions: user['all_regions'] == true,
+    mustChange: user['must_change'] == true,
   );
 
   /// Same session, with the user's details refreshed from /me.
@@ -73,6 +78,7 @@ class Session {
     'regions': regions,
     'permissions': permissions.toList()..sort(),
     'all_regions': allRegions,
+    'must_change': mustChange,
   };
 
   factory Session.fromJson(Map<String, dynamic> j) => Session(
@@ -87,5 +93,6 @@ class Session {
     regions: List<String>.from(j['regions'] as List? ?? const []),
     permissions: Set<String>.from(j['permissions'] as List? ?? const []),
     allRegions: j['all_regions'] == true,
+    mustChange: j['must_change'] == true,
   );
 }

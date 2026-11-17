@@ -563,5 +563,13 @@
         "type": "String"
       }
     }
-  }
+  },
+  "choosePasswordTitle": "Choose your own password",
+  "choosePasswordBody": "Your password was set by an administrator. Choose your own before you continue.",
+  "temporaryPassword": "Temporary password",
+  "repeatPassword": "Repeat the new password",
+  "passwordsDiffer": "The two passwords are different.",
+  "passwordMustDiffer": "The new password must be different from the temporary one.",
+  "addPhoto": "Photo (optional)",
+  "photoOnFile": "Photo on file"
 }

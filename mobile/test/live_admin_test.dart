@@ -38,8 +38,11 @@ void main() {
 
     final name = 'live${DateTime.now().millisecondsSinceEpoch}';
     final u = await api.createUser({
-      'username': name, 'password': generatePassword(), 'role': 'military',
-      'level': 'field', 'regions': ['Sour'],
+      'username': name,
+      'password': generatePassword(),
+      'role': 'military',
+      'level': 'field',
+      'regions': ['Sour'],
     });
     expect(u.regions, ['Sour']);
     final changed = await api.updateUser(u.id, {'level': 'commander', 'active': false});

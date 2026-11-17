@@ -924,4 +924,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String serverSaid(String reason) {
     return 'Not accepted: $reason';
   }
+
+  @override
+  String get choosePasswordTitle => 'Choose your own password';
+
+  @override
+  String get choosePasswordBody =>
+      'Your password was set by an administrator. Choose your own before you continue.';
+
+  @override
+  String get temporaryPassword => 'Temporary password';
+
+  @override
+  String get repeatPassword => 'Repeat the new password';
+
+  @override
+  String get passwordsDiffer => 'The two passwords are different.';
+
+  @override
+  String get passwordMustDiffer => 'The new password must be different from the temporary one.';
+
+  @override
+  String get addPhoto => 'Photo (optional)';
+
+  @override
+  String get photoOnFile => 'Photo on file';
 }

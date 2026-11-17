@@ -273,5 +273,13 @@
   "usersYou": "أنت",
   "usersCannotDisableSelf": "لا يمكنك تعطيل حسابك.",
   "auditEmpty": "لا يوجد شيء مسجّل بعد.",
-  "serverSaid": "لم يُقبل: {reason}"
+  "serverSaid": "لم يُقبل: {reason}",
+  "choosePasswordTitle": "اختر كلمة مرورك الخاصة",
+  "choosePasswordBody": "تم تعيين كلمة مرورك من قبل مسؤول. اختر كلمة مرورك الخاصة قبل المتابعة.",
+  "temporaryPassword": "كلمة المرور المؤقتة",
+  "repeatPassword": "أعد إدخال كلمة المرور الجديدة",
+  "passwordsDiffer": "كلمتا المرور غير متطابقتين.",
+  "passwordMustDiffer": "يجب أن تختلف كلمة المرور الجديدة عن المؤقتة.",
+  "addPhoto": "صورة (اختياري)",
+  "photoOnFile": "صورة محفوظة"
 }

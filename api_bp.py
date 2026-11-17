@@ -86,6 +86,10 @@ def login_required(perm: str | None = None):
             user = accounts.user_for_token(_token())
             if not user:
                 return _err("not signed in", 401)
+            # A password chosen by an admin must be replaced before anything else.
+            if user.get("must_change") and fn.__name__ not in ("me", "my_password", "logout"):
+                return jsonify({"error": "choose your own password first",
+                                "must_change": True}), 403
             if perm and not accounts.can(user, perm):
                 return _err("your role does not allow this", 403)
             g.user = user
@@ -591,7 +595,7 @@ def create_user():
         b.get("username", ""), b.get("password", ""), b.get("role", "military"),
         level=b.get("level"), regions=b.get("regions") or [],
         display_name=b.get("display_name", ""), actor=g.user["username"],
-        known_regions=set(regions.names()))
+        known_regions=set(regions.names()), must_change=True)
     return jsonify(u), 201
 
 
