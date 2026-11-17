@@ -45,6 +45,21 @@ class StaffService extends ChangeNotifier {
   List<Map<String, String>> munitions = const [];
   bool _flushing = false;
 
+  /// For the home screen headline; null until loaded (or when offline).
+  int? reportCount;
+  int? openLinks;
+
+  /// Counts for the home screen. Best effort: failures leave them as they were.
+  Future<void> loadSummary({required bool canReview}) async {
+    try {
+      reportCount = (await api.incidents()).length;
+      if (canReview) openLinks = (await api.links('open')).$2['open'];
+      notifyListeners();
+    } on ApiException {
+      // offline or signed out: the home screen simply shows no counts
+    }
+  }
+
   /// Form lists (cazas, munition types). Kept for the session.
   Future<void> loadMeta() async {
     final m = await api.meta();

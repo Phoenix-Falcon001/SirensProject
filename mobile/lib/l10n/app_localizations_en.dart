@@ -949,4 +949,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get photoOnFile => 'Photo on file';
+
+  @override
+  String homeReports(int n) {
+    return 'Reports on record in your regions: $n.';
+  }
+
+  @override
+  String homeOpenLinks(int n) {
+    return 'Links waiting for review: $n.';
+  }
 }

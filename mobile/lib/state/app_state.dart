@@ -188,6 +188,7 @@ class AppState extends ChangeNotifier {
       await st.loadPending();
       await st.loadMeta();
       await st.flush();
+      await st.loadSummary(canReview: session?.can('review') ?? false);
     } on Object {
       // Offline: the drafts wait; the forms fall back to the user's own regions.
     }

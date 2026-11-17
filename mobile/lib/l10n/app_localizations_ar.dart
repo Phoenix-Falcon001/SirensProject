@@ -944,4 +944,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get photoOnFile => 'صورة محفوظة';
+
+  @override
+  String homeReports(int n) {
+    return 'البلاغات المسجلة في مناطقك: $n.';
+  }
+
+  @override
+  String homeOpenLinks(int n) {
+    return 'الروابط بانتظار المراجعة: $n.';
+  }
 }

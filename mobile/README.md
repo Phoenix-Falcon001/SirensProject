@@ -107,6 +107,19 @@ VPN and the street map are.
 * **Audit log** (admin). Sign-ins (failed ones flagged), account changes,
   reports filed, link decisions, status changes, warnings.
 
+## Look, first sign-in, photos
+
+* **Same look as the web console** (`lib/ui/theme.dart`): navy header with an
+  amber line, grey-green background, white outlined panels. The main action
+  of each home screen is a dark tile; Review links shows how many are waiting.
+* **Military home** shows the reports on record in the user's regions and,
+  for analysts and above, the links waiting for review.
+* **First sign-in**: an account whose password was set or reset by an admin
+  gets a "Choose your own password" screen and nothing else until it is done.
+* **Photos on military reports**: take or choose a photo on the new report
+  form. It waits with the report when the VPN is off, and shows on the
+  report's page.
+
 ## Layout
 
 ```
@@ -157,7 +170,7 @@ this on a private test network: the web console pages have no sign-in yet.
 ```bash
 cd mobile
 flutter analyze     # expect: No issues found
-flutter test        # expect: 69 tests pass (4 live tests skipped)
+flutter test        # expect: 75 tests pass (4 live tests skipped)
 ```
 
 Live tests against running servers (skipped unless the variables are set):

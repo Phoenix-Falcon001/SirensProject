@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:sirens/state/app_state.dart';
 import 'package:sirens/ui/app.dart';
+import 'package:sirens/ui/common.dart';
 
 import 'fake_server.dart';
 
@@ -75,6 +76,24 @@ void main() {
     expect(server.filed.single['_photo'], isTrue);
     expect(server.filed.single['narrative'], 'Shell by the wall');
     expect(server.filed.single['caza'], 'Sour');
+  });
+
+  testWidgets('home shows the state of the record and the open-link count', (tester) async {
+    await staffHome(tester, FakeServers());
+    expect(
+      find.text('Reports on record in your regions: 2. Links waiting for review: 1.'),
+      findsOneWidget,
+    );
+    final review = tester.widget<MenuTile>(find.byKey(const Key('tile-review')));
+    expect(review.badge, '1');
+    expect(tester.widget<MenuTile>(find.byKey(const Key('tile-new_report'))).primary, isTrue);
+  });
+
+  testWidgets('field user: no link count, and the home works offline', (tester) async {
+    final server = FakeServers();
+    await staffHome(tester, server, user: 'field1');
+    expect(find.text('Reports on record in your regions: 2.'), findsOneWidget);
+    expect(find.byKey(const Key('tile-review')), findsNothing);
   });
 
   testWidgets('a report page shows its photo', (tester) async {

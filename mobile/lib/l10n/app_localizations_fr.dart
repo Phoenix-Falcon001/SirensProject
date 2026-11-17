@@ -957,4 +957,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get photoOnFile => 'Photo au dossier';
+
+  @override
+  String homeReports(int n) {
+    return 'Rapports enregistrés dans vos régions : $n.';
+  }
+
+  @override
+  String homeOpenLinks(int n) {
+    return 'Liens en attente d\'examen : $n.';
+  }
 }

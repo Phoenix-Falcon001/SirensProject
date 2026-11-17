@@ -49,6 +49,12 @@ Create the first admin on the server:
 python -m linker.accounts create-admin <username> --name "Full name"
 ```
 
+* An account whose password was set or reset by an admin (`must_change`) can
+  only call `/me`, `/me/password` and `/auth/logout` until it chooses its own.
+* The web console has its own sign-in (`web_auth.py`, session cookie) on the
+  same accounts; it does not apply to `/api/v1`, which keeps bearer tokens.
+* The link threshold is shared with the web pages (`LINK_THRESHOLD`, 0.35).
+
 ### Endpoints
 
 | Method | Path | Needs |
@@ -60,7 +66,8 @@ python -m linker.accounts create-admin <username> --name "Full name"
 | GET | `/meta` (cazas, levels, munition types) | signed in |
 | GET | `/incidents[?caza=]` | field |
 | GET | `/incidents/<id>` | field |
-| POST | `/incidents` `{narrative, caza, street?, date?, munition?, lat?, lon?}` | field |
+| POST | `/incidents` `{narrative, caza, street?, date?, munition?, lat?, lon?}` (JSON, or multipart with a `photo`) | field |
+| GET | `/incidents/<id>/photo` | field |
 | GET | `/incidents/<id>/network` (its candidate network, own regions only) | field |
 | GET | `/brief?location=&describe=` | field |
 | GET | `/map/markers`, `/map/info` | field |
@@ -163,7 +170,5 @@ SIRENS_GW_URL=https://<gateway> SIRENS_GW_SYNC_KEY=<key> python sync_gateway.py
   (`mobile/assets/safety_fallback.json`); a test checks the two are identical.
 * HTTPS in front of both services (reverse proxy), and a production WSGI
   server instead of Flask's development server.
-* The existing web console pages (`/`, `/review`, …) have no sign-in yet; they
-  must stay reachable only from the Army network until they do.
 * Precision is 0.63 on synthetic data, and the place-name bug ("Meiss") is
   still open. Links remain leads for analysts; civilians never see them.

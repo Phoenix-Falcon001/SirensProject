@@ -62,6 +62,7 @@ class CivilianHome extends StatelessWidget {
                   key: Key('tile-${e.id}'),
                   icon: e.icon,
                   title: e.label(l),
+                  primary: e.id == 'report',
                   subtitle: e.id == 'my_reports' && svc.pending.isNotEmpty
                       ? '${civilianHint(e.id, l)} · ${l.pendingSection}: ${svc.pending.length}'
                       : civilianHint(e.id, l),
@@ -128,41 +129,62 @@ class _StaffHomeState extends State<StaffHome> {
     final s = state.session!;
     final name = (s.displayName?.isNotEmpty ?? false) ? s.displayName! : s.username!;
     final menu = staffMenu(s);
+    final svc = state.staffService!;
     return Scaffold(
       appBar: AppBar(title: Text(l.appTitle), actions: [_settingsButton(context)]),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.refreshStaff,
-          child: ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              Text(l.staffGreeting(name), style: Theme.of(context).textTheme.headlineSmall),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  Chip(
-                    key: const Key('role-chip'),
-                    avatar: const Icon(Icons.badge_outlined, size: 18),
-                    label: Text(roleLabel(s, l)),
+          onRefresh: () async {
+            await state.refreshStaff();
+            await svc.loadSummary(canReview: s.can('review'));
+          },
+          child: ListenableBuilder(
+            listenable: svc,
+            builder: (context, _) => ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                Text(l.staffGreeting(name), style: Theme.of(context).textTheme.headlineSmall),
+                if (svc.reportCount != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Text(
+                      [
+                        l.homeReports(svc.reportCount!),
+                        if ((svc.openLinks ?? 0) > 0) l.homeOpenLinks(svc.openLinks!),
+                      ].join(' '),
+                      key: const Key('home-summary'),
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
-                  if (s.allRegions)
-                    Chip(avatar: const Icon(Icons.public, size: 18), label: Text(l.allRegions))
-                  else
-                    for (final r in s.regions)
-                      Chip(avatar: const Icon(Icons.place_outlined, size: 18), label: Text(r)),
-                ],
-              ),
-              const SizedBox(height: 16),
-              for (final e in menu)
-                MenuTile(
-                  key: Key('tile-${e.id}'),
-                  icon: e.icon,
-                  title: e.label(l),
-                  onTap: () => _openStaff(context, e, state),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    Chip(
+                      key: const Key('role-chip'),
+                      avatar: const Icon(Icons.badge_outlined, size: 18),
+                      label: Text(roleLabel(s, l)),
+                    ),
+                    if (s.allRegions)
+                      Chip(avatar: const Icon(Icons.public, size: 18), label: Text(l.allRegions))
+                    else
+                      for (final r in s.regions)
+                        Chip(avatar: const Icon(Icons.place_outlined, size: 18), label: Text(r)),
+                  ],
                 ),
-            ],
+                const SizedBox(height: 16),
+                for (final e in menu)
+                  MenuTile(
+                    key: Key('tile-${e.id}'),
+                    icon: e.icon,
+                    title: e.label(l),
+                    primary: e.id == 'new_report',
+                    badge: e.id == 'review' && (svc.openLinks ?? 0) > 0 ? '${svc.openLinks}' : null,
+                    onTap: () => _openStaff(context, e, state),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

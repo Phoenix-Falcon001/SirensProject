@@ -1785,6 +1785,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Photo on file'**
   String get photoOnFile;
+
+  /// No description provided for @homeReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports on record in your regions: {n}.'**
+  String homeReports(int n);
+
+  /// No description provided for @homeOpenLinks.
+  ///
+  /// In en, this message translates to:
+  /// **'Links waiting for review: {n}.'**
+  String homeOpenLinks(int n);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

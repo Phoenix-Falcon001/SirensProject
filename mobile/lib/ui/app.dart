@@ -8,6 +8,7 @@ import '../state/session.dart';
 import 'force_password_screen.dart';
 import 'home_screens.dart';
 import 'language_screen.dart';
+import 'theme.dart';
 import 'welcome_screen.dart';
 
 class SirensApp extends StatelessWidget {
@@ -16,7 +17,6 @@ class SirensApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
-    const seed = Color(0xFF3B5240); // muted olive, calm and readable
     return MaterialApp(
       onGenerateTitle: (c) => AppLocalizations.of(c).appTitle,
       debugShowCheckedModeBanner: false,
@@ -29,8 +29,8 @@ class SirensApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      theme: ThemeData(colorSchemeSeed: seed, useMaterial3: true),
-      darkTheme: ThemeData(colorSchemeSeed: seed, brightness: Brightness.dark, useMaterial3: true),
+      theme: sirensTheme(),
+      darkTheme: sirensDarkTheme(),
       home: const _Root(),
     );
   }

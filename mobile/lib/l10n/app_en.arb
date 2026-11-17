@@ -571,5 +571,21 @@
   "passwordsDiffer": "The two passwords are different.",
   "passwordMustDiffer": "The new password must be different from the temporary one.",
   "addPhoto": "Photo (optional)",
-  "photoOnFile": "Photo on file"
+  "photoOnFile": "Photo on file",
+  "homeReports": "Reports on record in your regions: {n}.",
+  "@homeReports": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "homeOpenLinks": "Links waiting for review: {n}.",
+  "@homeOpenLinks": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  }
 }
